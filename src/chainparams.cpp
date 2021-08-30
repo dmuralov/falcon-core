@@ -442,7 +442,7 @@ public:
         strNetworkID = CBaseChainParams::MAIN;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 12500000;
         consensus.BIP34Height = 0;
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
@@ -501,10 +501,10 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xfb;
-        pchMessageStart[1] = 0xf2;
-        pchMessageStart[2] = 0xef;
-        pchMessageStart[3] = 0xb4;
+        pchMessageStart[0] = 0xf9;
+        pchMessageStart[1] = 0xbe;
+        chMessageStart[2] = 0xb4;
+        pchMessageStart[3] = 0xd9;
         nDefaultPort = 51738;
         nBIP44ID = (int)WithHardenedBit(44);
         assert(nBIP44ID == (int)0x8000002C);
@@ -534,10 +534,10 @@ public:
         // This is fine at runtime as we'll fall back to using them as an addrfetch if they don't support the
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
-        vSeeds.emplace_back("mainnet-seed.falcon.io");
-        vSeeds.emplace_back("dnsseed-mainnet.falcon.io");
-        vSeeds.emplace_back("mainnet.falcon.io");
-        vSeeds.emplace_back("dnsseed.tecnovert.net");
+        //vSeeds.emplace_back("mainnet-seed.falcon.io");
+        //vSeeds.emplace_back("dnsseed-mainnet.falcon.io");
+        //vSeeds.emplace_back("mainnet.falcon.io");
+        //vSeeds.emplace_back("dnsseed.tecnovert.net");
 
 
         vTreasuryFundSettings.emplace_back(0,
@@ -647,7 +647,7 @@ public:
         strNetworkID = CBaseChainParams::TESTNET;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 210000;
+        consensus.nSubsidyHalvingInterval = 12500000;
         consensus.BIP34Height = 0;
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
@@ -695,10 +695,10 @@ public:
 
         consensus.nMinRCTOutputDepth = 12;
 
-        pchMessageStart[0] = 0x08;
+        pchMessageStart[0] = 0x0b;
         pchMessageStart[1] = 0x11;
-        pchMessageStart[2] = 0x05;
-        pchMessageStart[3] = 0x0b;
+        pchMessageStart[2] = 0x09;
+        pchMessageStart[3] = 0x07;
         nDefaultPort = 51938;
         nBIP44ID = (int)WithHardenedBit(1);
 
@@ -961,10 +961,10 @@ public:
 
         consensus.nMinRCTOutputDepth = 2;
 
-        pchMessageStart[0] = 0x09;
-        pchMessageStart[1] = 0x12;
-        pchMessageStart[2] = 0x06;
-        pchMessageStart[3] = 0x0c;
+        pchMessageStart[0] = 0xfa;
+        pchMessageStart[1] = 0xbf;
+        pchMessageStart[2] = 0xb5;
+        pchMessageStart[3] = 0xda;
         nDefaultPort = 11938;
         nBIP44ID = (int)WithHardenedBit(1);
 
