@@ -548,8 +548,8 @@ public:
             TreasuryFundSettings("RQYUDd3EJohpjq62So4ftcV5XZfxZxJPe9", 50, 650));
 
 
-        base58Prefixes[PUBKEY_ADDRESS]     = {0x38}; // P
-        base58Prefixes[SCRIPT_ADDRESS]     = {0x3c};
+        base58Prefixes[PUBKEY_ADDRESS]     = {0x24}; // F
+        base58Prefixes[SCRIPT_ADDRESS]     = {0x30}; // L
         base58Prefixes[PUBKEY_ADDRESS_256] = {0x39};
         base58Prefixes[SCRIPT_ADDRESS_256] = {0x3d};
         base58Prefixes[SECRET_KEY]         = {0x6c};
@@ -573,7 +573,7 @@ public:
         bech32Prefixes[EXT_ACC_HASH].assign         ("pea",(const char*)"pea"+3);
         bech32Prefixes[STAKE_ONLY_PKADDR].assign    ("pcs",(const char*)"pcs"+3);
 
-        bech32_hrp = "pw";
+        bech32_hrp = "fw";
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
 
         fDefaultConsistencyChecks = false;
@@ -731,8 +731,8 @@ public:
 
         vTreasuryFundSettings.push_back(std::make_pair(0, TreasuryFundSettings("rTvv9vsbu269mjYYEecPYinDG8Bt7D86qD", 10, 60)));
 
-        base58Prefixes[PUBKEY_ADDRESS]     = {0x76}; // p
-        base58Prefixes[SCRIPT_ADDRESS]     = {0x7a};
+        base58Prefixes[PUBKEY_ADDRESS]     = {0x5f}; // f
+        base58Prefixes[SCRIPT_ADDRESS]     = {0x7f}; // t
         base58Prefixes[PUBKEY_ADDRESS_256] = {0x77};
         base58Prefixes[SCRIPT_ADDRESS_256] = {0x7b};
         base58Prefixes[SECRET_KEY]         = {0x2e};
@@ -756,7 +756,7 @@ public:
         bech32Prefixes[EXT_ACC_HASH].assign         ("tpea",(const char*)"tpea"+4);
         bech32Prefixes[STAKE_ONLY_PKADDR].assign    ("tpcs",(const char*)"tpcs"+4);
 
-        bech32_hrp = "tpw";
+        bech32_hrp = "tfw";
 
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
 
@@ -1017,8 +1017,8 @@ public:
             },
         };
 
-        base58Prefixes[PUBKEY_ADDRESS]     = {0x76}; // p
-        base58Prefixes[SCRIPT_ADDRESS]     = {0x7a};
+        base58Prefixes[PUBKEY_ADDRESS]     = {0x5f}; // f
+        base58Prefixes[SCRIPT_ADDRESS]     = {0x7f}; // t
         base58Prefixes[PUBKEY_ADDRESS_256] = {0x77};
         base58Prefixes[SCRIPT_ADDRESS_256] = {0x7b};
         base58Prefixes[SECRET_KEY]         = {0x2e};
@@ -1042,7 +1042,7 @@ public:
         bech32Prefixes[EXT_ACC_HASH].assign         ("tpea",(const char*)"tpea"+4);
         bech32Prefixes[STAKE_ONLY_PKADDR].assign    ("tpcs",(const char*)"tpcs"+4);
 
-        bech32_hrp = "rtpw";
+        bech32_hrp = "lcfw";
 
         chainTxData = ChainTxData{
             0,
