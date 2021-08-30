@@ -18,7 +18,7 @@ export PYTHONPATH
 
 if BUILD_BITCOIN_LIBS
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libparticlconsensus.pc
+pkgconfig_DATA = libfalconconsensus.pc
 endif
 
 BITCOIND_BIN=$(top_builddir)/src/$(BITCOIN_DAEMON_NAME)$(EXEEXT)
@@ -34,7 +34,7 @@ BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win64-setup$(EXEEXT)
 empty :=
 space := $(empty) $(empty)
 
-OSX_APP=Particl-Qt.app
+OSX_APP=Falcon-Qt.app
 OSX_VOLNAME = $(subst $(space),-,$(PACKAGE_NAME))
 OSX_DMG = $(OSX_VOLNAME).dmg
 OSX_TEMP_ISO = $(OSX_DMG:.dmg=).temp.iso
@@ -42,7 +42,7 @@ OSX_BACKGROUND_SVG=background.svg
 OSX_BACKGROUND_IMAGE=background.tiff
 OSX_BACKGROUND_IMAGE_DPIS=36 72
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/particl.icns
+OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/falcon.icns
 OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
 
 DIST_CONTRIB = \
@@ -61,7 +61,7 @@ BIN_CHECKS=$(top_srcdir)/contrib/devtools/symbol-check.py \
            $(top_srcdir)/contrib/devtools/utils.py \
            $(top_srcdir)/contrib/devtools/pixie.py
 
-WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/particl.ico \
+WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/falcon.ico \
   $(top_srcdir)/share/pixmaps/nsis-header.bmp \
   $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
   $(top_srcdir)/doc/README_windows.txt
@@ -108,11 +108,11 @@ $(OSX_APP)/Contents/Info.plist: $(OSX_PLIST)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/Resources/particl.icns: $(OSX_INSTALLER_ICONS)
+$(OSX_APP)/Contents/Resources/falcon.icns: $(OSX_INSTALLER_ICONS)
 	$(MKDIR_P) $(@D)
 	$(INSTALL_DATA) $< $@
 
-$(OSX_APP)/Contents/MacOS/Particl-Qt: all-recursive
+$(OSX_APP)/Contents/MacOS/Falcon-Qt: all-recursive
 	$(MKDIR_P) $(@D)
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM)  $(BITCOIN_QT_BIN) $@
 
@@ -121,8 +121,8 @@ $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings:
 	echo '{	CFBundleDisplayName = "$(PACKAGE_NAME)"; CFBundleName = "$(PACKAGE_NAME)"; }' > $@
 
 OSX_APP_BUILT=$(OSX_APP)/Contents/PkgInfo $(OSX_APP)/Contents/Resources/empty.lproj \
-  $(OSX_APP)/Contents/Resources/particl.icns $(OSX_APP)/Contents/Info.plist \
-  $(OSX_APP)/Contents/MacOS/Particl-Qt $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
+  $(OSX_APP)/Contents/Resources/falcon.icns $(OSX_APP)/Contents/Info.plist \
+  $(OSX_APP)/Contents/MacOS/Falcon-Qt $(OSX_APP)/Contents/Resources/Base.lproj/InfoPlist.strings
 
 osx_volname:
 	echo $(OSX_VOLNAME) >$@
@@ -147,7 +147,7 @@ $(APP_DIST_DIR)/Applications:
 	@rm -f $@
 	@cd $(@D); $(LN_S) /Applications $(@F)
 
-$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Particl-Qt
+$(APP_DIST_EXTRAS): $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Falcon-Qt
 
 $(OSX_TEMP_ISO): $(APP_DIST_EXTRAS)
 	$(XORRISOFS) -D -l -V "$(OSX_VOLNAME)" -no-pad -r -dir-mode 0755 -o $@ $(APP_DIST_DIR) -- $(if $(SOURCE_DATE_EPOCH),-volume_date all_file_dates =$(SOURCE_DATE_EPOCH))
@@ -162,7 +162,7 @@ $(APP_DIST_DIR)/.background/$(OSX_BACKGROUND_IMAGE): $(OSX_BACKGROUND_IMAGE_DPIF
 	$(MKDIR_P) $(@D)
 	$(TIFFCP) -c none $(OSX_BACKGROUND_IMAGE_DPIFILES) $@
 
-$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Particl-Qt: $(OSX_APP_BUILT) $(OSX_PACKAGING)
+$(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Falcon-Qt: $(OSX_APP_BUILT) $(OSX_PACKAGING)
 	INSTALLNAMETOOL=$(INSTALLNAMETOOL) OTOOL=$(OTOOL) STRIP=$(STRIP) $(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) $(OSX_VOLNAME) -translations-dir=$(QT_TRANSLATION_DIR)
 
 deploydir: $(APP_DIST_EXTRAS)
@@ -342,27 +342,27 @@ EXTRA_DIST += \
     test/util/rpcauth-test.py
 
 EXTRA_DIST += \
-    test/util/data_particl/particl-util-test.json \
-    test/util/data_particl/blanktxv1.hex \
-    test/util/data_particl/blanktxv1.json \
-    test/util/data_particl/blanktxva0.hex \
-    test/util/data_particl/blanktxva0.json \
-    test/util/data_particl/tx14ae341f.hex \
-    test/util/data_particl/tt-delin1-out.hex \
-    test/util/data_particl/tt-delin1-out.json \
-    test/util/data_particl/tt-delout1-out.hex \
-    test/util/data_particl/tt-delout1-out.json \
-    test/util/data_particl/tt-locktime317000-out.hex \
-    test/util/data_particl/tt-locktime317000-out.json \
-    test/util/data_particl/txcreate1.hex \
-    test/util/data_particl/txcreate1.json \
-    test/util/data_particl/txcreate2.hex \
-    test/util/data_particl/txcreate2.json \
-    test/util/data_particl/txcreatesignva0.hex \
-    test/util/data_particl/txaddwitness0.hex \
-    test/util/data_particl/txdelwitness0.hex \
-    test/util/data_particl/txblindout0.hex \
-    test/util/data_particl/txoutdatatype0.hex
+    test/util/data_falcon/falcon-util-test.json \
+    test/util/data_falcon/blanktxv1.hex \
+    test/util/data_falcon/blanktxv1.json \
+    test/util/data_falcon/blanktxva0.hex \
+    test/util/data_falcon/blanktxva0.json \
+    test/util/data_falcon/tx14ae341f.hex \
+    test/util/data_falcon/tt-delin1-out.hex \
+    test/util/data_falcon/tt-delin1-out.json \
+    test/util/data_falcon/tt-delout1-out.hex \
+    test/util/data_falcon/tt-delout1-out.json \
+    test/util/data_falcon/tt-locktime317000-out.hex \
+    test/util/data_falcon/tt-locktime317000-out.json \
+    test/util/data_falcon/txcreate1.hex \
+    test/util/data_falcon/txcreate1.json \
+    test/util/data_falcon/txcreate2.hex \
+    test/util/data_falcon/txcreate2.json \
+    test/util/data_falcon/txcreatesignva0.hex \
+    test/util/data_falcon/txaddwitness0.hex \
+    test/util/data_falcon/txdelwitness0.hex \
+    test/util/data_falcon/txblindout0.hex \
+    test/util/data_falcon/txoutdatatype0.hex
 
 
 CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)

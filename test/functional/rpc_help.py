@@ -64,7 +64,7 @@ class HelpRpcTest(BitcoinTestFramework):
         # Filter all RPCs whether they need conversion
         mapping_server_conversion = [tuple(m[:3]) for m in mapping_server if not m[3]]
 
-        # Particl: Some arguments are converted internally and can be multiple types.
+        # Falcon: Some arguments are converted internally and can be multiple types.
         mapping_client += [
             ('extkeygenesisimport', 5, 'scan_chain_from'),
             ('extkeyimportmaster', 5, 'scan_chain_from'),

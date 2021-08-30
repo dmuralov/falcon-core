@@ -14,7 +14,7 @@
 
 #include <QPushButton>
 
-extern bool fParticlMode;
+extern bool fFalconMode;
 
 CreateWalletDialog::CreateWalletDialog(QWidget* parent) :
     QDialog(parent, GUIUtil::dialog_flags),
@@ -25,7 +25,7 @@ CreateWalletDialog::CreateWalletDialog(QWidget* parent) :
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     ui->wallet_name_line_edit->setFocus(Qt::ActiveWindowFocusReason);
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         ui->blank_wallet_checkbox->setChecked(true);
         ui->descriptor_checkbox->setChecked(false);
         ui->descriptor_checkbox->setEnabled(false);

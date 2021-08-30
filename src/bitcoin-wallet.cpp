@@ -41,7 +41,7 @@ static void SetupWalletToolArgs(ArgsManager& argsman)
     argsman.AddCommand("dump", "Print out all of the wallet key-value records");
     argsman.AddCommand("createfromdump", "Create new wallet file from dumped records");
 
-    // Particl
+    // Falcon
     argsman.AddCommand("generatemnemonic", "Generate a new mnemonic: <language> <bytes_entropy>");
     argsman.AddArg("-btcmode", "", ArgsManager::ALLOW_ANY, OptionsCategory::HIDDEN);
 }
@@ -55,21 +55,21 @@ static bool WalletAppInit(ArgsManager& args, int argc, char* argv[])
         return false;
     }
     if (argc < 2 || HelpRequested(args) || args.IsArgSet("-version")) {
-        std::string strUsage = strprintf("%s particl-wallet version", PACKAGE_NAME) + " " + FormatFullVersion() + "\n";
+        std::string strUsage = strprintf("%s falcon-wallet version", PACKAGE_NAME) + " " + FormatFullVersion() + "\n";
         if (!args.IsArgSet("-version")) {
             strUsage += "\n"
-                        "particl-wallet is an offline tool for creating and interacting with " PACKAGE_NAME " wallet files.\n"
-                        "By default particl-wallet will act on wallets in the default mainnet wallet directory in the datadir.\n"
+                        "falcon-wallet is an offline tool for creating and interacting with " PACKAGE_NAME " wallet files.\n"
+                        "By default falcon-wallet will act on wallets in the default mainnet wallet directory in the datadir.\n"
                         "To change the target wallet, use the -datadir, -wallet and -testnet/-regtest arguments.\n\n"
                         "Usage:\n"
-                        "  particl-wallet [options] <command>\n";
+                        "  falcon-wallet [options] <command>\n";
             strUsage += "\n" + args.GetHelpMessage();
         }
         tfm::format(std::cout, "%s", strUsage);
         return false;
     }
 
-    fParticlMode = !gArgs.GetBoolArg("-btcmode", false); // qa tests
+    fFalconMode = !gArgs.GetBoolArg("-btcmode", false); // qa tests
 
     // check for printtoconsole, allow -debug
     LogInstance().m_print_to_console = args.GetBoolArg("-printtoconsole", args.GetBoolArg("-debug", false));
@@ -80,10 +80,10 @@ static bool WalletAppInit(ArgsManager& args, int argc, char* argv[])
     }
     // Check for chain settings (Params() calls are only valid after this clause)
     SelectParams(args.GetChainName());
-    if (!fParticlMode) {
+    if (!fFalconMode) {
         WITNESS_SCALE_FACTOR = WITNESS_SCALE_FACTOR_BTC;
         if (args.GetChainName() == CBaseChainParams::REGTEST) {
-            ResetParams(CBaseChainParams::REGTEST, fParticlMode);
+            ResetParams(CBaseChainParams::REGTEST, fFalconMode);
         }
     }
 
@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 
     const auto command = args.GetCommand();
     if (!command) {
-        tfm::format(std::cerr, "No method provided. Run `particl-wallet -help` for valid methods.\n");
+        tfm::format(std::cerr, "No method provided. Run `falcon-wallet -help` for valid methods.\n");
         return EXIT_FAILURE;
     }
     if (command->args.size() != 0) {

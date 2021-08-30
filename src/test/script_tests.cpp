@@ -20,7 +20,7 @@
 #include <util/system.h>
 
 #if defined(HAVE_CONSENSUS_LIB)
-#include <script/particlconsensus.h>
+#include <script/falconconsensus.h>
 #endif
 
 #include <key/extkey.h>

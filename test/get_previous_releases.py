@@ -59,20 +59,20 @@ SHA256_SUMS = {
     "c378d4e21109f09e8829f3591e015c66632dff2925a60b64d259be05a334c30b": "bitcoin-0.20.1-osx.dmg",
     "fa71cb52ee5e0459cbf5248cdec72df27995840c796f58b304607a1ed4c165af": "bitcoin-0.20.1-riscv64-linux-gnu.tar.gz",
     "376194f06596ecfa40331167c39bc70c355f960280bd2a645fdbf18f66527397": "bitcoin-0.20.1-x86_64-linux-gnu.tar.gz",
-    # Particl
-    "fc649cb46d9f4ea4919bb87be8b685474f95f89ae82996dd1e36f2089b69f90d": "particl-0.18.1.7-aarch64-linux-gnu.tar.gz",
-    "779e57c7e4d680736f972de07276a1037de6c2aa8a2c95c8087c43c56927dc60": "particl-0.18.1.7-arm-linux-gnueabihf.tar.gz",
-    "d5a2ac8dac2b3d262a1684c21b444890837ad51f2b93e2372f54fc51d7fccbcd": "particl-0.18.1.7-i686-pc-linux-gnu.tar.gz",
-    "f85b7ee98dab3fbccc7a2de0d560c6861df05d7fbb11664f1da1a5f24d4dc58a": "particl-0.18.1.7-riscv64-linux-gnu.tar.gz",
-    "e758db39812dd2edf2c4aec215dfce4802c37e3a881d81233d24afff9d61af32": "particl-0.18.1.7-x86_64-linux-gnu.tar.gz",
-    "44c9f60a1f5fc8377cc1cef278a99b401a67ef0ff64429ce1aa21ca71bf73c04": "particl-0.18.1.7-osx64.tar.gz",
+    # Falcon
+    "fc649cb46d9f4ea4919bb87be8b685474f95f89ae82996dd1e36f2089b69f90d": "falcon-0.18.1.7-aarch64-linux-gnu.tar.gz",
+    "779e57c7e4d680736f972de07276a1037de6c2aa8a2c95c8087c43c56927dc60": "falcon-0.18.1.7-arm-linux-gnueabihf.tar.gz",
+    "d5a2ac8dac2b3d262a1684c21b444890837ad51f2b93e2372f54fc51d7fccbcd": "falcon-0.18.1.7-i686-pc-linux-gnu.tar.gz",
+    "f85b7ee98dab3fbccc7a2de0d560c6861df05d7fbb11664f1da1a5f24d4dc58a": "falcon-0.18.1.7-riscv64-linux-gnu.tar.gz",
+    "e758db39812dd2edf2c4aec215dfce4802c37e3a881d81233d24afff9d61af32": "falcon-0.18.1.7-x86_64-linux-gnu.tar.gz",
+    "44c9f60a1f5fc8377cc1cef278a99b401a67ef0ff64429ce1aa21ca71bf73c04": "falcon-0.18.1.7-osx64.tar.gz",
 
-    "98edac817ed8a252e14880c211a880f3940b64189f4bd540c9e7c8cfa5ec7303": "particl-0.19.2.3-aarch64-linux-gnu.tar.gz",
-    "8e56b57337a547f55c1dbfda593838a8ad2d970983b24ff6a102245e7a2904c8": "particl-0.19.2.3-arm-linux-gnueabihf.tar.gz",
-    "6df1c267d78e9945fc1417523e0c8d77eab4aaac56890f43b5a6a4f0c7bbda97": "particl-0.19.2.3-i686-pc-linux-gnu.tar.gz",
-    "d8e23caf38c3e7b4916823e332ae2040d8255289531c860c049ecbdbf9ff7dd0": "particl-0.19.2.3-riscv64-linux-gnu.tar.gz",
-    "116d960d61bbb52dcb0bb498a742c028d900e89394169be0777586bf268d01a6": "particl-0.19.2.3-x86_64-linux-gnu.tar.gz",
-    "12506300ad8aeda8be2b9195f50163abde6c219a4f478e81f6dccbe722147a68": "particl-0.19.2.3-osx64.tar.gz",
+    "98edac817ed8a252e14880c211a880f3940b64189f4bd540c9e7c8cfa5ec7303": "falcon-0.19.2.3-aarch64-linux-gnu.tar.gz",
+    "8e56b57337a547f55c1dbfda593838a8ad2d970983b24ff6a102245e7a2904c8": "falcon-0.19.2.3-arm-linux-gnueabihf.tar.gz",
+    "6df1c267d78e9945fc1417523e0c8d77eab4aaac56890f43b5a6a4f0c7bbda97": "falcon-0.19.2.3-i686-pc-linux-gnu.tar.gz",
+    "d8e23caf38c3e7b4916823e332ae2040d8255289531c860c049ecbdbf9ff7dd0": "falcon-0.19.2.3-riscv64-linux-gnu.tar.gz",
+    "116d960d61bbb52dcb0bb498a742c028d900e89394169be0777586bf268d01a6": "falcon-0.19.2.3-x86_64-linux-gnu.tar.gz",
+    "12506300ad8aeda8be2b9195f50163abde6c219a4f478e81f6dccbe722147a68": "falcon-0.19.2.3-osx64.tar.gz",
 }
 
 
@@ -93,16 +93,16 @@ def download_binary(tag, args) -> int:
             return 0
         shutil.rmtree(tag)
     Path(tag).mkdir()
-    bin_path = 'bin/particl-core-{}'.format(tag[1:])
+    bin_path = 'bin/falcon-core-{}'.format(tag[1:])
     match = re.compile('v(.*)(rc[0-9]+)$').search(tag)
     if match:
-        bin_path = 'bin/particl-core-{}/test.{}'.format(
+        bin_path = 'bin/falcon-core-{}/test.{}'.format(
             match.group(1), match.group(2))
-    tarball = 'particl-{tag}-{platform}.tar.gz'.format(
+    tarball = 'falcon-{tag}-{platform}.tar.gz'.format(
         tag=tag[1:], platform=args.platform)
     #tarballUrl = 'https://bitcoincore.org/{bin_path}/{tarball}'.format(
     #    bin_path=bin_path, tarball=tarball)
-    tarballUrl = 'https://github.com/particl/particl-core/releases/download/v{tag}/{tarball}'.format(
+    tarballUrl = 'https://github.com/falcon/falcon-core/releases/download/v{tag}/{tarball}'.format(
          tag=tag[1:], tarball=tarball)
 
     print('Fetching: {tarballUrl}'.format(tarballUrl=tarballUrl))
@@ -139,7 +139,7 @@ def download_binary(tag, args) -> int:
     # Extract tarball
     ret = subprocess.run(['tar', '-zxf', tarball, '-C', tag,
                           '--strip-components=1',
-                          'particl-{tag}'.format(tag=tag[1:])]).returncode
+                          'falcon-{tag}'.format(tag=tag[1:])]).returncode
     if ret:
         return ret
 
@@ -148,7 +148,7 @@ def download_binary(tag, args) -> int:
 
 
 def build_release(tag, args) -> int:
-    githubUrl = "https://github.com/particl/particl-core"
+    githubUrl = "https://github.com/falcon/falcon-core"
     if args.remove_dir:
         if Path(tag).is_dir():
             shutil.rmtree(tag)
@@ -192,7 +192,7 @@ def build_release(tag, args) -> int:
         # Move binaries, so they're in the same place as in the
         # release download
         Path('bin').mkdir(exist_ok=True)
-        files = ['particld', 'particl-cli', 'particl-tx']
+        files = ['falcond', 'falcon-cli', 'falcon-tx']
         for f in files:
             Path('src/'+f).rename('bin/'+f)
     return 0

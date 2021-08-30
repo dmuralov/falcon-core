@@ -1,22 +1,22 @@
-Particl Core integration/staging tree
+Falcon Core integration/staging tree
 =====================================
 
-https://particl.io
+https://falcon.io
 
-What is Particl?
+What is Falcon?
 ----------------
 
-Particl is a decentralized, open source privacy platform for trading goods and services without intermediaries. The ecosystem currently includes the digital currency PART and the Particl Marketplace application.
+Falcon is a decentralized, open source privacy platform for trading goods and services without intermediaries. The ecosystem currently includes the digital currency PART and the Falcon Marketplace application.
 
-PART is the cryptocurrency of the Particl blockchain. It is an independent usable secure and confidential digital currency specifically designed to power a marketplace and acts as its settlement layer. It uses several security, encryption, and privacy protocols to make sure no personal information and data can be collected when transacting on the marketplace.
+PART is the cryptocurrency of the Falcon blockchain. It is an independent usable secure and confidential digital currency specifically designed to power a marketplace and acts as its settlement layer. It uses several security, encryption, and privacy protocols to make sure no personal information and data can be collected when transacting on the marketplace.
 
 |Properties|Values|
 |:-------------------------|:-----------------------------------------|
-|Native blockchain|Particl|
+|Native blockchain|Falcon|
 |Blockchain codebase|Bitcoin (latest)|
 |Block Time|120 seconds|
 |Block Size|2 MB|
-|Consensus Mechanism|Particl Proof-of-Stake (PPoS)|
+|Consensus Mechanism|Falcon Proof-of-Stake (PPoS)|
 |Privacy Protocols|Confidential Transactions (CT) and RingCT|
 |Bulletproofs|:white_check_mark: yes|
 |Stealth Addresses|:white_check_mark: yes|
@@ -26,12 +26,12 @@ PART is the cryptocurrency of the Particl blockchain. It is an independent usabl
 |Lightning Network|:white_check_mark: yes|
 |Atomic Swaps|:white_check_mark: yes|
 
-For more information please visit https://particl.io and https://particl.wiki. The Particl Desktop application is available in this repository https://github.com/particl/particl-desktop.
+For more information please visit https://falcon.io and https://falcon.wiki. The Falcon Desktop application is available in this repository https://github.com/falcon/falcon-desktop.
 
 Getting Started
 ---------------
 
-A new Particl wallet will need an HD master key loaded and an initial account
+A new Falcon wallet will need an HD master key loaded and an initial account
 derived before it will be functional.
 
 The GUI programs will guide you through the initial setup.
@@ -42,22 +42,22 @@ Loading the new mnemonic with the extkeyimportmaster command will setup the
 master HD key and first account.
 
 To create an initial new HD master key and account from random data, start
-particld or particl-qt with the parameter: -createdefaultmasterkey.
+falcond or falcon-qt with the parameter: -createdefaultmasterkey.
 
 Remember to backup your passphrase and/or wallet.dat file!
 
 License
 -------
 
-Particl Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
+Falcon Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
 information or see https://opensource.org/licenses/MIT.
 
 Development Process
 -------------------
 
 The `master` branch is regularly built (see `doc/build-*.md` for instructions) and tested, but it is not guaranteed to be
-completely stable. [Tags](https://github.com/particl/particl-core/tags) are created
-regularly from release branches to indicate new official, stable release versions of Particl Core.
+completely stable. [Tags](https://github.com/falcon/falcon-core/tags) are created
+regularly from release branches to indicate new official, stable release versions of Falcon Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md)
 and useful hints for developers can be found in [doc/developer-notes.md](doc/developer-notes.md).

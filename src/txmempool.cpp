@@ -480,7 +480,7 @@ void CTxMemPool::addAddressIndex(const CTxMemPoolEntry &entry, const CCoinsViewC
     LOCK(cs);
     const CTransaction& tx = entry.GetTx();
 
-    if (!tx.IsParticlVersion())
+    if (!tx.IsFalconVersion())
         return;
 
     std::vector<CMempoolAddressDeltaKey> inserted;
@@ -579,7 +579,7 @@ void CTxMemPool::addSpentIndex(const CTxMemPoolEntry &entry, const CCoinsViewCac
 
     const CTransaction& tx = entry.GetTx();
 
-    if (!tx.IsParticlVersion())
+    if (!tx.IsFalconVersion())
         return;
 
     std::vector<CSpentIndexKey> inserted;
@@ -894,7 +894,7 @@ void CTxMemPool::clear()
 static void CheckInputsAndUpdateCoins(const CTransaction& tx, CCoinsViewCache& mempoolDuplicate, const int64_t spendheight)
 {
     TxValidationState dummy_state; // Not used. CheckTxInputs() should always pass
-    dummy_state.SetStateInfo(GetTime(), spendheight, Params().GetConsensus(), fParticlMode, false);
+    dummy_state.SetStateInfo(GetTime(), spendheight, Params().GetConsensus(), fFalconMode, false);
     CAmount txfee = 0;
     bool fCheckResult = tx.IsCoinBase() || Consensus::CheckTxInputs(tx, dummy_state, mempoolDuplicate, spendheight, txfee);
     //assert(fCheckResult)
@@ -942,7 +942,7 @@ void CTxMemPool::check(CChainState& active_chainstate) const
             if (it2 != mapTx.end()) {
                 const CTransaction& tx2 = it2->GetTx();
 
-                if (fParticlMode)
+                if (fFalconMode)
                     assert(tx2.vpout.size() > txin.prevout.n && tx2.vpout[txin.prevout.n] != nullptr
                         && (tx2.vpout[txin.prevout.n]->IsStandardOutput() || tx2.vpout[txin.prevout.n]->IsType(OUTPUT_CT)));
                 else
@@ -1245,7 +1245,7 @@ bool CCoinsViewMemPool::GetCoin(const COutPoint &outpoint, Coin &coin) const {
     CTransactionRef ptx = mempool.get(outpoint.hash);
     if (ptx) {
 
-        if (ptx->IsParticlVersion())
+        if (ptx->IsFalconVersion())
         {
             if (outpoint.n < ptx->vpout.size())
             {

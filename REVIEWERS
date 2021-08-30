@@ -1,8 +1,8 @@
 # ==============================================================================
-#                          Particl Core CODEOWNERS
+#                          Falcon Core CODEOWNERS
 # ==============================================================================
 
-# Configuration of code ownership and review approvals for the particl/particl-core
+# Configuration of code ownership and review approvals for the falcon/falcon-core
 # repo.
 
 # Order is not important; if a modified file or directory matches a fnmatch,

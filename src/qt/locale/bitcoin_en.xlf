@@ -99,12 +99,12 @@
         <context-group purpose="location"><context context-type="linenumber">97</context></context-group>
       </trans-unit>
       <trans-unit id="_msg19">
-        <source xml:space="preserve">These are your Particl addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source xml:space="preserve">These are your Falcon addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">104</context></context-group>
       </trans-unit>
       <trans-unit id="_msg20">
-        <source xml:space="preserve">These are your Particl addresses for receiving payments. Use the &apos;Create new receiving address&apos; button in the receive tab to create new addresses.
+        <source xml:space="preserve">These are your Falcon addresses for receiving payments. Use the &apos;Create new receiving address&apos; button in the receive tab to create new addresses.
 Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">109</context></context-group>
@@ -241,12 +241,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">126</context></context-group>
       </trans-unit>
       <trans-unit id="_msg44">
-        <source xml:space="preserve">Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PARTICL&lt;/b&gt;!</source>
+        <source xml:space="preserve">Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR FALCON&lt;/b&gt;!</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">126</context></context-group>
       </trans-unit>
       <trans-unit id="_msg45">
-        <source xml:space="preserve">Remember that encrypting your wallet cannot fully protect your particl from being stolen by malware infecting your computer.</source>
+        <source xml:space="preserve">Remember that encrypting your wallet cannot fully protect your falcon from being stolen by malware infecting your computer.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">133</context></context-group>
       </trans-unit>
@@ -408,12 +408,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">255</context></context-group>
       </trans-unit>
       <trans-unit id="_msg73">
-        <source xml:space="preserve">Send coins to a Particl address</source>
+        <source xml:space="preserve">Send coins to a Falcon address</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">262</context></context-group>
       </trans-unit>
       <trans-unit id="_msg74">
-        <source xml:space="preserve">Request payments (generates QR codes and particl: URIs)</source>
+        <source xml:space="preserve">Request payments (generates QR codes and falcon: URIs)</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">273</context></context-group>
       </trans-unit>
@@ -463,27 +463,27 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">319</context></context-group>
       </trans-unit>
       <trans-unit id="_msg84">
-        <source xml:space="preserve">Sign messages with your Particl addresses to prove you own them</source>
+        <source xml:space="preserve">Sign messages with your Falcon addresses to prove you own them</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">333</context></context-group>
       </trans-unit>
       <trans-unit id="_msg85">
-        <source xml:space="preserve">Verify messages to ensure they were signed with specified Particl addresses</source>
+        <source xml:space="preserve">Verify messages to ensure they were signed with specified Falcon addresses</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">335</context></context-group>
       </trans-unit>
       <trans-unit id="_msg86">
-        <source xml:space="preserve">Load Partially Signed Particl Transaction</source>
+        <source xml:space="preserve">Load Partially Signed Falcon Transaction</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">337</context></context-group>
       </trans-unit>
       <trans-unit id="_msg87">
-        <source xml:space="preserve">Load Partially Signed Particl Transaction from clipboard</source>
+        <source xml:space="preserve">Load Partially Signed Falcon Transaction from clipboard</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">339</context></context-group>
       </trans-unit>
       <trans-unit id="_msg88">
-        <source xml:space="preserve">Open a particl: URI</source>
+        <source xml:space="preserve">Open a falcon: URI</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">353</context></context-group>
       </trans-unit>
@@ -493,7 +493,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">365</context></context-group>
       </trans-unit>
       <trans-unit id="_msg90">
-        <source xml:space="preserve">Show the %1 help message to get a list with possible Particl command-line options</source>
+        <source xml:space="preserve">Show the %1 help message to get a list with possible Falcon command-line options</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">372</context></context-group>
       </trans-unit>
@@ -516,11 +516,11 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">1002</context></context-group>
         <note annotates="source" from="developer">A substring of the tooltip.</note>
         <trans-unit id="_msg94[0]">
-          <source xml:space="preserve">%n active connection(s) to Particl network.</source>
+          <source xml:space="preserve">%n active connection(s) to Falcon network.</source>
           <target xml:space="preserve"></target>
         </trans-unit>
         <trans-unit id="_msg94[1]">
-          <source xml:space="preserve">%n active connection(s) to Particl network.</source>
+          <source xml:space="preserve">%n active connection(s) to Falcon network.</source>
           <target xml:space="preserve"></target>
         </trans-unit>
       </group>
@@ -1477,7 +1477,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">40</context></context-group>
       </trans-unit>
       <trans-unit id="_msg274">
-        <source xml:space="preserve">The entered address &quot;%1&quot; is not a valid Particl address.</source>
+        <source xml:space="preserve">The entered address &quot;%1&quot; is not a valid Falcon address.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">138</context></context-group>
       </trans-unit>
@@ -1555,7 +1555,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         </trans-unit>
       </group>
       <trans-unit id="_msg287">
-        <source xml:space="preserve">%1 will download and store a copy of the Particl block chain.</source>
+        <source xml:space="preserve">%1 will download and store a copy of the Falcon block chain.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">392</context></context-group>
       </trans-unit>
@@ -1570,7 +1570,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">250</context></context-group>
       </trans-unit>
       <trans-unit id="_msg290">
-        <source xml:space="preserve">Particl</source>
+        <source xml:space="preserve">Falcon</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">139</context></context-group>
       </trans-unit>
@@ -1824,7 +1824,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">407</context></context-group>
       </trans-unit>
       <trans-unit id="_msg337">
-        <source xml:space="preserve">Open particl app before importing, confirm on device if prompted and wait for chain rescan to complete.</source>
+        <source xml:space="preserve">Open falcon app before importing, confirm on device if prompted and wait for chain rescan to complete.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">414</context></context-group>
       </trans-unit>
@@ -1885,7 +1885,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">235</context></context-group>
       </trans-unit>
       <trans-unit id="_msg347">
-        <source xml:space="preserve">Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the particl network, as detailed below.</source>
+        <source xml:space="preserve">Recent transactions may not yet be visible, and therefore your wallet&apos;s balance might be incorrect. This information will be correct once your wallet has finished synchronizing with the falcon network, as detailed below.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">133</context></context-group>
       </trans-unit>
@@ -2014,12 +2014,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">245</context></context-group>
       </trans-unit>
       <trans-unit id="_msg370">
-        <source xml:space="preserve">Automatically open the Particl client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <source xml:space="preserve">Automatically open the Falcon client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">305</context></context-group>
       </trans-unit>
       <trans-unit id="_msg371">
-        <source xml:space="preserve">Connect to the Particl network through a SOCKS5 proxy.</source>
+        <source xml:space="preserve">Connect to the Falcon network through a SOCKS5 proxy.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">335</context></context-group>
       </trans-unit>
@@ -2037,7 +2037,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">487</context></context-group>
       </trans-unit>
       <trans-unit id="_msg374">
-        <source xml:space="preserve">Connect to the Particl network through a separate SOCKS5 proxy for Tor onion services.</source>
+        <source xml:space="preserve">Connect to the Falcon network through a separate SOCKS5 proxy for Tor onion services.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">522</context></context-group>
       </trans-unit>
@@ -2437,7 +2437,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">60</context></context-group>
       </trans-unit>
       <trans-unit id="_msg451">
-        <source xml:space="preserve">The displayed information may be out of date. Your wallet automatically synchronizes with the Particl network after a connection is established, but this process has not completed yet.</source>
+        <source xml:space="preserve">The displayed information may be out of date. Your wallet automatically synchronizes with the Falcon network after a connection is established, but this process has not completed yet.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">76</context></context-group>
         <context-group purpose="location"><context context-type="linenumber">558</context></context-group>
@@ -2700,17 +2700,17 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <context-group purpose="location"><context context-type="linenumber">173</context></context-group>
       </trans-unit>
       <trans-unit id="_msg500">
-        <source xml:space="preserve">Cannot start particl: click-to-pay handler</source>
+        <source xml:space="preserve">Cannot start falcon: click-to-pay handler</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">174</context></context-group>
       </trans-unit>
       <trans-unit id="_msg501">
-        <source xml:space="preserve">&apos;particl://&apos; is not a valid URI. Use &apos;particl:&apos; instead.</source>
+        <source xml:space="preserve">&apos;falcon://&apos; is not a valid URI. Use &apos;falcon:&apos; instead.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">224</context></context-group>
       </trans-unit>
       <trans-unit id="_msg502">
-        <source xml:space="preserve">URI cannot be parsed! This can be caused by an invalid Particl address or malformed URI parameters.</source>
+        <source xml:space="preserve">URI cannot be parsed! This can be caused by an invalid Falcon address or malformed URI parameters.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">254</context></context-group>
       </trans-unit>
@@ -2801,7 +2801,7 @@ If you are receiving this error you should request the merchant provide a BIP21 
   <file original="../guiutil.cpp" datatype="cpp" source-language="en" target-language="en"><body>
     <group restype="x-trolltech-linguist-context" resname="QObject">
       <trans-unit id="_msg515">
-        <source xml:space="preserve">Enter a Particl address (e.g. %1)</source>
+        <source xml:space="preserve">Enter a Falcon address (e.g. %1)</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">120</context></context-group>
       </trans-unit>
@@ -3612,7 +3612,7 @@ For more information on using this console, type %6.
         <context-group purpose="location"><context context-type="linenumber">227</context></context-group>
       </trans-unit>
       <trans-unit id="_msg655">
-        <source xml:space="preserve">An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Particl network.</source>
+        <source xml:space="preserve">An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Falcon network.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">66</context></context-group>
       </trans-unit>
@@ -3976,7 +3976,7 @@ For more information on using this console, type %6.
         <context-group purpose="location"><context context-type="linenumber">892</context></context-group>
       </trans-unit>
       <trans-unit id="_msg723">
-        <source xml:space="preserve">When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for particl transactions than the network can process.</source>
+        <source xml:space="preserve">When there is less transaction volume than space in the blocks, miners as well as relaying nodes may enforce a minimum fee. Paying only this minimum fee is just fine, but be aware that this can result in a never confirming transaction once there is more demand for falcon transactions than the network can process.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">975</context></context-group>
       </trans-unit>
@@ -4224,7 +4224,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">564</context></context-group>
       </trans-unit>
       <trans-unit id="_msg771">
-        <source xml:space="preserve">Warning: Invalid Particl address</source>
+        <source xml:space="preserve">Warning: Invalid Falcon address</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">1227</context></context-group>
       </trans-unit>
@@ -4367,7 +4367,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">408</context></context-group>
       </trans-unit>
       <trans-unit id="_msg797">
-        <source xml:space="preserve">The Particl address to send the payment to</source>
+        <source xml:space="preserve">The Falcon address to send the payment to</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">83</context></context-group>
       </trans-unit>
@@ -4418,7 +4418,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">183</context></context-group>
       </trans-unit>
       <trans-unit id="_msg805">
-        <source xml:space="preserve">The fee will be deducted from the amount being sent. The recipient will receive less particl than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <source xml:space="preserve">The fee will be deducted from the amount being sent. The recipient will receive less falcon than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">190</context></context-group>
         <context-group purpose="location"><context context-type="linenumber">273</context></context-group>
@@ -4435,7 +4435,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">283</context></context-group>
       </trans-unit>
       <trans-unit id="_msg808">
-        <source xml:space="preserve">A short message sent over the Particl network, encrypted if sending to a stealth address or in a blind or anon transaction.</source>
+        <source xml:space="preserve">A short message sent over the Falcon network, encrypted if sending to a stealth address or in a blind or anon transaction.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">209</context></context-group>
         <context-group purpose="location"><context context-type="linenumber">305</context></context-group>
@@ -4446,7 +4446,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">219</context></context-group>
       </trans-unit>
       <trans-unit id="_msg810">
-        <source xml:space="preserve">A message that was attached to the particl: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Particl network.</source>
+        <source xml:space="preserve">A message that was attached to the falcon: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Falcon network.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">229</context></context-group>
       </trans-unit>
@@ -4466,7 +4466,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">292</context></context-group>
       </trans-unit>
       <trans-unit id="_msg814">
-        <source xml:space="preserve">The Particl address that will be able to spend the output (must be 256bit)</source>
+        <source xml:space="preserve">The Falcon address that will be able to spend the output (must be 256bit)</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">320</context></context-group>
       </trans-unit>
@@ -4481,7 +4481,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">395</context></context-group>
       </trans-unit>
       <trans-unit id="_msg817">
-        <source xml:space="preserve">The Particl address that will be able to stake the output</source>
+        <source xml:space="preserve">The Falcon address that will be able to stake the output</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">426</context></context-group>
       </trans-unit>
@@ -4528,12 +4528,12 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">27</context></context-group>
       </trans-unit>
       <trans-unit id="_msg825">
-        <source xml:space="preserve">You can sign messages/agreements with your addresses to prove you can receive particl sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <source xml:space="preserve">You can sign messages/agreements with your addresses to prove you can receive falcon sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">33</context></context-group>
       </trans-unit>
       <trans-unit id="_msg826">
-        <source xml:space="preserve">The Particl address to sign the message with</source>
+        <source xml:space="preserve">The Falcon address to sign the message with</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">51</context></context-group>
       </trans-unit>
@@ -4576,17 +4576,17 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <context-group purpose="location"><context context-type="linenumber">140</context></context-group>
       </trans-unit>
       <trans-unit id="_msg834">
-        <source xml:space="preserve">Sign the message to prove you own this Particl address</source>
+        <source xml:space="preserve">Sign the message to prove you own this Falcon address</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">161</context></context-group>
       </trans-unit>
       <trans-unit id="_msg835">
-        <source xml:space="preserve">The Particl address the message was signed with</source>
+        <source xml:space="preserve">The Falcon address the message was signed with</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">267</context></context-group>
       </trans-unit>
       <trans-unit id="_msg836">
-        <source xml:space="preserve">Verify the message to ensure it was signed with the specified Particl address</source>
+        <source xml:space="preserve">Verify the message to ensure it was signed with the specified Falcon address</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">318</context></context-group>
       </trans-unit>
@@ -5815,7 +5815,7 @@ Go to File &gt; Open Wallet to load a wallet.
         <context-group purpose="location"><context context-type="linenumber">147</context></context-group>
       </trans-unit>
       <trans-unit id="_msg1062">
-        <source xml:space="preserve">Error: Dumpfile version is not supported. This version of particl-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
+        <source xml:space="preserve">Error: Dumpfile version is not supported. This version of falcon-wallet only supports version 1 dumpfiles. Got dumpfile with version %s</source>
         <target xml:space="preserve"></target>
         <context-group purpose="location"><context context-type="linenumber">41</context></context-group>
       </trans-unit>

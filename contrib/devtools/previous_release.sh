@@ -98,7 +98,7 @@ pushd "$TARGET" || exit 1
           exit 1
         fi
 
-        git clone https://github.com/particl/particl-core "$tag"
+        git clone https://github.com/falcon/falcon-core "$tag"
         pushd "$tag" || exit 1
         {
           git checkout "$tag"
@@ -120,9 +120,9 @@ pushd "$TARGET" || exit 1
           make
           # Move binaries, so they're in the same place as in the release download:
           mkdir bin
-          mv src/particld src/particl-cli src/particl-tx bin
+          mv src/falcond src/falcon-cli src/falcon-tx bin
           if [ "$FUNCTIONAL_TESTS" -eq "0" ]; then
-            mv src/qt/particl-qt bin
+            mv src/qt/falcon-qt bin
           fi
         }
         popd || exit 1
@@ -137,14 +137,14 @@ pushd "$TARGET" || exit 1
         #else
         #    BIN_PATH="bin/bitcoin-core-${tag:1}"
         #fi
-        URL="https://github.com/particl/particl-core/releases/download/${tag}/particl-${tag:1}-$PLATFORM.tar.gz"
+        URL="https://github.com/falcon/falcon-core/releases/download/${tag}/falcon-${tag:1}-$PLATFORM.tar.gz"
         echo "Fetching: $URL"
         if ! curl -O -f $URL; then
             echo "Download failed."
             exit 1
         fi
-        tar -zxf "particl-${tag:1}-$PLATFORM.tar.gz" -C "$tag" --strip-components=1 "particl-${tag:1}"
-        rm "particl-${tag:1}-$PLATFORM.tar.gz"
+        tar -zxf "falcon-${tag:1}-$PLATFORM.tar.gz" -C "$tag" --strip-components=1 "falcon-${tag:1}"
+        rm "falcon-${tag:1}-$PLATFORM.tar.gz"
       fi
     fi
   done

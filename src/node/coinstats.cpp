@@ -25,7 +25,7 @@ uint64_t GetBogoSize(const CScript& script_pub_key)
            8 /* amount */ +
            2 /* scriptPubKey len */ +
            script_pub_key.size() /* scriptPubKey */ +
-           (fParticlMode ? 1 /* nType */ + 64 /* commitment */ : 0);
+           (fFalconMode ? 1 /* nType */ + 64 /* commitment */ : 0);
 }
 
 CDataStream TxOutSer(const COutPoint& outpoint, const Coin& coin) {

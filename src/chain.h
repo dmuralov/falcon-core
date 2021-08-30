@@ -402,7 +402,7 @@ public:
         READWRITE(obj.nVersion);
         READWRITE(obj.hashPrev);
         READWRITE(obj.hashMerkleRoot);
-        if (obj.nVersion == PARTICL_BLOCK_VERSION) {
+        if (obj.nVersion == FALCON_BLOCK_VERSION) {
             READWRITE(obj.hashWitnessMerkleRoot);
         }
         READWRITE(obj.nTime);

@@ -266,7 +266,7 @@ static RPCHelpMan getrawtransaction()
                                          {RPCResult::Type::STR, "address", /* optional */ true, "bitcoin address (only if a well-defined address exists)"},
                                          {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of bitcoin addresses",
                                          {
-                                             {RPCResult::Type::STR, "address", "particl address"},
+                                             {RPCResult::Type::STR, "address", "falcon address"},
                                          }},
                                      }},
                                  }},
@@ -294,7 +294,7 @@ static RPCHelpMan getrawtransaction()
     uint256 hash = ParseHashV(request.params[0], "parameter 1");
     CBlockIndex* blockindex = nullptr;
 
-    if (!fParticlMode && hash == Params().GenesisBlock().hashMerkleRoot) {
+    if (!fFalconMode && hash == Params().GenesisBlock().hashMerkleRoot) {
         // Special exception for the genesis block coinbase transaction
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "The genesis block coinbase is not considered an ordinary transaction and cannot be retrieved");
     }
@@ -370,7 +370,7 @@ static RPCHelpMan getrawtransaction()
     if (blockindex) result.pushKV("in_active_chain", in_active_chain);
     result.pushKV("hex", strHex);
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         TxToJSONExpanded(chainman, *tx, hash_block, node.mempool.get(), result, nHeight, nConfirmations, nBlockTime);
     } else {
         TxToJSON(*tx, hash_block, result, chainman.ActiveChainstate());
@@ -556,7 +556,7 @@ static RPCHelpMan createrawtransaction()
                         {
                             {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                                 {
-                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the particl address, the value (float or string) is the amount in " + CURRENCY_UNIT},
+                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the falcon address, the value (float or string) is the amount in " + CURRENCY_UNIT},
                                 },
                                 },
                             {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
@@ -657,7 +657,7 @@ static RPCHelpMan decoderawtransaction()
                                     {RPCResult::Type::STR, "address", /* optional */ true, "bitcoin address (only if a well-defined address exists)"},
                                     {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of bitcoin addresses",
                                     {
-                                        {RPCResult::Type::STR, "address", "particl address"},
+                                        {RPCResult::Type::STR, "address", "falcon address"},
                                     }},
                                 }},
                             }},
@@ -716,7 +716,7 @@ static RPCHelpMan decodescript()
                         {RPCResult::Type::NUM, "reqSigs", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Number of required signatures"},
                         {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of bitcoin addresses",
                         {
-                            {RPCResult::Type::STR, "address", "particl address"},
+                            {RPCResult::Type::STR, "address", "falcon address"},
                         }},
                         {RPCResult::Type::STR, "p2sh", "address of P2SH script wrapping this redeem script (not returned if the script is already a P2SH)"},
                         {RPCResult::Type::OBJ, "segwit", "Result of a witness script public key wrapping this redeem script (not returned if the script is a P2SH or witness)",
@@ -1027,7 +1027,7 @@ static RPCHelpMan sendrawtransaction()
     CTransactionRef tx(MakeTransactionRef(std::move(mtx)));
 
     const CFeeRate max_raw_tx_fee_rate = request.params[1].isNull() ?
-                                             fParticlMode ? DEFAULT_MAX_RAW_TX_FEE_RATE : DEFAULT_MAX_RAW_TX_FEE_RATE_BTC :
+                                             fFalconMode ? DEFAULT_MAX_RAW_TX_FEE_RATE : DEFAULT_MAX_RAW_TX_FEE_RATE_BTC :
                                              CFeeRate(AmountFromValue(request.params[1]));
 
     int64_t virtual_size = GetVirtualTransactionSize(*tx);
@@ -1110,7 +1110,7 @@ static RPCHelpMan testmempoolaccept()
     }
 
     const CFeeRate max_raw_tx_fee_rate = request.params[1].isNull() ?
-                                             fParticlMode ? DEFAULT_MAX_RAW_TX_FEE_RATE : DEFAULT_MAX_RAW_TX_FEE_RATE_BTC :
+                                             fFalconMode ? DEFAULT_MAX_RAW_TX_FEE_RATE : DEFAULT_MAX_RAW_TX_FEE_RATE_BTC :
                                              CFeeRate(AmountFromValue(request.params[1]));
 
     bool ignore_locks = !request.params[2].isNull() ? request.params[2].get_bool() : false;
@@ -1634,7 +1634,7 @@ static RPCHelpMan createpsbt()
                         {
                             {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                                 {
-                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the particl address, the value (float or string) is the amount in " + CURRENCY_UNIT},
+                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the falcon address, the value (float or string) is the amount in " + CURRENCY_UNIT},
                                 },
                                 },
                             {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",

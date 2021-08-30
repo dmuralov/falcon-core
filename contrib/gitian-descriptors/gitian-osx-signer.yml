@@ -1,5 +1,5 @@
 ---
-name: "particl-dmg-signer"
+name: "falcon-dmg-signer"
 distro: "ubuntu"
 suites:
 - "focal"
@@ -10,13 +10,13 @@ packages:
 - "xorriso"
 - "python3-pip"
 remotes:
-- "url": "https://github.com/particl/particl-detached-sigs.git"
+- "url": "https://github.com/falcon/falcon-detached-sigs.git"
   "dir": "signature"
 - "url": "https://github.com/achow101/signapple.git"
   "dir": "signapple"
   "commit": "b084cbbf44d5330448ffce0c7d118f75781b64bd"
 files:
-- "particl-osx-unsigned.tar.gz"
+- "falcon-osx-unsigned.tar.gz"
 script: |
   set -e -o pipefail
 
@@ -42,9 +42,9 @@ script: |
   export PATH="$HOME/.local/bin":$PATH
   cd ..
 
-  UNSIGNED_TARBALL=particl-osx-unsigned.tar.gz
-  UNSIGNED_APP=dist/Particl-Qt.app
-  SIGNED=particl-osx-signed.dmg
+  UNSIGNED_TARBALL=falcon-osx-unsigned.tar.gz
+  UNSIGNED_APP=dist/Falcon-Qt.app
+  SIGNED=falcon-osx-signed.dmg
 
   tar -xf ${UNSIGNED_TARBALL}
   OSX_VOLNAME="$(cat osx_volname)"

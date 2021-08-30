@@ -161,7 +161,7 @@ public:
     bool fBulletproofsActive = false;
     bool rct_active = false;
     int m_spend_height = 0;
-    bool m_particl_mode = false;
+    bool m_falcon_mode = false;
     bool m_skip_rangeproof = false;
     const Consensus::Params *m_consensus_params = nullptr;
     bool m_preserve_state = false; // Don't clear error during ActivateBestChain (debug)
@@ -177,7 +177,7 @@ public:
     CAmount tx_balances[6] = {0};
     std::set<CCmpPubKey> m_setHaveKI;
 
-    void SetStateInfo(int64_t time, int spend_height, const Consensus::Params& consensusParams, bool particl_mode, bool skip_rangeproof)
+    void SetStateInfo(int64_t time, int spend_height, const Consensus::Params& consensusParams, bool falcon_mode, bool skip_rangeproof)
     {
         m_consensus_params = &consensusParams;
         fEnforceSmsgFees = time >= consensusParams.nPaidSmsgTime;
@@ -186,7 +186,7 @@ public:
         if (spend_height > -1) {
             m_spend_height = spend_height; // Pass through connectblock->checkblock
         }
-        m_particl_mode = particl_mode;
+        m_falcon_mode = falcon_mode;
         m_skip_rangeproof = skip_rangeproof;
 
         m_clamp_tx_version = time >= consensusParams.clamp_tx_version_time;

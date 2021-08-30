@@ -235,7 +235,7 @@ std::shared_ptr<CWallet> LoadWalletInternal(WalletContext& context, const std::s
         // Write the wallet setting
         UpdateWalletSetting(*context.chain, name, load_on_start, warnings);
 
-        if (wallet->IsParticlWallet()) {
+        if (wallet->IsFalconWallet()) {
             RestartStakingThreads(context, *context.chain->getChainman());
         }
 
@@ -330,8 +330,8 @@ std::shared_ptr<CWallet> CreateWallet(WalletContext& context, const std::string&
             }
 
             // Set a seed for the wallet
-            if (wallet->IsParticlWallet()) {
-                if (0 != GetParticlWallet(wallet.get())->MakeDefaultAccount()) {
+            if (wallet->IsFalconWallet()) {
+                if (0 != GetFalconWallet(wallet.get())->MakeDefaultAccount()) {
                     error = Untranslated("Error: MakeDefaultAccount failed");
                     return nullptr;
                 }
@@ -360,7 +360,7 @@ std::shared_ptr<CWallet> CreateWallet(WalletContext& context, const std::string&
     // Write the wallet settings
     UpdateWalletSetting(*context.chain, name, load_on_start, warnings);
 
-    if (wallet->IsParticlWallet()) {
+    if (wallet->IsFalconWallet()) {
         RestartStakingThreads(context, *context.chain->getChainman());
     }
 
@@ -2615,7 +2615,7 @@ std::shared_ptr<CWallet> CWallet::Create(WalletContext& context, const std::stri
     int64_t nStart = GetTimeMillis();
     // TODO: Can't use std::make_shared because we need a custom deleter but
     // should be possible to use std::allocate_shared.
-    std::shared_ptr<CWallet> walletInstance(fParticlMode
+    std::shared_ptr<CWallet> walletInstance(fFalconMode
         ? std::shared_ptr<CWallet>(new CHDWallet(chain, name, std::move(database)), ReleaseWallet)
         : std::shared_ptr<CWallet>(new CWallet(chain, name, std::move(database)), ReleaseWallet));
 
@@ -2663,12 +2663,12 @@ std::shared_ptr<CWallet> CWallet::Create(WalletContext& context, const std::stri
 
         if ((wallet_creation_flags & WALLET_FLAG_EXTERNAL_SIGNER) || !(wallet_creation_flags & (WALLET_FLAG_DISABLE_PRIVATE_KEYS | WALLET_FLAG_BLANK_WALLET))) {
             LOCK(walletInstance->cs_wallet);
-            if (!walletInstance->IsParticlWallet() && walletInstance->IsWalletFlagSet(WALLET_FLAG_DESCRIPTORS)) {
+            if (!walletInstance->IsFalconWallet() && walletInstance->IsWalletFlagSet(WALLET_FLAG_DESCRIPTORS)) {
                 walletInstance->SetupDescriptorScriptPubKeyMans();
                 // SetupDescriptorScriptPubKeyMans already calls SetupGeneration for us so we don't need to call SetupGeneration separately
             } else {
                 // Legacy wallets need SetupGeneration here.
-                if (!walletInstance->IsParticlWallet())
+                if (!walletInstance->IsFalconWallet())
                 for (auto spk_man : walletInstance->GetActiveScriptPubKeyMans()) {
                     if (!spk_man->SetupGeneration()) {
                         error = _("Unable to generate initial keys");
@@ -3023,7 +3023,7 @@ int CWalletTx::GetBlocksToMaturity() const
     int chain_depth = GetDepthInMainChain();
     assert(chain_depth >= 0); // coinbase tx should not be conflicted
 
-    if (pwallet->IsParticlWallet() && pwallet->m_last_block_processed_height < COINBASE_MATURITY * 2 && m_confirm.status == CWalletTx::Status::CONFIRMED) {
+    if (pwallet->IsFalconWallet() && pwallet->m_last_block_processed_height < COINBASE_MATURITY * 2 && m_confirm.status == CWalletTx::Status::CONFIRMED) {
         int nRequiredDepth = m_confirm.block_height / 2;
         return std::max(0, (nRequiredDepth+1) - chain_depth);
     }

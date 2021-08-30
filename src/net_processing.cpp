@@ -43,7 +43,7 @@
 #include <typeinfo>
 
 
-// Particl includes
+// Falcon includes
 #include <smsg/smessage.h>
 
 
@@ -669,7 +669,7 @@ private:
      */
     bool SetupAddressRelay(const CNode& node, Peer& peer);
 
-    /** Particl */
+    /** Falcon */
     int m_banscore = DISCOURAGEMENT_THRESHOLD;
     void PassOnMisbehaviour(NodeId node_id, int howmuch);
 public:
@@ -1705,7 +1705,7 @@ void PeerManagerImpl::CheckUnreceivedHeaders(int64_t now) EXCLUSIVE_LOCKS_REQUIR
         auto it_headers = dos_counters.m_map_loose_headers.begin();
         for (; it_headers != dos_counters.m_map_loose_headers.end();) {
             if (it_headers->second + MAX_LOOSE_HEADER_TIME < now) {
-                if (particl::RemoveUnreceivedHeader(m_chainman, it_headers->first)) {
+                if (falcon::RemoveUnreceivedHeader(m_chainman, it_headers->first)) {
                     MisbehavingByAddr(it->first, dos_counters.m_misbehavior, 5, "Block not received.");
                     dos_counters.m_misbehavior += 5;
                 }
@@ -2946,7 +2946,7 @@ void PeerManagerImpl::ProcessMessage(CNode& pfrom, const std::string& msg_type, 
         peer->m_chain_height = starting_height;
         {
             LOCK(cs_main);
-            particl::UpdateNumBlocksOfPeers(m_chainman, pfrom.GetId(), starting_height);
+            falcon::UpdateNumBlocksOfPeers(m_chainman, pfrom.GetId(), starting_height);
         }
 
         // set nodes not relaying blocks and tx and not serving (parts) of the historical blockchain as "clients"
@@ -4195,7 +4195,7 @@ void PeerManagerImpl::ProcessMessage(CNode& pfrom, const std::string& msg_type, 
             }
             {
                 LOCK(cs_main);
-                particl::UpdateNumBlocksOfPeers(m_chainman, pfrom.GetId(), nChainHeight);
+                falcon::UpdateNumBlocksOfPeers(m_chainman, pfrom.GetId(), nChainHeight);
             }
 
             // Echo the message back with the nonce. This allows for two useful features:
@@ -4721,7 +4721,7 @@ void PeerManagerImpl::MaybeSendPing(CNode& node_to, Peer& peer, std::chrono::mic
         }
         peer.m_ping_queued = false;
         peer.m_ping_start = now;
-        // Particl ping includes chain height and is always > BIP0031
+        // Falcon ping includes chain height and is always > BIP0031
         int nChainHeight;
         {
             LOCK(cs_main);

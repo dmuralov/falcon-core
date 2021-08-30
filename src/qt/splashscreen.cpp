@@ -65,7 +65,7 @@ SplashScreen::SplashScreen(const NetworkStyle* networkStyle)
     QRect rGradient(QPoint(0,0), splashSize);
     pixPaint.fillRect(rGradient, gradient);
 
-    // draw the particl icon, expected size of PNG: 1024x1024
+    // draw the falcon icon, expected size of PNG: 1024x1024
     QRect rectIcon(QPoint(0,20), QSize(256,256));
 
     const QSize requiredSize(1024,1024);

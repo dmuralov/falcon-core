@@ -101,7 +101,7 @@ bool IsStandard(const CScript& scriptPubKey, TxoutType& whichType, int64_t time=
 // adapting relay policy by bumping TX_MAX_STANDARD_VERSION, and then later
 // allowing the new transaction version in the wallet/RPC.
 static constexpr decltype(CTransaction::nVersion) TX_MAX_STANDARD_VERSION{2};
-static constexpr decltype(CTransaction::nVersion) TX_MAX_STANDARD_VERSION_PARTICL{0xA1};
+static constexpr decltype(CTransaction::nVersion) TX_MAX_STANDARD_VERSION_FALCON{0xA1};
 
 /**
 * Check for standard transaction types

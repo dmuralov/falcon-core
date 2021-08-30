@@ -140,7 +140,7 @@ LRESULT APIENTRY MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int CreateMessageWindow()
 {
-    // Create a message-only window to intercept WM_CLOSE events from particld
+    // Create a message-only window to intercept WM_CLOSE events from falcond
 
     WNDCLASSEX WindowClassEx;
     ZeroMemory(&WindowClassEx, sizeof(WNDCLASSEX));
@@ -187,7 +187,7 @@ static const char* DEFAULT_ASMAP_FILENAME="ip_asn.map";
 /**
  * The PID file facilities.
  */
-static const char* BITCOIN_PID_FILENAME = "particl.pid";
+static const char* BITCOIN_PID_FILENAME = "falcon.pid";
 
 static fs::path GetPidFile(const ArgsManager& args)
 {
@@ -237,7 +237,7 @@ static fs::path GetPidFile(const ArgsManager& args)
 bool ShutdownRequestedMainThread()
 {
 #ifdef WIN32
-    // Only particld will create a hidden window to receive messages
+    // Only falcond will create a hidden window to receive messages
     while (winHwnd && PeekMessage(&winMsg, 0, 0, 0, PM_REMOVE)) {
         TranslateMessage(&winMsg);
         DispatchMessage(&winMsg);
@@ -520,16 +520,16 @@ void SetupServerArgs(ArgsManager& argsman)
                  " If <type> is not supplied or if <type> = 1, indexes for all known types are enabled.",
                  ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 
-    // Particl specific
-    argsman.AddArg("-addressindex", strprintf("Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)", particl::DEFAULT_ADDRESSINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-timestampindex", strprintf("Maintain a timestamp index for block hashes, used to query blocks hashes by a range of timestamps (default: %u)", particl::DEFAULT_TIMESTAMPINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-spentindex", strprintf("Maintain a full spent index, used to query the spending txid and input index for an outpoint (default: %u)", particl::DEFAULT_SPENTINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-balancesindex", strprintf("Maintain a balances index per block (default: %u)", particl::DEFAULT_BALANCESINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-csindex", strprintf("Maintain an index of outputs by coldstaking address (default: %u)", particl::DEFAULT_CSINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    // Falcon specific
+    argsman.AddArg("-addressindex", strprintf("Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)", falcon::DEFAULT_ADDRESSINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-timestampindex", strprintf("Maintain a timestamp index for block hashes, used to query blocks hashes by a range of timestamps (default: %u)", falcon::DEFAULT_TIMESTAMPINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-spentindex", strprintf("Maintain a full spent index, used to query the spending txid and input index for an outpoint (default: %u)", falcon::DEFAULT_SPENTINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-balancesindex", strprintf("Maintain a balances index per block (default: %u)", falcon::DEFAULT_BALANCESINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-csindex", strprintf("Maintain an index of outputs by coldstaking address (default: %u)", falcon::DEFAULT_CSINDEX), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-cswhitelist", strprintf("Only index coldstaked outputs with matching stake address. Can be specified multiple times."), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 
-    argsman.AddArg("-dbmaxopenfiles", strprintf("Maximum number of open files parameter passed to level-db (default: %u)", particl::DEFAULT_DB_MAX_OPEN_FILES), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-dbcompression", strprintf("Database compression parameter passed to level-db (default: %s)", particl::DEFAULT_DB_COMPRESSION ? "true" : "false"), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-dbmaxopenfiles", strprintf("Maximum number of open files parameter passed to level-db (default: %u)", falcon::DEFAULT_DB_MAX_OPEN_FILES), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-dbcompression", strprintf("Database compression parameter passed to level-db (default: %s)", falcon::DEFAULT_DB_COMPRESSION ? "true" : "false"), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
 
     argsman.AddArg("-findpeers", "Node will search for peers (default: 1)", ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
 
@@ -538,18 +538,18 @@ void SetupServerArgs(ArgsManager& argsman)
     argsman.AddArg("-displaylocaltime", "Display human readable time strings in local timezone (default: false)", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
     argsman.AddArg("-displayutctime", "Display human readable time strings in UTC (default: false)", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
     argsman.AddArg("-rebuildrollingindices", "Force rebuild of rolling indices (default: false)", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
-    argsman.AddArg("-acceptanontxn", strprintf("Relay and mine \"anon\" transactions (default: %u)", particl::DEFAULT_ACCEPT_ANON_TX), ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
-    argsman.AddArg("-acceptblindtxn", strprintf("Relay and mine \"anon\" transactions (default: %u)", particl::DEFAULT_ACCEPT_BLIND_TX), ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
+    argsman.AddArg("-acceptanontxn", strprintf("Relay and mine \"anon\" transactions (default: %u)", falcon::DEFAULT_ACCEPT_ANON_TX), ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
+    argsman.AddArg("-acceptblindtxn", strprintf("Relay and mine \"anon\" transactions (default: %u)", falcon::DEFAULT_ACCEPT_BLIND_TX), ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
     argsman.AddArg("-checkpeerheight", "Consider peer height for initial-block-download status (default: true)", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
     argsman.AddArg("-skiprangeproofverify", "Skip verifying rangeproofs when reindexing or importing (default: false)", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
-    argsman.AddArg("-rpccorsdomain=<domain>", "Allow JSON-RPC connections from specified domain (e.g. http://localhost:4200 or \"*\"). This needs to be set if you are using the Particl GUI in a browser.", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
+    argsman.AddArg("-rpccorsdomain=<domain>", "Allow JSON-RPC connections from specified domain (e.g. http://localhost:4200 or \"*\"). This needs to be set if you are using the Falcon GUI in a browser.", ArgsManager::ALLOW_ANY, OptionsCategory::RPC);
 
     hidden_args.emplace_back("-btcmode");
     hidden_args.emplace_back("-debugdevice");  // Disable to allow usbdevices in regtest mode
-    // end Particl specific
+    // end Falcon specific
 
     argsman.AddArg("-addnode=<ip>", strprintf("Add a node to connect to and attempt to keep the connection open (see the addnode RPC help for more info). This option can be specified multiple times to add multiple nodes; connections are limited to %u at a time and are counted separately from the -maxconnections limit.", MAX_ADDNODE_CONNECTIONS), ArgsManager::ALLOW_ANY | ArgsManager::NETWORK_ONLY, OptionsCategory::CONNECTION);
-    argsman.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", particl::DEFAULT_BANSCORE_THRESHOLD), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
+    argsman.AddArg("-banscore=<n>", strprintf("Threshold for disconnecting misbehaving peers (default: %u)", falcon::DEFAULT_BANSCORE_THRESHOLD), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     argsman.AddArg("-asmap=<file>", strprintf("Specify asn mapping used for bucketing of the peers (default: %s). Relative paths will be prefixed by the net-specific datadir location.", DEFAULT_ASMAP_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     argsman.AddArg("-bantime=<n>", strprintf("Default duration (in seconds) of manually configured bans (default: %u)", DEFAULT_MISBEHAVING_BANTIME), ArgsManager::ALLOW_ANY, OptionsCategory::CONNECTION);
     argsman.AddArg("-bind=<addr>[:<port>][=onion]", strprintf("Bind to given address and always listen on it (default: 0.0.0.0). Use [host]:port notation for IPv6. Append =onion to tag any incoming connections to that address and port as incoming Tor connections (default: 127.0.0.1:%u=onion, testnet: 127.0.0.1:%u=onion, signet: 127.0.0.1:%u=onion, regtest: 127.0.0.1:%u=onion)", defaultBaseParams->OnionServiceTargetPort(), testnetBaseParams->OnionServiceTargetPort(), signetBaseParams->OnionServiceTargetPort(), regtestBaseParams->OnionServiceTargetPort()), ArgsManager::ALLOW_ANY | ArgsManager::NETWORK_ONLY, OptionsCategory::CONNECTION);
@@ -609,7 +609,7 @@ void SetupServerArgs(ArgsManager& argsman)
 
     g_wallet_init_interface.AddWalletOptions(argsman);
 #ifdef ENABLE_WALLET
-    if (fParticlMode) {
+    if (fFalconMode) {
         CHDWallet::AddOptions(argsman);
     }
 #endif
@@ -626,7 +626,7 @@ void SetupServerArgs(ArgsManager& argsman)
     argsman.AddArg("-zmqpubrawtxhwm=<n>", strprintf("Set publish raw transaction outbound message high water mark (default: %d)", CZMQAbstractNotifier::DEFAULT_ZMQ_SNDHWM), ArgsManager::ALLOW_ANY, OptionsCategory::ZMQ);
     argsman.AddArg("-zmqpubsequencehwm=<n>", strprintf("Set publish hash sequence message high water mark (default: %d)", CZMQAbstractNotifier::DEFAULT_ZMQ_SNDHWM), ArgsManager::ALLOW_ANY, OptionsCategory::ZMQ);
 
-    // Particl
+    // Falcon
     argsman.AddArg("-zmqpubhashwtx=<address>", "Enable publish hash transaction received by wallets in <address>", ArgsManager::ALLOW_ANY, OptionsCategory::ZMQ);
     argsman.AddArg("-zmqpubsmsg=<address>", "Enable publish secure message in <address>", ArgsManager::ALLOW_ANY, OptionsCategory::ZMQ);
     argsman.AddArg("-serverkeyzmq=<secret_key>", "Base64 encoded string of the z85 encoded secret key for CurveZMQ.", ArgsManager::ALLOW_ANY, OptionsCategory::ZMQ);
@@ -644,7 +644,7 @@ void SetupServerArgs(ArgsManager& argsman)
     hidden_args.emplace_back("-zmqpubrawtxhwm=<n>");
     hidden_args.emplace_back("-zmqpubsequencehwm=<n>");
 
-    // Particl
+    // Falcon
     hidden_args.emplace_back("-zmqpubhashwtx=<address>");
     hidden_args.emplace_back("-zmqpubsmsg=<address>");
     hidden_args.emplace_back("-serverkeyzmq=<secret_key>");
@@ -721,7 +721,7 @@ void SetupServerArgs(ArgsManager& argsman)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/particl/particl-core>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/falcon/falcon-core>";
 
     return CopyrightHolders(strprintf(_("Copyright (C)").translated)) + "\n" +
            "\n" +
@@ -936,11 +936,11 @@ bool AppInitBasicSetup(const ArgsManager& args)
 
 bool AppInitParameterInteraction(const ArgsManager& args)
 {
-    fParticlMode = !args.GetBoolArg("-btcmode", false); // qa tests
-    if (!fParticlMode) {
+    fFalconMode = !args.GetBoolArg("-btcmode", false); // qa tests
+    if (!fFalconMode) {
         WITNESS_SCALE_FACTOR = WITNESS_SCALE_FACTOR_BTC;
         if (args.GetChainName() == CBaseChainParams::REGTEST) {
-            ResetParams(CBaseChainParams::REGTEST, fParticlMode);
+            ResetParams(CBaseChainParams::REGTEST, fFalconMode);
         }
     } else {
         MIN_BLOCKS_TO_KEEP = 1024;
@@ -1016,10 +1016,10 @@ bool AppInitParameterInteraction(const ArgsManager& args)
         #define CHECK_ARG_FOR_PRUNE_MODE(name, default_mode)                                \
         if (gArgs.GetBoolArg(name, default_mode)) {                                         \
             return InitError(_("Prune mode is incompatible with " name ".")); }
-        CHECK_ARG_FOR_PRUNE_MODE("-addressindex", particl::DEFAULT_ADDRESSINDEX)
-        CHECK_ARG_FOR_PRUNE_MODE("-timestampindex", particl::DEFAULT_TIMESTAMPINDEX)
-        CHECK_ARG_FOR_PRUNE_MODE("-spentindex", particl::DEFAULT_SPENTINDEX)
-        CHECK_ARG_FOR_PRUNE_MODE("-csindex", particl::DEFAULT_CSINDEX)
+        CHECK_ARG_FOR_PRUNE_MODE("-addressindex", falcon::DEFAULT_ADDRESSINDEX)
+        CHECK_ARG_FOR_PRUNE_MODE("-timestampindex", falcon::DEFAULT_TIMESTAMPINDEX)
+        CHECK_ARG_FOR_PRUNE_MODE("-spentindex", falcon::DEFAULT_SPENTINDEX)
+        CHECK_ARG_FOR_PRUNE_MODE("-csindex", falcon::DEFAULT_CSINDEX)
         #undef CHECK_ARG_FOR_PRUNE_MODE
     }
 
@@ -1528,8 +1528,8 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         fs::create_directories(blocksDir);
 
     // block tree db settings
-    int dbMaxOpenFiles = gArgs.GetArg("-dbmaxopenfiles", particl::DEFAULT_DB_MAX_OPEN_FILES);
-    bool dbCompression = gArgs.GetBoolArg("-dbcompression", particl::DEFAULT_DB_COMPRESSION);
+    int dbMaxOpenFiles = gArgs.GetArg("-dbmaxopenfiles", falcon::DEFAULT_DB_MAX_OPEN_FILES);
+    bool dbCompression = gArgs.GetBoolArg("-dbcompression", falcon::DEFAULT_DB_COMPRESSION);
 
     LogPrintf("Block index database configuration:\n");
     LogPrintf("* Using %d max open files\n", dbMaxOpenFiles);
@@ -1541,7 +1541,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
     nTotalCache = std::min(nTotalCache, nMaxDbCache << 20); // total cache cannot be greater than nMaxDbcache
     int64_t nBlockTreeDBCache = nTotalCache / 8;
 
-    if (gArgs.GetBoolArg("-addressindex", particl::DEFAULT_ADDRESSINDEX) || gArgs.GetBoolArg("-spentindex", particl::DEFAULT_SPENTINDEX)) {
+    if (gArgs.GetBoolArg("-addressindex", falcon::DEFAULT_ADDRESSINDEX) || gArgs.GetBoolArg("-spentindex", falcon::DEFAULT_SPENTINDEX)) {
         // enable 3/4 of the cache if addressindex and/or spentindex is enabled
         nBlockTreeDBCache = nTotalCache * 3 / 4;
     } else {
@@ -1605,7 +1605,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                 pblocktree.reset(new CBlockTreeDB(nBlockTreeDBCache, false, fReset));
 
                 // Automatically start reindexing if necessary
-                if (!fReset && particl::ShouldAutoReindex(chainman)) {
+                if (!fReset && falcon::ShouldAutoReindex(chainman)) {
                     fReindex = true;
                     fReset = true;
                     pblocktree.reset();
@@ -1639,19 +1639,19 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                 }
 
                 // Check for changed index states
-                if (fAddressIndex != gArgs.GetBoolArg("-addressindex", particl::DEFAULT_ADDRESSINDEX)) {
+                if (fAddressIndex != gArgs.GetBoolArg("-addressindex", falcon::DEFAULT_ADDRESSINDEX)) {
                     strLoadError = _("You need to rebuild the database using -reindex to change -addressindex");
                     break;
                 }
-                if (fSpentIndex != gArgs.GetBoolArg("-spentindex", particl::DEFAULT_SPENTINDEX)) {
+                if (fSpentIndex != gArgs.GetBoolArg("-spentindex", falcon::DEFAULT_SPENTINDEX)) {
                     strLoadError = _("You need to rebuild the database using -reindex to change -spentindex");
                     break;
                 }
-                if (fTimestampIndex != gArgs.GetBoolArg("-timestampindex", particl::DEFAULT_TIMESTAMPINDEX)) {
+                if (fTimestampIndex != gArgs.GetBoolArg("-timestampindex", falcon::DEFAULT_TIMESTAMPINDEX)) {
                     strLoadError = _("You need to rebuild the database using -reindex to change -timestampindex");
                     break;
                 }
-                if (fBalancesIndex != gArgs.GetBoolArg("-balancesindex", particl::DEFAULT_BALANCESINDEX)) {
+                if (fBalancesIndex != gArgs.GetBoolArg("-balancesindex", falcon::DEFAULT_BALANCESINDEX)) {
                     strLoadError = _("You need to rebuild the database using -reindex to change -balancesindex");
                     break;
                 }
@@ -1729,7 +1729,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
             }
 
             // Initialise temporary indices if required
-            if (!particl::RebuildRollingIndices(chainman, node.mempool.get())) {
+            if (!falcon::RebuildRollingIndices(chainman, node.mempool.get())) {
                 strLoadError = _("Failed to rebuild rolling indices by rewinding the chain, a reindex is required.");
                 break;
             }
@@ -1825,7 +1825,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
     if (args.GetBoolArg("-txindex", DEFAULT_TXINDEX)) {
         g_txindex = std::make_unique<TxIndex>(nTxIndexCache, false, fReindex);
 
-        if (gArgs.GetBoolArg("-csindex", particl::DEFAULT_CSINDEX)) {
+        if (gArgs.GetBoolArg("-csindex", falcon::DEFAULT_CSINDEX)) {
             g_txindex->m_cs_index = true;
             for (const auto &addr : gArgs.GetArgs("-cswhitelist")) {
                 g_txindex->AppendCSAddress(addr);
@@ -1931,7 +1931,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     smsgModule.m_node = &node;
     bool start_smsg_without_wallet = true;
-    if (fParticlMode && gArgs.GetBoolArg("-smsg", true)) { // SMSG breaks functional tests with services flag, see version msg
+    if (fFalconMode && gArgs.GetBoolArg("-smsg", true)) { // SMSG breaks functional tests with services flag, see version msg
 #ifdef ENABLE_WALLET
         if (node.wallet_client && node.wallet_client->context()) {
             auto vpwallets = GetWallets(*node.wallet_client->context());
@@ -2080,7 +2080,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     // ********************************************************* Step 12.5: start staking
 #ifdef ENABLE_WALLET
-    if (fParticlMode) {
+    if (fFalconMode) {
         // Must recheck num_wallets as smsg may be disabled.
         size_t num_wallets = 0;
         if (node.wallet_client && node.wallet_client->context()) {

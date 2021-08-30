@@ -133,7 +133,7 @@ PE_ALLOWED_LIBRARIES = {
 'VERSION.dll', # version checking
 'WINMM.dll', # WinMM audio API
 'WTSAPI32.dll',
-'SETUPAPI.dll', # Particl, usb devices
+'SETUPAPI.dll', # Falcon, usb devices
 }
 
 class CPPFilt(object):

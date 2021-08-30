@@ -320,7 +320,7 @@ public:
     }
     NodeContext* m_context{nullptr};
 
-    // Particl
+    // Falcon
     std::unique_ptr<Handler> handleNotifyWaitingForDevice(WaitingForDeviceFn fn) override
     {
         return MakeHandler(::uiInterface.NotifyWaitingForDevice_connect(fn));
@@ -738,7 +738,7 @@ public:
     int64_t getSmsgFeeRate(ChainstateManager &chainman, const CBlockIndex *pindex, bool reduce_height) override
     {
         LOCK(::cs_main);
-        return particl::GetSmsgFeeRate(chainman, pindex, reduce_height);
+        return falcon::GetSmsgFeeRate(chainman, pindex, reduce_height);
     }
     bool transactionInMempool(const uint256 &txhash) override
     {

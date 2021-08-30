@@ -2,7 +2,7 @@ OpenBSD build guide
 ======================
 (updated for OpenBSD 6.9)
 
-This guide describes how to build particld, particl-qt, and command-line utilities on OpenBSD.
+This guide describes how to build falcond, falcon-qt, and command-line utilities on OpenBSD.
 
 Preparation
 -------------
@@ -17,7 +17,7 @@ pkg_add automake # (select highest version, e.g. 1.16)
 pkg_add python # (select highest version, e.g. 3.8)
 pkg_add bash
 
-git clone https://github.com/particl/particl-core.git
+git clone https://github.com/falcon/falcon-core.git
 ```
 
 See [dependencies.md](dependencies.md) for a complete overview.
@@ -48,7 +48,7 @@ from the root of the repository. Then set `BDB_PREFIX` for the next section:
 export BDB_PREFIX="$PWD/db4"
 ```
 
-### Building Particl Core
+### Building Falcon Core
 
 **Important**: Use `gmake` (the non-GNU `make` will exit with an error).
 

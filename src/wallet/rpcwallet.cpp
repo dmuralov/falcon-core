@@ -125,8 +125,8 @@ void EnsureWalletIsUnlocked(const CWallet& wallet)
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
     }
 
-    if (IsParticlWallet(&wallet)
-        && GetParticlWallet(&wallet)->fUnlockForStakingOnly) {
+    if (IsFalconWallet(&wallet)
+        && GetFalconWallet(&wallet)->fUnlockForStakingOnly) {
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Wallet is unlocked for staking only.");
     }
 }
@@ -298,7 +298,7 @@ static void SetFeeEstimateMode(const CWallet& wallet, CCoinControl& cc, const Un
 static RPCHelpMan getnewaddress()
 {
     return RPCHelpMan{"getnewaddress",
-                "\nReturns a new Particl address for receiving payments.\n"
+                "\nReturns a new Falcon address for receiving payments.\n"
                 "If 'label' is specified, it is added to the address book \n"
                 "so payments received with the address will be associated with 'label'.\n",
                 {
@@ -309,7 +309,7 @@ static RPCHelpMan getnewaddress()
                     {"address_type", RPCArg::Type::STR, RPCArg::DefaultHint{"set by -addresstype"}, "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                 },
                 RPCResult{
-                    RPCResult::Type::STR, "address", "The new particl address"
+                    RPCResult::Type::STR, "address", "The new falcon address"
                 },
                 RPCExamples{
                     HelpExampleCli("getnewaddress", "")
@@ -322,7 +322,7 @@ static RPCHelpMan getnewaddress()
 
     //LOCK(pwallet->cs_wallet);
 
-    if (!pwallet->IsParticlWallet()) {
+    if (!pwallet->IsFalconWallet()) {
         LOCK(pwallet->cs_wallet);
         if (!pwallet->CanGetAddresses()) {
             throw JSONRPCError(RPC_WALLET_ERROR, "Error: This wallet has no available keys");
@@ -335,7 +335,7 @@ static RPCHelpMan getnewaddress()
         label = LabelFromValue(request.params[0]);
 
     OutputType output_type = pwallet->m_default_address_type;
-    size_t type_ofs = fParticlMode ? 4 : 1;
+    size_t type_ofs = fFalconMode ? 4 : 1;
     if (!request.params[type_ofs].isNull()) {
         std::optional<OutputType> parsed = ParseOutputType(request.params[type_ofs].get_str());
         if (!parsed) {
@@ -346,7 +346,7 @@ static RPCHelpMan getnewaddress()
         output_type = parsed.value();
     }
 
-    if (pwallet->IsParticlWallet()) {
+    if (pwallet->IsFalconWallet()) {
         CKeyID keyID;
 
         bool fBech32 = request.params.size() > 1 ? GetBool(request.params[1]) : false;
@@ -361,7 +361,7 @@ static RPCHelpMan getnewaddress()
         }
 
         CPubKey newKey;
-        CHDWallet *phdw = GetParticlWallet(pwallet.get());
+        CHDWallet *phdw = GetFalconWallet(pwallet.get());
         {
             LOCK(phdw->cs_wallet);
             if (pwallet->IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
@@ -411,7 +411,7 @@ static RPCHelpMan getnewaddress()
 static RPCHelpMan getrawchangeaddress()
 {
     return RPCHelpMan{"getrawchangeaddress",
-                "\nReturns a new Particl address, for receiving change.\n"
+                "\nReturns a new Falcon address, for receiving change.\n"
                 "This is for use with raw transactions, NOT normal use.\n",
                 {
                     {"address_type", RPCArg::Type::STR, RPCArg::DefaultHint{"set by -changetype"}, "The address type to use. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
@@ -430,8 +430,8 @@ static RPCHelpMan getrawchangeaddress()
 
     LOCK(pwallet->cs_wallet);
 
-    if (pwallet->IsParticlWallet()) {
-        CHDWallet *phdw = GetParticlWallet(pwallet.get());
+    if (pwallet->IsFalconWallet()) {
+        CHDWallet *phdw = GetFalconWallet(pwallet.get());
         CPubKey pkOut;
 
         if (0 != phdw->NewKeyFromAccount(pkOut, true)) {
@@ -471,7 +471,7 @@ static RPCHelpMan setlabel()
     return RPCHelpMan{"setlabel",
                 "\nSets the label associated with the given address.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The particl address to be associated with a label."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The falcon address to be associated with a label."},
                     {"label", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The label to assign to the address."},
                 },
                 RPCResult{RPCResult::Type::NONE, "", ""},
@@ -488,7 +488,7 @@ static RPCHelpMan setlabel()
 
     CTxDestination dest = DecodeDestination(request.params[0].get_str());
     if (!IsValidDestination(dest)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
     }
 
     std::string label = LabelFromValue(request.params[1]);
@@ -510,7 +510,7 @@ void ParseRecipients(const UniValue& address_amounts, const UniValue& subtract_f
     for (const std::string& address: address_amounts.getKeys()) {
         CTxDestination dest = DecodeDestination(address);
         if (!IsValidDestination(dest)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl address: ") + address);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon address: ") + address);
         }
 
         if (destinations.count(dest)) {
@@ -574,7 +574,7 @@ static RPCHelpMan sendtoaddress()
                 "\nSend an amount to a given address." +
         HELP_REQUIRING_PASSPHRASE,
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address to send to."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address to send to."},
                     {"amount", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "The amount in " + CURRENCY_UNIT + " to send. eg 0.1"},
                     {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "A comment used to store what the transaction is for.\n"
                                          "This is not part of the transaction, just kept in your wallet."},
@@ -582,7 +582,7 @@ static RPCHelpMan sendtoaddress()
                                          "to which you're sending the transaction. This is not part of the \n"
                                          "transaction, just kept in your wallet."},
                     {"subtractfeefromamount", RPCArg::Type::BOOL, RPCArg::Default{false}, "The fee will be deducted from the amount being sent.\n"
-                                         "The recipient will receive less particl than you enter in the amount field."},
+                                         "The recipient will receive less falcon than you enter in the amount field."},
                     {"narration", RPCArg::Type::STR, RPCArg::Default{""}, "Up to 24 characters sent with the transaction.\n"
                                          "Plaintext if sending to standard address type, encrypted when sending to stealthaddresses."},
                     {"replaceable", RPCArg::Type::BOOL, RPCArg::DefaultHint{"wallet default"}, "Allow this transaction to be replaced by a transaction with higher fees via BIP 125"},
@@ -654,7 +654,7 @@ static RPCHelpMan sendtoaddress()
 
     SetFeeEstimateMode(*pwallet, coin_control, /* conf_target */ request.params[7], /* estimate_mode */ request.params[8], /* fee_rate */ request.params[10], /* override_min_fee */ false);
 
-    if (pwallet->IsParticlWallet()) {
+    if (pwallet->IsFalconWallet()) {
         JSONRPCRequest newRequest;
         newRequest.context = request.context;
         newRequest.fSkipBlock = true; // already blocked in this function
@@ -751,7 +751,7 @@ static RPCHelpMan listaddressgroupings()
                         {
                             {RPCResult::Type::ARR_FIXED, "", "",
                             {
-                                {RPCResult::Type::STR, "address", "The particl address"},
+                                {RPCResult::Type::STR, "address", "The falcon address"},
                                 {RPCResult::Type::STR_AMOUNT, "amount", "The amount in " + CURRENCY_UNIT},
                                 {RPCResult::Type::STR, "label", /* optional */ true, "The label"},
                             }},
@@ -803,7 +803,7 @@ static RPCHelpMan signmessage()
                 "\nSign a message with the private key of an address" +
         HELP_REQUIRING_PASSPHRASE,
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address to use for the private key."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address to use for the private key."},
                     {"message", RPCArg::Type::STR, RPCArg::Optional::NO, "The message to create a signature of."},
                 },
                 RPCResult{
@@ -869,7 +869,7 @@ static CAmount GetReceived(const CWallet& wallet, const UniValue& params, bool b
         // Get the address
         CTxDestination dest = DecodeDestination(params[0].get_str());
         if (!IsValidDestination(dest)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
         }
         CScript script_pub_key = GetScriptForDestination(dest);
         if (!wallet.IsMine(script_pub_key)) {
@@ -887,10 +887,10 @@ static CAmount GetReceived(const CWallet& wallet, const UniValue& params, bool b
     CAmount amount = 0;
     for (const std::pair<const uint256, CWalletTx>& wtx_pair : wallet.mapWallet) {
         const CWalletTx& wtx = wtx_pair.second;
-        if ((!wallet.IsParticlWallet() && wtx.IsCoinBase()) || !wallet.chain().checkFinalTx(*wtx.tx) || wtx.GetDepthInMainChain() < min_depth) {
+        if ((!wallet.IsFalconWallet() && wtx.IsCoinBase()) || !wallet.chain().checkFinalTx(*wtx.tx) || wtx.GetDepthInMainChain() < min_depth) {
             continue;
         }
-        if (wallet.IsParticlWallet()) {
+        if (wallet.IsFalconWallet()) {
             for (auto &txout : wtx.tx->vpout) {
                 if (txout->IsStandardOutput()) {
                     CTxDestination address;
@@ -917,7 +917,7 @@ static RPCHelpMan getreceivedbyaddress()
     return RPCHelpMan{"getreceivedbyaddress",
                 "\nReturns the total amount received by the given address in transactions with at least minconf confirmations.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address for transactions."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address for transactions."},
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{1}, "Only include transactions confirmed at least this many times."},
                 },
                 RPCResult{
@@ -1076,14 +1076,14 @@ static RPCHelpMan sendmany()
                     {"dummy", RPCArg::Type::STR, RPCArg::Optional::NO, "Must be set to \"\" for backwards compatibility.", "\"\""},
                     {"amounts", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::NO, "The addresses and amounts",
                         {
-                            {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "The particl address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value"},
+                            {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "The falcon address is the key, the numeric amount (can be string) in " + CURRENCY_UNIT + " is the value"},
                         },
                     },
                     {"minconf", RPCArg::Type::NUM, RPCArg::Optional::OMITTED_NAMED_ARG, "Ignored dummy value"},
                     {"comment", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "A comment"},
                     {"subtractfeefrom", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "The addresses.\n"
                                        "The fee will be equally deducted from the amount of each selected address.\n"
-                                       "Those recipients will receive less particl than you enter in their corresponding amount field.\n"
+                                       "Those recipients will receive less falcon than you enter in their corresponding amount field.\n"
                                        "If no addresses are specified here, the sender pays the fee.",
                         {
                             {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Subtract fee from this address"},
@@ -1151,7 +1151,7 @@ static RPCHelpMan sendmany()
 
     SetFeeEstimateMode(*pwallet, coin_control, /* conf_target */ request.params[6], /* estimate_mode */ request.params[7], /* fee_rate */ request.params[8], /* override_min_fee */ false);
 
-    if (pwallet->IsParticlWallet()) {
+    if (pwallet->IsFalconWallet()) {
         JSONRPCRequest newRequest;
         newRequest.context = request.context;
         //newRequest.mode = EXECUTE;
@@ -1226,7 +1226,7 @@ static RPCHelpMan sendmany()
     for (const std::string& name_ : keys) {
         CTxDestination dest = DecodeDestination(name_);
         if (!IsValidDestination(dest)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl address: ") + name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon address: ") + name_);
         }
 
         if (destinations.count(dest)) {
@@ -1266,15 +1266,15 @@ static RPCHelpMan addmultisigaddress()
 {
     return RPCHelpMan{"addmultisigaddress",
                 "\nAdd an nrequired-to-sign multisignature address to the wallet. Requires a new wallet backup.\n"
-                "Each key is a Particl address or hex-encoded public key.\n"
+                "Each key is a Falcon address or hex-encoded public key.\n"
                 "This functionality is only intended for use with non-watchonly addresses.\n"
                 "See `importaddress` for watchonly p2sh address support.\n"
                 "If 'label' is specified, assign address to that label.\n",
                 {
                     {"nrequired", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of required signatures out of the n keys or addresses."},
-                    {"keys", RPCArg::Type::ARR, RPCArg::Optional::NO, "The particl addresses or hex-encoded public keys",
+                    {"keys", RPCArg::Type::ARR, RPCArg::Optional::NO, "The falcon addresses or hex-encoded public keys",
                         {
-                            {"key", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "particl address or hex-encoded public key"},
+                            {"key", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "falcon address or hex-encoded public key"},
                         },
                         },
                     {"label", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "A label to assign the addresses to."},
@@ -1323,7 +1323,7 @@ static RPCHelpMan addmultisigaddress()
     }
 
     OutputType output_type = pwallet->m_default_address_type;
-    size_t type_ofs = fParticlMode ? 5 : 3;
+    size_t type_ofs = fFalconMode ? 5 : 3;
     if (!request.params[type_ofs].isNull()) {
         std::optional<OutputType> parsed = ParseOutputType(request.params[type_ofs].get_str());
         if (!parsed) {
@@ -1342,8 +1342,8 @@ static RPCHelpMan addmultisigaddress()
     std::unique_ptr<Descriptor> descriptor = InferDescriptor(GetScriptForDestination(dest), spk_man);
 
     UniValue result(UniValue::VOBJ);
-    bool fbech32 = fParticlMode && request.params.size() > 3 ? request.params[3].get_bool() : false;
-    bool f256Hash = fParticlMode && request.params.size() > 4 ? request.params[4].get_bool() : false;
+    bool fbech32 = fFalconMode && request.params.size() > 3 ? request.params[3].get_bool() : false;
+    bool f256Hash = fFalconMode && request.params.size() > 4 ? request.params[4].get_bool() : false;
 
     if (f256Hash) {
         CScriptID256 innerID;
@@ -1714,11 +1714,11 @@ static void ListTransactions(const CWallet& wallet, const CWalletTx& wtx, int nM
                 entry.pushKV("involvesWatchonly", true);
             }
 
-            if (wallet.IsParticlWallet()
+            if (wallet.IsFalconWallet()
                 && r.destination.index() == DI::_PKHash) {
                 CStealthAddress sx;
                 CKeyID idK = ToKeyID(std::get<PKHash>(r.destination));
-                if (GetParticlWallet(&wallet)->GetStealthLinked(idK, sx)) {
+                if (GetFalconWallet(&wallet)->GetStealthLinked(idK, sx)) {
                     entry.pushKV("stealth_address", sx.Encoded());
                 }
             }
@@ -1734,7 +1734,7 @@ static void ListTransactions(const CWallet& wallet, const CWalletTx& wtx, int nM
                 if (wtx.IsImmatureCoinBase()) {
                     entry.pushKV("category", "immature");
                 } else {
-                    entry.pushKV("category", (fParticlMode ? "coinbase" : "generate"));
+                    entry.pushKV("category", (fFalconMode ? "coinbase" : "generate"));
                 }
             } else {
                 entry.pushKV("category", "receive");
@@ -1959,7 +1959,7 @@ static RPCHelpMan listtransactions()
                         {RPCResult::Type::OBJ, "", "", Cat(Cat<std::vector<RPCResult>>(
                         {
                             {RPCResult::Type::BOOL, "involvesWatchonly", "Only returns true if imported addresses were involved in transaction."},
-                            {RPCResult::Type::STR, "address", "The particl address of the transaction."},
+                            {RPCResult::Type::STR, "address", "The falcon address of the transaction."},
                             {RPCResult::Type::STR, "category", "The transaction category.\n"
                                 "\"send\"                  Transactions sent.\n"
                                 "\"receive\"               Non-coinbase transactions received.\n"
@@ -2041,8 +2041,8 @@ static RPCHelpMan listtransactions()
     // ret must be newest to oldest
     ret.reverse();
 
-    if (pwallet->IsParticlWallet()) {
-        const CHDWallet *phdw = GetParticlWallet(pwallet.get());
+    if (pwallet->IsFalconWallet()) {
+        const CHDWallet *phdw = GetFalconWallet(pwallet.get());
         LOCK(phdw->cs_wallet);
         const RtxOrdered_t &txOrdered = phdw->rtxOrdered;
 
@@ -2111,7 +2111,7 @@ static RPCHelpMan listsinceblock()
                             {RPCResult::Type::OBJ, "", "", Cat(Cat<std::vector<RPCResult>>(
                             {
                                 {RPCResult::Type::BOOL, "involvesWatchonly", "Only returns true if imported addresses were involved in transaction."},
-                                {RPCResult::Type::STR, "address", "The particl address of the transaction."},
+                                {RPCResult::Type::STR, "address", "The falcon address of the transaction."},
                                 {RPCResult::Type::STR, "category", "The transaction category.\n"
                                     "\"send\"                  Transactions sent.\n"
                                     "\"receive\"               Non-coinbase transactions received.\n"
@@ -2196,8 +2196,8 @@ static RPCHelpMan listsinceblock()
         }
     }
 
-    if (IsParticlWallet(&wallet)) {
-        const CHDWallet *phdw = GetParticlWallet(&wallet);
+    if (IsFalconWallet(&wallet)) {
+        const CHDWallet *phdw = GetFalconWallet(&wallet);
         LOCK_ASSERTION(phdw->cs_wallet);
 
         for (const auto &ri : phdw->mapRecords) {
@@ -2225,8 +2225,8 @@ static RPCHelpMan listsinceblock()
                 // even negative confirmation ones, hence the big negative.
                 ListTransactions(wallet, it->second, -100000000, true, removed, filter, nullptr /* filter_label */);
             } else
-            if (IsParticlWallet(&wallet)) {
-                const CHDWallet *phdw = GetParticlWallet(&wallet);
+            if (IsFalconWallet(&wallet)) {
+                const CHDWallet *phdw = GetFalconWallet(&wallet);
                 LOCK_ASSERTION(phdw->cs_wallet);
                 const uint256 &txhash = tx->GetHash();
                 MapRecords_t::const_iterator mri = phdw->mapRecords.find(txhash);
@@ -2279,8 +2279,8 @@ UniValue gettransaction_inner(JSONRPCRequest const &request)
     UniValue entry(UniValue::VOBJ);
     auto it = pwallet->mapWallet.find(hash);
     if (it == pwallet->mapWallet.end()) {
-        if (IsParticlWallet(pwallet.get())) {
-            CHDWallet *phdw = GetParticlWallet(pwallet.get());
+        if (IsFalconWallet(pwallet.get())) {
+            CHDWallet *phdw = GetFalconWallet(pwallet.get());
             LOCK_ASSERTION(phdw->cs_wallet);
             MapRecords_t::const_iterator mri = phdw->mapRecords.find(hash);
 
@@ -2364,7 +2364,7 @@ static RPCHelpMan gettransaction()
                             {RPCResult::Type::OBJ, "", "",
                             {
                                 {RPCResult::Type::BOOL, "involvesWatchonly", "Only returns true if imported addresses were involved in transaction."},
-                                {RPCResult::Type::STR, "address", "The particl address involved in the transaction."},
+                                {RPCResult::Type::STR, "address", "The falcon address involved in the transaction."},
                                 {RPCResult::Type::STR, "category", "The transaction category.\n"
                                     "\"send\"                  Transactions sent.\n"
                                     "\"receive\"               Non-coinbase transactions received.\n"
@@ -2430,10 +2430,10 @@ static RPCHelpMan abandontransaction()
     uint256 hash(ParseHashV(request.params[0], "txid"));
 
     if (!pwallet->mapWallet.count(hash)) {
-        if (!IsParticlWallet(pwallet.get())) {
+        if (!IsFalconWallet(pwallet.get())) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
         }
-        CHDWallet *phdw = GetParticlWallet(pwallet.get());
+        CHDWallet *phdw = GetFalconWallet(pwallet.get());
         if (!phdw) {
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid or non-wallet transaction id");
         }
@@ -2534,7 +2534,7 @@ static RPCHelpMan walletpassphrase()
 {
     return RPCHelpMan{"walletpassphrase",
                 "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-                "This is needed prior to performing transactions related to private keys such as sending particl\n"
+                "This is needed prior to performing transactions related to private keys such as sending falcon\n"
             "\nNote:\n"
             "Issuing the walletpassphrase command while the wallet is already unlocked will set a new unlock\n"
             "time that overrides the old one.\n"
@@ -2609,8 +2609,8 @@ static RPCHelpMan walletpassphrase()
         LOCK(pwallet->cs_wallet);
         pwallet->TopUpKeyPool();
 
-        if (pwallet->IsParticlWallet()) {
-            CHDWallet *phdw = GetParticlWallet(pwallet);
+        if (pwallet->IsFalconWallet()) {
+            CHDWallet *phdw = GetFalconWallet(pwallet);
             phdw->fUnlockForStakingOnly = fWalletUnlockStakingOnly;
         }
         pwallet->nRelockTime = GetTime() + nSleepTime;
@@ -2753,7 +2753,7 @@ static RPCHelpMan encryptwallet()
                 RPCExamples{
             "\nEncrypt your wallet\n"
             + HelpExampleCli("encryptwallet", "\"my pass phrase\"") +
-            "\nNow set the passphrase to use the wallet, such as for signing or sending particl\n"
+            "\nNow set the passphrase to use the wallet, such as for signing or sending falcon\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can do something like sign\n"
             + HelpExampleCli("signmessage", "\"address\" \"test message\"") +
@@ -2802,7 +2802,7 @@ static RPCHelpMan lockunspent()
                 "\nUpdates list of temporarily unspendable outputs.\n"
                 "Temporarily lock (unlock=false) or unlock (unlock=true) specified transaction outputs.\n"
                 "If no transaction outputs are specified when unlocking then all current locked transaction outputs are unlocked.\n"
-                "A locked transaction output will not be chosen by automatic coin selection, when spending particl.\n"
+                "A locked transaction output will not be chosen by automatic coin selection, when spending falcon.\n"
                 "Manually selected coins are automatically unlocked.\n"
                 "Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list\n"
                 "is always cleared (by virtue of process exit) when a node stops or fails.\n"
@@ -2884,10 +2884,10 @@ static RPCHelpMan lockunspent()
 
         const COutPoint outpt(txid, nOutput);
 
-        if (IsParticlWallet(pwallet.get()))  {
+        if (IsFalconWallet(pwallet.get()))  {
             const auto it = pwallet->mapWallet.find(outpt.hash);
             if (it == pwallet->mapWallet.end()) {
-                CHDWallet *phdw = GetParticlWallet(pwallet.get());
+                CHDWallet *phdw = GetFalconWallet(pwallet.get());
                 const auto it = phdw->mapRecords.find(outpt.hash);
                 if (it == phdw->mapRecords.end()) {
                     throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, unknown transaction");
@@ -3095,8 +3095,8 @@ static RPCHelpMan getbalances()
 
     LOCK(wallet.cs_wallet);
 
-    if (IsParticlWallet(&wallet)) {
-        const CHDWallet *pwhd = GetParticlWallet(&wallet);
+    if (IsFalconWallet(&wallet)) {
+        const CHDWallet *pwhd = GetFalconWallet(&wallet);
         CHDWalletBalances bal;
         pwhd->GetBalances(bal);
 
@@ -3234,9 +3234,9 @@ static RPCHelpMan getwalletinfo()
     obj.pushKV("walletversion", pwallet->GetVersion());
     obj.pushKV("format", pwallet->GetDatabase().Format());
 
-    if (pwallet->IsParticlWallet()) {
+    if (pwallet->IsFalconWallet()) {
         CHDWalletBalances bal;
-        GetParticlWallet(pwallet.get())->GetBalances(bal);
+        GetFalconWallet(pwallet.get())->GetBalances(bal);
 
         obj.pushKV("total_balance",         ValueFromAmount(
             bal.nPart + bal.nPartUnconf + bal.nPartStaked + bal.nPartImmature
@@ -3269,12 +3269,12 @@ static RPCHelpMan getwalletinfo()
         obj.pushKV("immature_balance", ValueFromAmount(bal.m_mine_immature));
     }
 
-    int nTxCount = (int)pwallet->mapWallet.size() + (pwallet->IsParticlWallet() ? (int)GetParticlWallet(pwallet.get())->mapRecords.size() : 0);
+    int nTxCount = (int)pwallet->mapWallet.size() + (pwallet->IsFalconWallet() ? (int)GetFalconWallet(pwallet.get())->mapRecords.size() : 0);
     obj.pushKV("txcount",       (int)nTxCount);
 
     CKeyID seed_id;
-    if (IsParticlWallet(pwallet.get())) {
-        const CHDWallet *pwhd = GetParticlWallet(pwallet.get());
+    if (IsFalconWallet(pwallet.get())) {
+        const CHDWallet *pwhd = GetFalconWallet(pwallet.get());
 
         obj.pushKV("keypoololdest", pwhd->GetOldestActiveAccountTime());
         obj.pushKV("keypoolsize",   pwhd->CountActiveAccountKeys());
@@ -3431,7 +3431,7 @@ static RPCHelpMan loadwallet()
 {
     return RPCHelpMan{"loadwallet",
                 "\nLoads a wallet from a wallet file or directory."
-                "\nNote that all wallet command-line options used when starting particld will be"
+                "\nNote that all wallet command-line options used when starting falcond will be"
                 "\napplied to the new wallet (eg -rescan, etc).\n",
                 {
                     {"filename", RPCArg::Type::STR, RPCArg::Optional::NO, "The wallet directory or .dat file."},
@@ -3731,7 +3731,7 @@ static RPCHelpMan unloadwallet()
         throw JSONRPCError(RPC_MISC_ERROR, "Requested wallet already unloaded");
     }
 
-    if (wallet->IsParticlWallet()) {
+    if (wallet->IsFalconWallet()) {
         ChainstateManager *chainman = wallet->HaveChain() ? wallet->chain().getChainman() : nullptr;
         if (chainman) {
             RestartStakingThreads(context, *chainman);
@@ -3775,8 +3775,8 @@ static RPCHelpMan resendwallettransactions()
 
     std::vector<uint256> txids = pwallet->ResendWalletTransactionsBefore(GetTime());
     UniValue result(UniValue::VARR);
-    if (pwallet->IsParticlWallet()) {
-        CHDWallet *phdw = GetParticlWallet(pwallet.get());
+    if (pwallet->IsFalconWallet()) {
+        CHDWallet *phdw = GetFalconWallet(pwallet.get());
         std::vector<uint256> txidsRec;
         txidsRec = phdw->ResendRecordTransactionsBefore(GetTime());
 
@@ -3803,9 +3803,9 @@ static RPCHelpMan listunspent()
                 {
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{1}, "The minimum confirmations to filter"},
                     {"maxconf", RPCArg::Type::NUM, RPCArg::Default{9999999}, "The maximum confirmations to filter"},
-                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "The particl addresses to filter",
+                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "The falcon addresses to filter",
                         {
-                            {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "particl address"},
+                            {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "falcon address"},
                         },
                     },
                     {"include_unsafe", RPCArg::Type::BOOL, RPCArg::Default{true}, "Include outputs that are not safe to spend\n"
@@ -3828,8 +3828,8 @@ static RPCHelpMan listunspent()
                         {
                             {RPCResult::Type::STR_HEX, "txid", "the transaction id"},
                             {RPCResult::Type::NUM, "vout", "the vout value"},
-                            {RPCResult::Type::STR, "address", "the particl address"},
-                            {RPCResult::Type::STR, "coldstaking_address", "the particl address this output must stake on"},
+                            {RPCResult::Type::STR, "address", "the falcon address"},
+                            {RPCResult::Type::STR, "coldstaking_address", "the falcon address this output must stake on"},
                             {RPCResult::Type::STR, "label", "The associated label, or \"\" for the default label"},
                             {RPCResult::Type::STR, "scriptPubKey", "the script key"},
                             {RPCResult::Type::STR_AMOUNT, "amount", "the transaction output amount in " + CURRENCY_UNIT},
@@ -3881,7 +3881,7 @@ static RPCHelpMan listunspent()
             const UniValue& input = inputs[idx];
             CTxDestination dest = DecodeDestination(input.get_str());
             if (!IsValidDestination(dest)) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl address: ") + input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon address: ") + input.get_str());
             }
             if (!destinations.insert(dest).second) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ") + input.get_str());
@@ -3961,7 +3961,7 @@ static RPCHelpMan listunspent()
         CAmount nValue;
         CTxDestination address;
         const CScript *scriptPubKey;
-        if (pwallet->IsParticlWallet()) {
+        if (pwallet->IsFalconWallet()) {
             scriptPubKey = out.tx->tx->vpout[out.i]->GetPScriptPubKey();
             nValue = out.tx->tx->vpout[out.i]->GetValue();
         } else {
@@ -4058,11 +4058,11 @@ static RPCHelpMan listunspent()
         if (avoid_reuse) entry.pushKV("reused", reused);
         entry.pushKV("safe", out.fSafe);
 
-        if (IsParticlWallet(pwallet.get())) {
-            const CHDWallet *phdw = GetParticlWallet(pwallet.get());
+        if (IsFalconWallet(pwallet.get())) {
+            const CHDWallet *phdw = GetFalconWallet(pwallet.get());
             LOCK_ASSERTION(phdw->cs_wallet);
             CKeyID stakingKeyID;
-            bool fStakeable = particl::ExtractStakingKeyID(*scriptPubKey, stakingKeyID);
+            bool fStakeable = falcon::ExtractStakingKeyID(*scriptPubKey, stakingKeyID);
             if (fStakeable) {
                 isminetype mine = phdw->IsMine(stakingKeyID);
                 if (!(mine & ISMINE_SPENDABLE)
@@ -4141,7 +4141,7 @@ void FundTransaction(CWallet& wallet, CMutableTransaction& tx, CAmount& fee_out,
             CTxDestination dest = DecodeDestination(change_address_str);
 
             if (!IsValidDestination(dest)) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Change address must be a valid particl address");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Change address must be a valid falcon address");
             }
 
             coinControl.destChange = dest;
@@ -4247,7 +4247,7 @@ static RPCHelpMan fundrawtransaction()
                             {"include_unsafe", RPCArg::Type::BOOL, RPCArg::Default{false}, "Include inputs that are not safe to spend (unconfirmed transactions from outside keys and unconfirmed replacement transactions).\n"
                                                           "Warning: the resulting transaction may become invalid if one of the unsafe inputs disappears.\n"
                                                           "If that happens, you will need to fund the transaction with different inputs and republish it."},
-                            {"changeAddress", RPCArg::Type::STR, RPCArg::DefaultHint{"pool address"}, "The particl address to receive the change"},
+                            {"changeAddress", RPCArg::Type::STR, RPCArg::DefaultHint{"pool address"}, "The falcon address to receive the change"},
                             {"changePosition", RPCArg::Type::NUM, RPCArg::DefaultHint{"random"}, "The index of the change output"},
                             {"change_type", RPCArg::Type::STR, RPCArg::DefaultHint{"set by -changetype"}, "The output type to use. Only valid if changeAddress is not specified. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                             {"includeWatching", RPCArg::Type::BOOL, RPCArg::DefaultHint{"true for watch-only wallets, otherwise false"}, "Also select inputs which are watch only.\n"
@@ -4258,7 +4258,7 @@ static RPCHelpMan fundrawtransaction()
                             {"feeRate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"not set, fall back to wallet fee estimation"}, "Specify a fee rate in " + CURRENCY_UNIT + "/kvB."},
                             {"subtractFeeFromOutputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "The integers.\n"
                                                           "The fee will be equally deducted from the amount of each specified output.\n"
-                                                          "Those recipients will receive less particl than you enter in their corresponding amount field.\n"
+                                                          "Those recipients will receive less falcon than you enter in their corresponding amount field.\n"
                                                           "If no outputs are specified here, the sender pays the fee.",
                                 {
                                     {"vout_index", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "The zero-based output index, before a change output is added."},
@@ -4535,7 +4535,7 @@ static RPCHelpMan bumpfee_helper(std::string method_name)
     CAmount new_fee;
     CMutableTransaction mtx;
     feebumper::Result res;
-    if (IsParticlWallet(pwallet.get())) {
+    if (IsFalconWallet(pwallet.get())) {
         // Targeting total fee bump. Requires a change output of sufficient size.
         res = feebumper::CreateTotalBumpTransaction(pwallet.get(), hash, coin_control, errors, old_fee, new_fee, mtx);
     } else {
@@ -4841,14 +4841,14 @@ static UniValue AddressBookDataToJSON(const CAddressBookData& data, const bool v
 RPCHelpMan getaddressinfo()
 {
     return RPCHelpMan{"getaddressinfo",
-                "\nReturn information about the given particl address.\n"
+                "\nReturn information about the given falcon address.\n"
                 "Some of the information will only be present if the address is in the active wallet.\n",                {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address to get the information of."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address to get the information of."},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
                     {
-                        {RPCResult::Type::STR, "address", "The particl address validated."},
+                        {RPCResult::Type::STR, "address", "The falcon address validated."},
                         {RPCResult::Type::STR_HEX, "scriptPubKey", "The hex-encoded scriptPubKey generated by the address."},
                         {RPCResult::Type::BOOL, "ismine", "If the address is yours."},
                         {RPCResult::Type::BOOL, "iswatchonly", "If the address is watchonly."},
@@ -4927,8 +4927,8 @@ RPCHelpMan getaddressinfo()
     std::unique_ptr<SigningProvider> provider = pwallet->GetSolvingProvider(scriptPubKey);
 
     isminetype mine = ISMINE_NO;
-    if (IsParticlWallet(pwallet.get())) {
-        const CHDWallet *phdw = GetParticlWallet(pwallet.get());
+    if (IsFalconWallet(pwallet.get())) {
+        const CHDWallet *phdw = GetFalconWallet(pwallet.get());
         LOCK_ASSERTION(phdw->cs_wallet);
         if (dest.index() == DI::_CExtPubKey) {
             CExtPubKey ek = std::get<CExtPubKey>(dest);
@@ -5188,7 +5188,7 @@ static RPCHelpMan send()
                 {
                     {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                         {
-                            {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the particl address, the value (float or string) is the amount in " + CURRENCY_UNIT + ""},
+                            {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the falcon address, the value (float or string) is the amount in " + CURRENCY_UNIT + ""},
                         },
                         },
                     {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
@@ -5209,7 +5209,7 @@ static RPCHelpMan send()
                                                           "Warning: the resulting transaction may become invalid if one of the unsafe inputs disappears.\n"
                                                           "If that happens, you will need to fund the transaction with different inputs and republish it."},
                     {"add_to_wallet", RPCArg::Type::BOOL, RPCArg::Default{true}, "When false, returns a serialized transaction which will not be added to the wallet or broadcast"},
-                    {"change_address", RPCArg::Type::STR_HEX, RPCArg::DefaultHint{"pool address"}, "The particl address to receive the change"},
+                    {"change_address", RPCArg::Type::STR_HEX, RPCArg::DefaultHint{"pool address"}, "The falcon address to receive the change"},
                     {"change_position", RPCArg::Type::NUM, RPCArg::DefaultHint{"random"}, "The index of the change output"},
                     {"change_type", RPCArg::Type::STR, RPCArg::DefaultHint{"set by -changetype"}, "The output type to use. Only valid if change_address is not specified. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                     {"conf_target", RPCArg::Type::NUM, RPCArg::DefaultHint{"wallet -txconfirmtarget"}, "Confirmation target in blocks"},
@@ -5231,7 +5231,7 @@ static RPCHelpMan send()
                     {"psbt", RPCArg::Type::BOOL,  RPCArg::DefaultHint{"automatic"}, "Always return a PSBT, implies add_to_wallet=false."},
                     {"subtract_fee_from_outputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "Outputs to subtract the fee from, specified as integer indices.\n"
                     "The fee will be equally deducted from the amount of each specified output.\n"
-                    "Those recipients will receive less particl than you enter in their corresponding amount field.\n"
+                    "Those recipients will receive less falcon than you enter in their corresponding amount field.\n"
                     "If no outputs are specified here, the sender pays the fee.",
                         {
                             {"vout_index", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "The zero-based output index, before a change output is added."},
@@ -5417,8 +5417,8 @@ static RPCHelpMan sethdseed()
         throw JSONRPCError(RPC_WALLET_ERROR, "Cannot set an HD seed on a non-HD wallet. Use the upgradewallet RPC in order to upgrade a non-HD wallet to HD");
     }
 
-    if (IsParticlWallet(pwallet.get()))
-        throw JSONRPCError(RPC_WALLET_ERROR, "Not necessary in Particl mode.");
+    if (IsFalconWallet(pwallet.get()))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Not necessary in Falcon mode.");
 
     EnsureWalletIsUnlocked(*pwallet);
 
@@ -5546,7 +5546,7 @@ static RPCHelpMan walletcreatefundedpsbt()
                         {
                             {"", RPCArg::Type::OBJ_USER_KEYS, RPCArg::Optional::OMITTED, "",
                                 {
-                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the particl address, the value (float or string) is the amount in " + CURRENCY_UNIT + ""},
+                                    {"address", RPCArg::Type::AMOUNT, RPCArg::Optional::NO, "A key-value pair. The key (string) is the falcon address, the value (float or string) is the amount in " + CURRENCY_UNIT + ""},
                                 },
                                 },
                             {"", RPCArg::Type::OBJ, RPCArg::Optional::OMITTED, "",
@@ -5563,7 +5563,7 @@ static RPCHelpMan walletcreatefundedpsbt()
                             {"include_unsafe", RPCArg::Type::BOOL, RPCArg::Default{false}, "Include inputs that are not safe to spend (unconfirmed transactions from outside keys and unconfirmed replacement transactions).\n"
                                                           "Warning: the resulting transaction may become invalid if one of the unsafe inputs disappears.\n"
                                                           "If that happens, you will need to fund the transaction with different inputs and republish it."},
-                            {"changeAddress", RPCArg::Type::STR_HEX, RPCArg::DefaultHint{"pool address"}, "The particl address to receive the change"},
+                            {"changeAddress", RPCArg::Type::STR_HEX, RPCArg::DefaultHint{"pool address"}, "The falcon address to receive the change"},
                             {"changePosition", RPCArg::Type::NUM, RPCArg::DefaultHint{"random"}, "The index of the change output"},
                             {"change_type", RPCArg::Type::STR, RPCArg::DefaultHint{"set by -changetype"}, "The output type to use. Only valid if changeAddress is not specified. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\"."},
                             {"includeWatching", RPCArg::Type::BOOL, RPCArg::DefaultHint{"true for watch-only wallets, otherwise false"}, "Also select inputs which are watch only"},
@@ -5572,7 +5572,7 @@ static RPCHelpMan walletcreatefundedpsbt()
                             {"feeRate", RPCArg::Type::AMOUNT, RPCArg::DefaultHint{"not set, fall back to wallet fee estimation"}, "Specify a fee rate in " + CURRENCY_UNIT + "/kvB."},
                             {"subtractFeeFromOutputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "The outputs to subtract the fee from.\n"
                                                           "The fee will be equally deducted from the amount of each specified output.\n"
-                                                          "Those recipients will receive less particl than you enter in their corresponding amount field.\n"
+                                                          "Those recipients will receive less falcon than you enter in their corresponding amount field.\n"
                                                           "If no outputs are specified here, the sender pays the fee.",
                                 {
                                     {"vout_index", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "The zero-based output index, before a change output is added."},
@@ -5727,7 +5727,7 @@ static RPCHelpMan walletdisplayaddress()
     return RPCHelpMan{"walletdisplayaddress",
         "Display address on an external signer for verification.",
         {
-            {"address",     RPCArg::Type::STR, RPCArg::Optional::NO, "particl address to display"},
+            {"address",     RPCArg::Type::STR, RPCArg::Optional::NO, "falcon address to display"},
         },
         RPCResult{
             RPCResult::Type::OBJ,"","",

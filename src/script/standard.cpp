@@ -756,7 +756,7 @@ std::optional<std::vector<std::tuple<int, CScript, int>>> InferTaprootTree(const
     return ret;
 }
 
-namespace particl {
+namespace falcon {
 TxoutType ToTxoutType(uint8_t type_byte)
 {
     switch (type_byte) {
@@ -824,4 +824,4 @@ bool ExtractStakingKeyID(const CScript &scriptPubKey, CKeyID &keyID)
     return false;
 }
 
-} // namespace particl
+} // namespace falcon

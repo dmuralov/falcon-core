@@ -707,7 +707,7 @@ public:
     mapMsgCmdSize mapRecvBytesPerMsgCmd GUARDED_BY(cs_vRecv);
 
     /**
-     * Particl
+     * Falcon
      */
     SecMsgNode smsgData;
 };
@@ -741,7 +741,7 @@ public:
     */
     virtual bool SendMessages(CNode* pnode) EXCLUSIVE_LOCKS_REQUIRED(pnode->cs_sendProcessing) = 0;
 
-    /** Particl */
+    /** Falcon */
     virtual void CheckUnreceivedHeaders(int64_t now) EXCLUSIVE_LOCKS_REQUIRED(cs_main) = 0;
     virtual void DecMisbehaving(NodeId nodeid, int howmuch) = 0;
 protected:

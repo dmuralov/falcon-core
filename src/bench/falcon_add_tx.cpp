@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -238,44 +238,44 @@ static void AddTx(benchmark::Bench& bench, const std::string from, const std::st
     ECC_Stop_Blinding();
 }
 
-static void ParticlAddTxPlainPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "plain", false); }
-static void ParticlAddTxPlainPlainOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "plain", true); }
-static void ParticlAddTxPlainBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "blind", false); }
-static void ParticlAddTxPlainBlindOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "blind", true); }
-// static void ParticlAddTxPlainAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "anon", false); }
-// static void ParticlAddTxPlainAnonOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "anon", true); }
+static void FalconAddTxPlainPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "plain", false); }
+static void FalconAddTxPlainPlainOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "plain", true); }
+static void FalconAddTxPlainBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "blind", false); }
+static void FalconAddTxPlainBlindOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "blind", true); }
+// static void FalconAddTxPlainAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "anon", false); }
+// static void FalconAddTxPlainAnonOwned(benchmark::Bench& bench) { AddTx(bench, "plain", "anon", true); }
 
-static void ParticlAddTxBlindPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "plain", false); }
-static void ParticlAddTxBlindPlainOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "plain", true); }
-static void ParticlAddTxBlindBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "blind", false); }
-static void ParticlAddTxBlindBlindOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "blind", true); }
-static void ParticlAddTxBlindAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "anon", false); }
-static void ParticlAddTxBlindAnonOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "anon", true); }
+static void FalconAddTxBlindPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "plain", false); }
+static void FalconAddTxBlindPlainOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "plain", true); }
+static void FalconAddTxBlindBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "blind", false); }
+static void FalconAddTxBlindBlindOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "blind", true); }
+static void FalconAddTxBlindAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "anon", false); }
+static void FalconAddTxBlindAnonOwned(benchmark::Bench& bench) { AddTx(bench, "blind", "anon", true); }
 
-static void ParticlAddTxAnonPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "plain", false); }
-static void ParticlAddTxAnonPlainOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "plain", true); }
-static void ParticlAddTxAnonBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "blind", false); }
-static void ParticlAddTxAnonBlindOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "blind", true); }
-static void ParticlAddTxAnonAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "anon", false); }
-static void ParticlAddTxAnonAnonOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "anon", true); }
+static void FalconAddTxAnonPlainNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "plain", false); }
+static void FalconAddTxAnonPlainOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "plain", true); }
+static void FalconAddTxAnonBlindNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "blind", false); }
+static void FalconAddTxAnonBlindOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "blind", true); }
+static void FalconAddTxAnonAnonNotOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "anon", false); }
+static void FalconAddTxAnonAnonOwned(benchmark::Bench& bench) { AddTx(bench, "anon", "anon", true); }
 
-BENCHMARK(ParticlAddTxPlainPlainNotOwned);
-BENCHMARK(ParticlAddTxPlainPlainOwned);
-BENCHMARK(ParticlAddTxPlainBlindNotOwned);
-BENCHMARK(ParticlAddTxPlainBlindOwned);
-// BENCHMARK(ParticlAddTxPlainAnonNotOwned);
-// BENCHMARK(ParticlAddTxPlainAnonOwned);
+BENCHMARK(FalconAddTxPlainPlainNotOwned);
+BENCHMARK(FalconAddTxPlainPlainOwned);
+BENCHMARK(FalconAddTxPlainBlindNotOwned);
+BENCHMARK(FalconAddTxPlainBlindOwned);
+// BENCHMARK(FalconAddTxPlainAnonNotOwned);
+// BENCHMARK(FalconAddTxPlainAnonOwned);
 
-BENCHMARK(ParticlAddTxBlindPlainNotOwned);
-BENCHMARK(ParticlAddTxBlindPlainOwned);
-BENCHMARK(ParticlAddTxBlindBlindNotOwned);
-BENCHMARK(ParticlAddTxBlindBlindOwned);
-BENCHMARK(ParticlAddTxBlindAnonNotOwned);
-BENCHMARK(ParticlAddTxBlindAnonOwned);
+BENCHMARK(FalconAddTxBlindPlainNotOwned);
+BENCHMARK(FalconAddTxBlindPlainOwned);
+BENCHMARK(FalconAddTxBlindBlindNotOwned);
+BENCHMARK(FalconAddTxBlindBlindOwned);
+BENCHMARK(FalconAddTxBlindAnonNotOwned);
+BENCHMARK(FalconAddTxBlindAnonOwned);
 
-BENCHMARK(ParticlAddTxAnonPlainNotOwned);
-BENCHMARK(ParticlAddTxAnonPlainOwned);
-BENCHMARK(ParticlAddTxAnonBlindNotOwned);
-BENCHMARK(ParticlAddTxAnonBlindOwned);
-BENCHMARK(ParticlAddTxAnonAnonNotOwned);
-BENCHMARK(ParticlAddTxAnonAnonOwned);
+BENCHMARK(FalconAddTxAnonPlainNotOwned);
+BENCHMARK(FalconAddTxAnonPlainOwned);
+BENCHMARK(FalconAddTxAnonBlindNotOwned);
+BENCHMARK(FalconAddTxAnonBlindOwned);
+BENCHMARK(FalconAddTxAnonAnonNotOwned);
+BENCHMARK(FalconAddTxAnonAnonOwned);

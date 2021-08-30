@@ -74,7 +74,7 @@ class TestNode():
         self.index = i
         self.p2p_conn_index = 1
         self.datadir = datadir
-        self.bitcoinconf = os.path.join(self.datadir, "particl.conf")
+        self.bitcoinconf = os.path.join(self.datadir, "falcon.conf")
         self.stdout_dir = os.path.join(self.datadir, "stdout")
         self.stderr_dir = os.path.join(self.datadir, "stderr")
         self.chain = chain
@@ -214,7 +214,7 @@ class TestNode():
         self.process = subprocess.Popen(self.args + extra_args, env=subp_env, stdout=stdout, stderr=stderr, cwd=cwd, **kwargs)
 
         self.running = True
-        self.log.debug("particld started, waiting for RPC to come up")
+        self.log.debug("falcond started, waiting for RPC to come up")
 
         if self.start_perf:
             self._start_perf()
@@ -595,7 +595,7 @@ class TestNode():
         wait_until_helper(lambda: self.num_test_p2p_connections() == 0, timeout_factor=self.timeout_factor)
 
     def tx(self, args):
-        binary = 'particl-tx'
+        binary = 'falcon-tx'
         p_args = [binary, '-regtest'] + args
 
         self.log.debug("Running bitcoin-tx command: %s" % ' '.join(args))

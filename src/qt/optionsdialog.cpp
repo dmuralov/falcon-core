@@ -272,7 +272,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
     mapper->addMapping(ui->embeddedFont_radioButton, OptionsModel::UseEmbeddedMonospacedFont);
 
-    // Particl
+    // Falcon
     mapper->addMapping(ui->reserveBalanceAmount, OptionsModel::ReserveBalance);
 }
 

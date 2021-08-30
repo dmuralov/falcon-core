@@ -417,7 +417,7 @@ namespace GUIUtil
             type);
     }
 
-namespace particl
+namespace falcon
 {
     QString escapeQString(const QString& si);
 }

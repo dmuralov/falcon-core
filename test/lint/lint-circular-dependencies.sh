@@ -29,7 +29,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "wallet/receive -> wallet/wallet -> wallet/receive"
     "wallet/spend -> wallet/wallet -> wallet/spend"
 
-# Particl
+# Falcon
     "anon -> txmempool -> anon"
     "anon -> validation -> anon"
     "consensus/tx_verify -> validation -> consensus/tx_verify"

@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2016 The ShadowCoin developers
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -893,7 +893,7 @@ bool CSMSG::Start(std::shared_ptr<CWallet> pwalletIn, std::vector<std::shared_pt
     UnloadAllWallets();
 
     for (const auto &pw : vpwallets) {
-        CHDWallet *const ppartw = GetParticlWallet(pw.get());
+        CHDWallet *const ppartw = GetFalconWallet(pw.get());
         if (!ppartw || !ppartw->m_smsg_enabled) {
             continue;
         }
@@ -1970,7 +1970,7 @@ static bool ScanBlock(CSMSG &smsg, const CBlock &block, SecMsgDB &addrpkdb,
     for (const auto &tx : block.vtx) {
         // Harvest public keys from coinstake txns
 
-        if (!tx->IsParticlVersion()) {
+        if (!tx->IsFalconVersion()) {
             continue;
         }
 
@@ -3111,7 +3111,7 @@ int CSMSG::Receive(PeerManager *peerLogic, CNode *pfrom, std::vector<uint8_t> &v
                 GetPowHash(&smsg, pPayload, smsg.nPayload, msg_hash);
                 {
                 LOCK(cs_main);
-                target.SetCompact(particl::GetSmsgDifficulty(*m_node->chainman, now, true));
+                target.SetCompact(falcon::GetSmsgDifficulty(*m_node->chainman, now, true));
                 }
 
                 if (UintToArith256(msg_hash) > target) {
@@ -3533,7 +3533,7 @@ int CSMSG::CheckFundingTx(const Consensus::Params &consensusParams, const Secure
             pindex = mi->second;
             if (pindex && m_node->chainman->ActiveChain().Contains(pindex)) {
                 blockDepth = m_node->chainman->ActiveChain().Height() - pindex->nHeight + 1;
-                nMsgFeePerKPerDay = particl::GetSmsgFeeRate(*m_node->chainman, pindex);
+                nMsgFeePerKPerDay = falcon::GetSmsgFeeRate(*m_node->chainman, pindex);
             }
         }
     }
@@ -3556,7 +3556,7 @@ int CSMSG::CheckFundingTx(const Consensus::Params &consensusParams, const Secure
                 // Grace period after fee period transition where prev fee is still allowed
                 bool matched_last_fee = false;
                 if (pindex->nHeight % consensusParams.smsg_fee_period < 10) {
-                    int64_t nMsgFeePerKPerDayLast = particl::GetSmsgFeeRate(*m_node->chainman, pindex, true);
+                    int64_t nMsgFeePerKPerDayLast = falcon::GetSmsgFeeRate(*m_node->chainman, pindex, true);
                     int64_t nExpectFeeLast = ((nMsgFeePerKPerDayLast * nMsgBytes) / 1000) * nDaysRetention;
 
                     if (nAmount >= nExpectFeeLast) {
@@ -3687,7 +3687,7 @@ int CSMSG::Validate(const SecureMessage *psmsg, const uint8_t *pPayload, uint32_
     arith_uint256 target;
     {
     LOCK(cs_main);
-    target.SetCompact(particl::GetSmsgDifficulty(*m_node->chainman, psmsg->timestamp, true));
+    target.SetCompact(falcon::GetSmsgDifficulty(*m_node->chainman, psmsg->timestamp, true));
     }
 
     if (UintToArith256(msg_hash) <= target) {
@@ -3714,7 +3714,7 @@ int CSMSG::SetHash(SecureMessage *psmsg, uint8_t *pPayload, uint32_t nPayload)
     arith_uint256 target_difficulty;
     {
     LOCK(cs_main);
-    target_difficulty.SetCompact(particl::GetSmsgDifficulty(*m_node->chainman, psmsg->timestamp));
+    target_difficulty.SetCompact(falcon::GetSmsgDifficulty(*m_node->chainman, psmsg->timestamp));
     }
 
     unsigned char header_buffer[SMSG_HDR_LEN];
@@ -4276,7 +4276,7 @@ int CSMSG::FundMsg(SecureMessage &smsg, std::string &sError, bool fTestFee, CAmo
         memput_uint32_le(&tr.vData[21], msgFee);
         vec_send.push_back(tr);
 
-        CHDWallet *const pw = GetParticlWallet(pactive_wallet.get());
+        CHDWallet *const pw = GetFalconWallet(pactive_wallet.get());
         CTransactionRef tx_new;
         CWalletTx wtx(pactive_wallet.get(), tx_new);
 

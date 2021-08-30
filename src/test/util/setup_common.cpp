@@ -38,7 +38,7 @@
 #include <validationinterface.h>
 #include <walletinitinterface.h>
 
-// Particl
+// Falcon
 #include <insight/insight.h>
 
 #include <functional>
@@ -70,7 +70,7 @@ void Seed(FastRandomContext& ctx)
     ctx = FastRandomContext(seed);
 }
 
-extern bool fParticlMode;
+extern bool fFalconMode;
 
 std::ostream& operator<<(std::ostream& os, const uint256& num)
 {
@@ -78,11 +78,11 @@ std::ostream& operator<<(std::ostream& os, const uint256& num)
     return os;
 }
 
-BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fParticlModeIn)
+BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fFalconModeIn)
     : m_path_root{fs::temp_directory_path() / "test_common_" PACKAGE_NAME / g_insecure_rand_ctx_temp_path.rand256().ToString()},
       m_args{}
 {
-    fParticlMode = fParticlModeIn;
+    fFalconMode = fFalconModeIn;
     m_node.args = &gArgs;
     const std::vector<const char*> arguments = Cat(
         {
@@ -94,8 +94,8 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::ve
             "-debug",
             "-debugexclude=libevent",
             "-debugexclude=leveldb",
-            fParticlMode ? "" : "-btcmode",
-            fParticlMode ? "-debugexclude=hdwallet" : "",
+            fFalconMode ? "" : "-btcmode",
+            fFalconMode ? "-debugexclude=hdwallet" : "",
         },
         extra_args);
     util::ThreadRename("test");
@@ -118,7 +118,7 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName, const std::ve
         }
     }
     SelectParams(chainName);
-    ResetParams(chainName, fParticlMode);
+    ResetParams(chainName, fFalconMode);
     SeedInsecureRand();
     if (G_TEST_LOG_FUN) LogInstance().PushBackCallback(G_TEST_LOG_FUN);
     InitLogging(*m_node.args);
@@ -150,8 +150,8 @@ BasicTestingSetup::~BasicTestingSetup()
     ECC_Stop();
 }
 
-ChainTestingSetup::ChainTestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fParticlModeIn)
-    : BasicTestingSetup(chainName, extra_args, fParticlModeIn)
+ChainTestingSetup::ChainTestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fFalconModeIn)
+    : BasicTestingSetup(chainName, extra_args, fFalconModeIn)
 {
     // We have to run a scheduler thread to prevent ActivateBestChain
     // from blocking due to queue overrun.
@@ -188,8 +188,8 @@ ChainTestingSetup::~ChainTestingSetup()
     m_node.chainman.reset();
 }
 
-TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fParticlModeIn)
-    : ChainTestingSetup(chainName, extra_args, fParticlModeIn)
+TestingSetup::TestingSetup(const std::string& chainName, const std::vector<const char*>& extra_args, bool fFalconModeIn)
+    : ChainTestingSetup(chainName, extra_args, fFalconModeIn)
 {
     const CChainParams& chainparams = Params();
     // Ideally we'd move all the RPC tests to the functional testing framework

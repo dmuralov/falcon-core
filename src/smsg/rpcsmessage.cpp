@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2016 The ShadowCoin developers
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -79,7 +79,7 @@ static RPCHelpMan smsgenable()
         sFindWallet = request.params[0].get_str();
     }
     for (const auto &pw : vpwallets) {
-        CHDWallet *const ppartw = GetParticlWallet(pw.get());
+        CHDWallet *const ppartw = GetFalconWallet(pw.get());
         if (!ppartw) {
             continue;
         }
@@ -703,7 +703,7 @@ static RPCHelpMan smsgdumpprivkey()
     return RPCHelpMan{"smsgdumpprivkey",
         "\nReveals the private key corresponding to 'address'.\n",
         {
-            {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address for the private key"},
+            {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address for the private key"},
         },
         RPCResult{
             RPCResult::Type::STR, "key", "The private key"
@@ -718,7 +718,7 @@ static RPCHelpMan smsgdumpprivkey()
     std::string strAddress = request.params[0].get_str();
     CTxDestination dest = DecodeDestination(strAddress);
     if (!IsValidDestination(dest)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
     }
 
     if (dest.index() != DI::_PKHash) {
@@ -832,7 +832,7 @@ static RPCHelpMan smsgsend()
                         "options"},
                     {"coin_control", RPCArg::Type::OBJ, RPCArg::Default{UniValue::VOBJ}, "",
                         {
-                            {"changeaddress", RPCArg::Type::STR, RPCArg::Default{""}, "The particl address to receive the change"},
+                            {"changeaddress", RPCArg::Type::STR, RPCArg::Default{""}, "The falcon address to receive the change"},
                             {"inputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of json objects",
                                 {
                                     {"", RPCArg::Type::OBJ, RPCArg::Default{UniValue::VOBJ}, "",
@@ -970,7 +970,7 @@ static RPCHelpMan smsgsend()
         if (!smsgModule.pactive_wallet) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Active wallet must be set to send a paid smsg.");
         }
-        CHDWallet *const pw = GetParticlWallet(smsgModule.pactive_wallet.get());
+        CHDWallet *const pw = GetFalconWallet(smsgModule.pactive_wallet.get());
         if (!fTestFee) {
             EnsureWalletIsUnlocked(pw);
         }
@@ -2118,7 +2118,7 @@ static RPCHelpMan smsggetfeerate()
                 return result;
             }
 
-            result.pushKV("currentrate", particl::GetSmsgFeeRate(chainman, nullptr));
+            result.pushKV("currentrate", falcon::GetSmsgFeeRate(chainman, nullptr));
             int fee_height = (chain_height / consensusParams.smsg_fee_period) * consensusParams.smsg_fee_period;
             result.pushKV("currentrateblockheight", fee_height);
 
@@ -2139,7 +2139,7 @@ static RPCHelpMan smsggetfeerate()
         pblockindex = chainman.ActiveChain()[nHeight];
     }
 
-    return particl::GetSmsgFeeRate(chainman, pblockindex);
+    return falcon::GetSmsgFeeRate(chainman, pblockindex);
 },
     };
 }
@@ -2173,7 +2173,7 @@ static RPCHelpMan smsggetdifficulty()
         }
     }
 
-    uint32_t target_compact = particl::GetSmsgDifficulty(chainman, chain_time);
+    uint32_t target_compact = falcon::GetSmsgDifficulty(chainman, chain_time);
     return smsg::GetDifficulty(target_compact);
 },
     };

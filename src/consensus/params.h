@@ -146,7 +146,7 @@ struct Params {
     /** By default assume that the signatures in ancestors of this block are valid */
     uint256 defaultAssumeValid;
 
-    /** Minimum depth a Particl Anon output is spendable at */
+    /** Minimum depth a Falcon Anon output is spendable at */
     int nMinRCTOutputDepth;
 
     /**

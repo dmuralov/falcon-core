@@ -375,7 +375,7 @@ public:
  */
 std::optional<std::vector<std::tuple<int, CScript, int>>> InferTaprootTree(const TaprootSpendData& spenddata, const XOnlyPubKey& output);
 
-namespace particl {
+namespace falcon {
 TxoutType ToTxoutType(uint8_t type_byte);
 uint8_t FromTxoutType(TxoutType type_class);
 bool ExtractStakingKeyID(const CScript &scriptPubKey, CKeyID &keyID);

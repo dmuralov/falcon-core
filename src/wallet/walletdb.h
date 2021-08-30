@@ -287,7 +287,7 @@ public:
     //! Abort current transaction
     bool TxnAbort();
 
-    // Particl
+    // Falcon
     bool WriteLockedUnspentOutput(const COutPoint &o);
     bool EraseLockedUnspentOutput(const COutPoint &o);
     bool EraseAllByPrefix(std::string sPrefix);

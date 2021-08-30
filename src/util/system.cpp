@@ -79,10 +79,10 @@
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
-const char * const BITCOIN_CONF_FILENAME = "particl.conf";
+const char * const BITCOIN_CONF_FILENAME = "falcon.conf";
 const char * const BITCOIN_SETTINGS_FILENAME = "settings.json";
 
-bool fParticlMode = true;
+bool fFalconMode = true;
 ArgsManager gArgs;
 
 /** Mutex to protect dir_locks. */
@@ -723,7 +723,7 @@ std::string ArgsManager::GetHelpMessage() const
                 usage += HelpMessageGroup("SMSG Commands:");
                 break;
             case OptionsCategory::PART_WALLET:
-                usage += HelpMessageGroup("Particl wallet Commands:");
+                usage += HelpMessageGroup("Falcon wallet Commands:");
                 break;
             case OptionsCategory::PART_STAKING:
                 usage += HelpMessageGroup("Staking Commands:");
@@ -782,7 +782,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(nullptr, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "particl";
+    const char* pszModule = "falcon";
 #endif
     if (pex)
         return strprintf(
@@ -801,12 +801,12 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 
 fs::path GetDefaultDataDir()
 {
-    // Windows: C:\Users\Username\AppData\Roaming\Particl
-    // macOS: ~/Library/Application Support/Particl
-    // Unix-like: ~/.particl
+    // Windows: C:\Users\Username\AppData\Roaming\Falcon
+    // macOS: ~/Library/Application Support/Falcon
+    // Unix-like: ~/.falcon
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Particl";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Falcon";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -816,10 +816,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // macOS
-    return pathRet / "Library/Application Support/Particl";
+    return pathRet / "Library/Application Support/Falcon";
 #else
     // Unix-like
-    return pathRet / ".particl";
+    return pathRet / ".falcon";
 #endif
 #endif
 }

@@ -1,9 +1,9 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PARTICL_WALLET_HDWALLET_H
-#define PARTICL_WALLET_HDWALLET_H
+#ifndef FALCON_WALLET_HDWALLET_H
+#define FALCON_WALLET_HDWALLET_H
 
 #include <wallet/wallet.h>
 #include <wallet/hdwalletdb.h>
@@ -35,7 +35,7 @@ class CHDWallet : public CWallet
 public:
     CHDWallet(interfaces::Chain* chain, const std::string& name, std::unique_ptr<WalletDatabase> database) : CWallet(chain, name, std::move(database))
     {
-        m_default_address_type = OutputType::LEGACY; // In Particl segwit is enabled for all types
+        m_default_address_type = OutputType::LEGACY; // In Falcon segwit is enabled for all types
         m_fallback_fee = CFeeRate(DEFAULT_FALLBACK_FEE_PART);
     }
 
@@ -44,7 +44,7 @@ public:
         Finalise();
     }
 
-    bool IsParticlWallet() const override { return true; };
+    bool IsFalconWallet() const override { return true; };
 
     int Finalise();
     int FreeExtKeyMaps();
@@ -605,9 +605,9 @@ int64_t CalculateMaximumSignedTxSize(const CTransaction &tx, const CHDWallet *wa
 
 void RestartStakingThreads(WalletContext &wallet_context, ChainstateManager &chainman);
 
-bool IsParticlWallet(const WalletStorage *win);
-CHDWallet *GetParticlWallet(WalletStorage *win);
-const CHDWallet *GetParticlWallet(const WalletStorage *win);
+bool IsFalconWallet(const WalletStorage *win);
+CHDWallet *GetFalconWallet(WalletStorage *win);
+const CHDWallet *GetFalconWallet(const WalletStorage *win);
 
 
-#endif // PARTICL_WALLET_HDWALLET_H
+#endif // FALCON_WALLET_HDWALLET_H

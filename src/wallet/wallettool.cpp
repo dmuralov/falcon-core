@@ -27,7 +27,7 @@ static void WalletCreate(CWallet* wallet_instance, uint64_t wallet_creation_flag
 {
     LOCK(wallet_instance->cs_wallet);
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         wallet_instance->AddWalletFlags(wallet_creation_flags);
         return;
     }
@@ -57,7 +57,7 @@ static std::shared_ptr<CWallet> MakeWallet(const std::string& name, const fs::pa
     }
 
     // dummy chain interface
-    std::shared_ptr<CWallet> wallet_instance(fParticlMode
+    std::shared_ptr<CWallet> wallet_instance(fFalconMode
         ? std::shared_ptr<CWallet>(new CHDWallet(nullptr /* chain */, name, std::move(database)), WalletToolReleaseWallet)
         : std::shared_ptr<CWallet>(new CWallet(nullptr /* chain */, name, std::move(database)), WalletToolReleaseWallet));
     DBErrors load_wallet_ret;
@@ -180,7 +180,7 @@ bool ExecuteWalletToolFunc(const ArgsManager& args, const std::string& command)
             tfm::format(std::cerr, "%s\n", error.original);
             return ret;
         }
-        tfm::format(std::cout, "The dumpfile may contain private keys. To ensure the safety of your Particl, do not share the dumpfile.\n");
+        tfm::format(std::cout, "The dumpfile may contain private keys. To ensure the safety of your Falcon, do not share the dumpfile.\n");
         return ret;
     } else if (command == "createfromdump") {
         bilingual_str error;

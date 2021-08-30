@@ -1352,7 +1352,7 @@ public:
             ::Serialize(s, CTxOut());
         else
         {
-            if (txTo.IsParticlVersion())
+            if (txTo.IsFalconVersion())
                 ::Serialize(s, *(txTo.vpout[nOutput].get()));
             else
                 ::Serialize(s, txTo.vout[nOutput]);
@@ -1409,7 +1409,7 @@ uint256 GetOutputsSHA256(const T& txTo)
     CHashWriter ss(SER_GETHASH, 0);
 
     bool have_non_plain = false;
-    if (txTo.IsParticlVersion()) {
+    if (txTo.IsFalconVersion()) {
         for (unsigned int n = 0; n < txTo.vpout.size(); n++) {
             ss << *txTo.vpout[n];
             if (txTo.vpout[n]->GetType() != OUTPUT_STANDARD) {
@@ -1421,7 +1421,7 @@ uint256 GetOutputsSHA256(const T& txTo)
             ss << txout;
         }
     }
-    if (have_non_plain && (txTo.nVersion & 0xFF) > PARTICL_TXN_VERSION) {
+    if (have_non_plain && (txTo.nVersion & 0xFF) > FALCON_TXN_VERSION) {
         for (unsigned int n = 0; n < txTo.vpout.size(); n++) {
             ss << txTo.vpout[n]->GetType();
         }
@@ -1648,7 +1648,7 @@ uint256 SignatureHash(const CScript& scriptCode, const T& txTo, unsigned int nIn
     assert(nIn < txTo.vin.size());
 
     if (sigversion == SigVersion::WITNESS_V0
-        || txTo.IsParticlVersion()) {
+        || txTo.IsFalconVersion()) {
         uint256 hashPrevouts;
         uint256 hashSequence;
         uint256 hashOutputs;
@@ -1667,7 +1667,7 @@ uint256 SignatureHash(const CScript& scriptCode, const T& txTo, unsigned int nIn
         } else if ((nHashType & 0x1f) == SIGHASH_SINGLE && nIn < txTo.GetNumVOuts()) {
             CHashWriter ss(SER_GETHASH, 0);
 
-            if (txTo.IsParticlVersion()) {
+            if (txTo.IsFalconVersion()) {
                 ss << *(txTo.vpout[nIn].get());
             } else {
                 ss << txTo.vout[nIn];
@@ -2048,7 +2048,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     // scriptSig and scriptPubKey must be evaluated sequentially on the same stack
     // rather than being simply concatenated (see CVE-2010-5141)
     std::vector<std::vector<unsigned char> > stack, stackCopy;
-    if (checker.IsParticlVersion())
+    if (checker.IsFalconVersion())
     {
         assert(witness);
         if (scriptSig.size() != 0) {
@@ -2094,7 +2094,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         }
     }
 
-    bool fIsP2SH = checker.IsParticlVersion() ? scriptPubKey.IsPayToScriptHashAny(checker.IsCoinStake()) : scriptPubKey.IsPayToScriptHash();
+    bool fIsP2SH = checker.IsFalconVersion() ? scriptPubKey.IsPayToScriptHashAny(checker.IsCoinStake()) : scriptPubKey.IsPayToScriptHash();
 
     // Additional validation for spend-to-script-hash transactions:
     if ((flags & SCRIPT_VERIFY_P2SH)
@@ -2162,7 +2162,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
         // possible, which is not a softfork.
         assert((flags & SCRIPT_VERIFY_P2SH) != 0);
 
-        if (!checker.IsParticlVersion())
+        if (!checker.IsFalconVersion())
         if (!hadWitness && !witness->IsNull()) {
             return set_error(serror, SCRIPT_ERR_WITNESS_UNEXPECTED);
         }

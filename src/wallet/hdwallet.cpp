@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1584,7 +1584,7 @@ DBErrors CHDWallet::LoadWallet()
             */
         }
     }
-    if (idDefaultAccount.IsNull() && m_chain) { // If !m_chain, probably running from particl-wallet
+    if (idDefaultAccount.IsNull() && m_chain) { // If !m_chain, probably running from falcon-wallet
         std::string sWarning = "Warning: Wallet " + GetName() + " has no active account, please view the readme.";
 #ifndef ENABLE_QT
         tfm::format(std::cout, "%s\n", sWarning.c_str());
@@ -2225,7 +2225,7 @@ CAmount CHDWallet::GetDebit(const CTxIn &txin, const isminefilter &filter) const
 
 CAmount CHDWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) const
 {
-    if (!tx.IsParticlVersion())
+    if (!tx.IsFalconVersion())
         return CWallet::GetDebit(tx, filter);
 
     CAmount nDebit = 0;
@@ -3888,7 +3888,7 @@ int CHDWallet::AddStandardInputs(CWalletTx &wtx, CTransactionRecord &rtx,
     wtx.fTimeReceivedIsTxTime = true;
     wtx.fFromMe = true;
     CMutableTransaction txNew;
-    txNew.nVersion = PARTICL_TXN_VERSION;
+    txNew.nVersion = FALCON_TXN_VERSION;
     txNew.vout.clear();
 
     // Discourage fee sniping. See CWallet::CreateTransaction
@@ -4131,7 +4131,7 @@ int CHDWallet::AddStandardInputs(CWalletTx &wtx, CTransactionRecord &rtx,
                     if (!provider) {
                         return wserrorN(1, sError, __func__, "GetLegacyScriptPubKeyMan failed.");
                     }
-                    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_PARTICL, scriptPubKey, sigdata)) {
+                    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_FALCON, scriptPubKey, sigdata)) {
                         return wserrorN(1, sError, __func__, "Dummy signature failed.");
                     }
                 }
@@ -4512,7 +4512,7 @@ int CHDWallet::AddBlindedInputs(CWalletTx &wtx, CTransactionRecord &rtx,
     wtx.fTimeReceivedIsTxTime = true;
     wtx.fFromMe = true;
     CMutableTransaction txNew;
-    txNew.nVersion = PARTICL_TXN_VERSION;
+    txNew.nVersion = FALCON_TXN_VERSION;
     txNew.vout.clear();
 
     // Discourage fee sniping. See CWallet::CreateTransaction
@@ -4699,7 +4699,7 @@ int CHDWallet::AddBlindedInputs(CWalletTx &wtx, CTransactionRecord &rtx,
                     if (!provider) {
                         return wserrorN(1, sError, __func__, "GetSolvingProvider failed.");
                     }
-                    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_PARTICL, scriptPubKey, sigdata)) {
+                    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_FALCON, scriptPubKey, sigdata)) {
                         return wserrorN(1, sError, __func__, "Dummy signature failed.");
                     }
                 }
@@ -5336,7 +5336,7 @@ int CHDWallet::AddAnonInputs(CWalletTx &wtx, CTransactionRecord &rtx,
     wtx.fTimeReceivedIsTxTime = true;
     wtx.fFromMe = true;
     CMutableTransaction txNew;
-    txNew.nVersion = PARTICL_TXN_VERSION;
+    txNew.nVersion = FALCON_TXN_VERSION;
     txNew.vout.clear();
 
     txNew.nLockTime = 0;
@@ -5907,12 +5907,12 @@ bool CHDWallet::LoadToWallet(const uint256& hash, const UpdateWalletTxFn& fill_w
         if (wtxIn.IsCoinStake() && wtxIn.isAbandoned()) {
             int csHeight;
             if (wtxIn.tx->GetCoinStakeHeight(csHeight)
-                && csHeight > nBestHeight - (particl::MAX_STAKE_SEEN_SIZE * 1.5)) {
+                && csHeight > nBestHeight - (falcon::MAX_STAKE_SEEN_SIZE * 1.5)) {
                 // Add to MapStakeSeen to prevent node submitting a block that would be rejected.
                 LOCK(cs_main);
                 const COutPoint &kernel = wtxIn.tx->vin[0].prevout;
                 uint256 hash = wtxIn.GetHash();
-                particl::AddToMapStakeSeen(kernel, hash);
+                falcon::AddToMapStakeSeen(kernel, hash);
             }
         }
     }
@@ -9108,7 +9108,7 @@ bool CHDWallet::DummySignInput(CTxIn &tx_in, const CTxOut &txout, bool use_max_s
     std::unique_ptr<SigningProvider> provider = GetSolvingProvider(scriptPubKey);
     SignatureData sigdata;
 
-    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_PARTICL, scriptPubKey, sigdata)) {
+    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_FALCON, scriptPubKey, sigdata)) {
         return false;
     } else {
         UpdateInput(tx_in, sigdata);
@@ -9126,7 +9126,7 @@ bool CHDWallet::DummySignInput(CTxIn &tx_in, const CTxOutBaseRef &txout) const
     std::unique_ptr<SigningProvider> provider = GetSolvingProvider(scriptPubKey);
     SignatureData sigdata;
 
-    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_PARTICL, scriptPubKey, sigdata)) {
+    if (!ProduceSignature(*provider, DUMMY_SIGNATURE_CREATOR_FALCON, scriptPubKey, sigdata)) {
         return false;
     } else {
         UpdateInput(tx_in, sigdata);
@@ -13103,7 +13103,7 @@ void CHDWallet::AvailableCoinsForStaking(std::vector<COutput> &vCoins, int64_t n
                     continue;
                 }
                 COutPoint kernel(wtxid, i);
-                if (!particl::CheckStakeUnused(kernel)
+                if (!falcon::CheckStakeUnused(kernel)
                      || IsSpent(wtxid, i)
                      || IsLockedCoin(wtxid, i)) {
                     continue;
@@ -13111,7 +13111,7 @@ void CHDWallet::AvailableCoinsForStaking(std::vector<COutput> &vCoins, int64_t n
 
                 const CScript *pscriptPubKey = txout->GetPScriptPubKey();
                 CKeyID keyID;
-                if (!particl::ExtractStakingKeyID(*pscriptPubKey, keyID)) {
+                if (!falcon::ExtractStakingKeyID(*pscriptPubKey, keyID)) {
                     continue;
                 }
 
@@ -13156,14 +13156,14 @@ void CHDWallet::AvailableCoinsForStaking(std::vector<COutput> &vCoins, int64_t n
                     continue;
                 }
                 COutPoint kernel(txid, r.n);
-                if (!particl::CheckStakeUnused(kernel)
+                if (!falcon::CheckStakeUnused(kernel)
                     || IsSpent(txid, r.n)
                     || IsLockedCoin(txid, r.n)) {
                     continue;
                 }
 
                 CKeyID keyID;
-                if (!particl::ExtractStakingKeyID(r.scriptPubKey, keyID)) {
+                if (!falcon::ExtractStakingKeyID(r.scriptPubKey, keyID)) {
                     continue;
                 }
 
@@ -13318,7 +13318,7 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
             whichType = Solver(*pscriptPubKey, vSolutions);
 
             if (LogAcceptCategory(BCLog::POS)) {
-                WalletLogPrintf("%s: Parsed kernel type=%d.\n", __func__, particl::FromTxoutType(whichType));
+                WalletLogPrintf("%s: Parsed kernel type=%d.\n", __func__, falcon::FromTxoutType(whichType));
             }
             CKeyID spendId;
             if (whichType == TxoutType::PUBKEYHASH) {
@@ -13328,14 +13328,14 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
                 spendId = CKeyID(uint256(vSolutions[0]));
             } else {
                 if (LogAcceptCategory(BCLog::POS)) {
-                    WalletLogPrintf("%s: No support for kernel type=%d.\n", __func__, particl::FromTxoutType(whichType));
+                    WalletLogPrintf("%s: No support for kernel type=%d.\n", __func__, falcon::FromTxoutType(whichType));
                 }
                 break;  // only support pay to address (pay to pubkey hash)
             }
 
             if (!GetKey(spendId, key)) {
                 if (LogAcceptCategory(BCLog::POS)) {
-                    WalletLogPrintf("%s: Failed to get key for kernel type=%d.\n", __func__, particl::FromTxoutType(whichType));
+                    WalletLogPrintf("%s: Failed to get key for kernel type=%d.\n", __func__, falcon::FromTxoutType(whichType));
                 }
                 break;  // unable to find corresponding key
             }
@@ -13394,7 +13394,7 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
             txNew.vpout.clear();
 
             // Mark as coin stake transaction
-            txNew.nVersion = PARTICL_TXN_VERSION;
+            txNew.nVersion = FALCON_TXN_VERSION;
             txNew.SetType(TXN_COINSTAKE);
 
             txNew.vin.push_back(CTxIn(pcoin.first->GetHash(), pcoin.second));
@@ -13511,7 +13511,7 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
         CAmount nTreasuryBfwd = 0;
         if (nBlockHeight > 1) { // genesis block is pow
             LOCK(cs_main);
-            if (!particl::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
+            if (!falcon::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
                 return werror("%s: Failed to get previous coinstake: %s.", __func__, pindexPrev->GetBlockHash().ToString());
             }
 
@@ -13556,7 +13556,7 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
         CAmount smsg_fee_rate = consensusParams.smsg_fee_msg_per_day_per_k;
         if (nBlockHeight > 1) { // genesis block is pow
             LOCK(cs_main);
-            if (!txPrevCoinstake && !particl::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
+            if (!txPrevCoinstake && !falcon::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
                 return werror("%s: Failed to get previous coinstake: %s.", __func__, pindexPrev->GetBlockHash().ToString());
             }
             txPrevCoinstake->GetSmsgFeeRate(smsg_fee_rate);
@@ -13589,7 +13589,7 @@ bool CHDWallet::CreateCoinStake(unsigned int nBits, int64_t nTime, int nBlockHei
         uint32_t last_compact = consensusParams.smsg_min_difficulty, next_compact = m_smsg_difficulty_target;
         if (nBlockHeight > 1) { // genesis block is pow
             LOCK(cs_main);
-            if (!txPrevCoinstake && !particl::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
+            if (!txPrevCoinstake && !falcon::coinStakeCache.GetCoinStake(chain().getChainman()->ActiveChainstate(), pindexPrev->GetBlockHash(), txPrevCoinstake)) {
                 return werror("%s: Failed to get previous coinstake: %s.", __func__, pindexPrev->GetBlockHash().ToString());
             }
             txPrevCoinstake->GetSmsgDifficulty(last_compact);
@@ -13723,7 +13723,7 @@ bool CHDWallet::SignBlock(CBlockTemplate *pblocktemplate, int nHeight, int64_t n
     CBlockIndex *pindexPrev = chain().getTip();
 
     CKey key;
-    pblock->nVersion = PARTICL_BLOCK_VERSION;
+    pblock->nVersion = FALCON_BLOCK_VERSION;
     pblock->nBits = GetNextTargetRequired(pindexPrev);
     if (LogAcceptCategory(BCLog::POS)) {
         WalletLogPrintf("%s, nBits %d\n", __func__, pblock->nBits);
@@ -13920,12 +13920,12 @@ void RestartStakingThreads(WalletContext &wallet_context, ChainstateManager &cha
     StartThreadStakeMiner(wallet_context, chainman);
 };
 
-bool IsParticlWallet(const WalletStorage *win)
+bool IsFalconWallet(const WalletStorage *win)
 {
     return win && dynamic_cast<const CHDWallet*>(win);
 };
 
-CHDWallet *GetParticlWallet(WalletStorage *win)
+CHDWallet *GetFalconWallet(WalletStorage *win)
 {
     CHDWallet *rv;
     if (!win) {
@@ -13937,7 +13937,7 @@ CHDWallet *GetParticlWallet(WalletStorage *win)
     return rv;
 };
 
-const CHDWallet *GetParticlWallet(const WalletStorage *win)
+const CHDWallet *GetFalconWallet(const WalletStorage *win)
 {
     const CHDWallet *rv;
     if (!win) {

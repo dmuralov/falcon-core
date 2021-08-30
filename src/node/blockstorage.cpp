@@ -341,7 +341,7 @@ bool WriteUndoDataForBlock(const CBlockUndo& blockundo, BlockValidationState& st
         if (!FindUndoPos(state, pindex->nFile, _pos, ::GetSerializeSize(blockundo, CLIENT_VERSION) + 40)) {
             return error("ConnectBlock(): FindUndoPos failed");
         }
-        uint256 prev_hash; // Particl genesis block txns are valid
+        uint256 prev_hash; // Falcon genesis block txns are valid
         if (pindex->pprev) {
             prev_hash = pindex->pprev->GetBlockHash();
         }
@@ -384,7 +384,7 @@ bool ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, const Consensus::P
     }
 
     // Check the header
-    if (fParticlMode) {
+    if (fFalconMode) {
         // only CheckProofOfWork for genesis blocks
         if (block.hashPrevBlock.IsNull()
             && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams, 0, Params().GetLastImportHeight())) {
@@ -597,7 +597,7 @@ void ThreadImport(ChainstateManager& chainman, std::vector<fs::path> vImportFile
             state.m_chainman = &chainman;
             if (!chainstate->ActivateBestChain(state, nullptr)) {
                 LogPrintf("Failed to connect best block (%s)\n", state.ToString());
-                // Particl - Don't exit.  May be missing PoS info for valid blocks.
+                // Falcon - Don't exit.  May be missing PoS info for valid blocks.
                 //StartShutdown();
                 //return;
             }

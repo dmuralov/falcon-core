@@ -390,7 +390,7 @@ private:
     static bool AttachChain(const std::shared_ptr<CWallet>& wallet, interfaces::Chain& chain, bilingual_str& error, std::vector<bilingual_str>& warnings);
 
 public:
-    bool IsParticlWallet() const override { return false; };
+    bool IsFalconWallet() const override { return false; };
     /**
      * Main wallet lock.
      * This lock protects all the fields added by CWallet.
@@ -428,7 +428,7 @@ public:
           m_name(name),
           m_database(std::move(database))
     {
-        if (!fParticlMode) {
+        if (!fFalconMode) {
             m_min_fee = CFeeRate(DEFAULT_TRANSACTION_MINFEE_BTC);
             m_default_max_tx_fee = DEFAULT_TRANSACTION_MAXFEE_BTC;
         }
@@ -564,7 +564,7 @@ public:
     int64_t IncOrderPosNext(WalletBatch *batch = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
     DBErrors ReorderTransactions();
 
-    //! For ParticlWallet, clear cached balances from wallet called at new block and adding new transaction
+    //! For FalconWallet, clear cached balances from wallet called at new block and adding new transaction
     virtual void ClearCachedBalances() {};
     void MarkDirty();
 
@@ -990,7 +990,7 @@ public:
     //! Add a descriptor to the wallet, return a ScriptPubKeyMan & associated output type
     ScriptPubKeyMan* AddWalletDescriptor(WalletDescriptor& desc, const FlatSigningProvider& signing_provider, const std::string& label, bool internal);
 
-    //! Particl
+    //! Falcon
     bool HaveKey(const CKeyID &address) const override { return false; };
     bool GetKey(const CKeyID &address, CKey &keyOut) const override { return false; };
     bool GetPubKey(const CKeyID &address, CPubKey &pkOut) const override { return false; };

@@ -35,7 +35,7 @@ struct CNodeStateStats {
     uint64_t m_addr_rate_limited = 0;
     bool m_addr_relay_enabled{false};
 
-    // Particl
+    // Falcon
     int m_chain_height = -1;
     int nDuplicateCount = 0;
     int nLooseHeadersCount = 0;
@@ -84,7 +84,7 @@ public:
     virtual void ProcessMessage(CNode& pfrom, const std::string& msg_type, CDataStream& vRecv,
                                 const std::chrono::microseconds time_received, const std::atomic<bool>& interruptMsgProc) = 0;
 
-    /** Particl */
+    /** Falcon */
     virtual NodeId GetBlockSource(const uint256 &hash) = 0;
     virtual void IncPersistentMisbehaviour(NodeId node_id, int howmuch) EXCLUSIVE_LOCKS_REQUIRED(cs_main) = 0;
     virtual void MisbehavingByAddr(CNetAddr addr, int misbehavior_cfwd, int howmuch, const std::string& message="") = 0;

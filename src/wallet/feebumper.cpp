@@ -186,8 +186,8 @@ namespace feebumper {
 bool TransactionCanBeBumped(const CWallet& wallet, const uint256& txid)
 {
     LOCK(wallet.cs_wallet);
-    if (fParticlMode) {
-        const CHDWallet *pw = GetParticlWallet(&wallet);
+    if (fFalconMode) {
+        const CHDWallet *pw = GetFalconWallet(&wallet);
         if (!pw) {
             return false;
         }
@@ -220,14 +220,14 @@ bool TransactionCanBeBumped(const CWallet& wallet, const uint256& txid)
 Result CreateTotalBumpTransaction(const CWallet* wallet, const uint256& txid, const CCoinControl& coin_control, std::vector<bilingual_str>& errors,
                                   CAmount& old_fee, CAmount& new_fee, CMutableTransaction& mtx)
 {
-    // Particl TODO: Remove CreateTotalBumpTransaction, convert CreateRateBumpTransaction
+    // Falcon TODO: Remove CreateTotalBumpTransaction, convert CreateRateBumpTransaction
     new_fee = 0;
     errors.clear();
 
-    if (!IsParticlWallet(wallet)) {
+    if (!IsFalconWallet(wallet)) {
         return Result::WALLET_ERROR;
     }
-    const CHDWallet *pw = GetParticlWallet(wallet);
+    const CHDWallet *pw = GetFalconWallet(wallet);
     LOCK(pw->cs_wallet);
     auto it = pw->mapWallet.find(txid);
     if (it != pw->mapWallet.end()) {
@@ -366,7 +366,7 @@ Result CreateRateBumpTransaction(CWallet& wallet, const uint256& txid, const CCo
 
     // Fill in recipients(and preserve a single change key if there is one)
     std::vector<CRecipient> recipients;
-    if (IsParticlWallet(&wallet)) {
+    if (IsFalconWallet(&wallet)) {
         assert(false);
     } else
     for (const auto& output : wtx.tx->vout) {

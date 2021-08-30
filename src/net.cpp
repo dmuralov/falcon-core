@@ -113,9 +113,9 @@ std::map<CNetAddr, LocalServiceInfo> mapLocalHost GUARDED_BY(cs_mapLocalHost);
 static bool vfLimited[NET_MAX] GUARDED_BY(cs_mapLocalHost) = {};
 std::string strSubVersion;
 
-namespace particl {
+namespace falcon {
 extern void UpdateNumPeers(int num_peers);
-} // namespace particl
+} // namespace falcon
 
 void CConnman::AddAddrFetch(const std::string& strDest)
 {
@@ -1296,7 +1296,7 @@ void CConnman::NotifyNumConnectionsChanged()
         if (m_client_interface) {
             m_client_interface->NotifyNumConnectionsChanged(vNodesSize);
         }
-        particl::UpdateNumPeers(vNodesSize);
+        falcon::UpdateNumPeers(vNodesSize);
     }
 }
 

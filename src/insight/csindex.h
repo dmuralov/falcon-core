@@ -1,9 +1,9 @@
-// Copyright (c) 2018 The Particl Core developers
+// Copyright (c) 2018 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PARTICL_INSIGHT_CSINDEX_H
-#define PARTICL_INSIGHT_CSINDEX_H
+#ifndef FALCON_INSIGHT_CSINDEX_H
+#define FALCON_INSIGHT_CSINDEX_H
 
 #include <script/standard.h>
 
@@ -68,21 +68,21 @@ public:
 
     template<typename Stream>
     void Serialize(Stream& s) const {
-        ser_writedata8(s, particl::FromTxoutType(m_stake_type));
+        ser_writedata8(s, falcon::FromTxoutType(m_stake_type));
         s.write((char*)m_stake_id.begin(), (m_stake_type == TxoutType::PUBKEYHASH256) ? 32 : 20);
         ser_writedata32be(s, m_height);
-        ser_writedata8(s, particl::FromTxoutType(m_spend_type));
+        ser_writedata8(s, falcon::FromTxoutType(m_spend_type));
         s.write((char*)m_spend_id.begin(), (m_spend_type == TxoutType::PUBKEYHASH256 || m_spend_type == TxoutType::SCRIPTHASH256) ? 32 : 20);
     }
     template<typename Stream>
     void Unserialize(Stream& s) {
         uint8_t stake_type = ser_readdata8(s);
-        m_stake_type = particl::ToTxoutType(stake_type);
+        m_stake_type = falcon::ToTxoutType(stake_type);
         m_stake_id.SetNull();
         s.read((char*)m_stake_id.begin(), (m_stake_type == TxoutType::PUBKEYHASH256) ? 32 : 20);
         m_height = ser_readdata32be(s);
         uint8_t spend_type = ser_readdata8(s);
-        m_spend_type = particl::ToTxoutType(spend_type);
+        m_spend_type = falcon::ToTxoutType(spend_type);
         m_spend_id.SetNull();
         s.read((char*)m_spend_id.begin(), (m_spend_type == TxoutType::PUBKEYHASH256 || m_spend_type == TxoutType::SCRIPTHASH256) ? 32 : 20);
     }
@@ -98,4 +98,4 @@ public:
     }
 };
 
-#endif // PARTICL_INSIGHT_CSINDEX_H
+#endif // FALCON_INSIGHT_CSINDEX_H

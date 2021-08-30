@@ -15,7 +15,7 @@
   - Plain output (including fee) of txns spending frozen prevouts must be less
     than 200 part or prevouts must be whitelisted (or blind outputs that don't descend from anon)]
     - For the tainted output bloom filter construction see:
-      https://github.com/tecnovert/particl-core/commit/ce5ef62b61ea67daa6c4571ad3d2f44a2ca2a5b6
+      https://github.com/tecnovert/falcon-core/commit/ce5ef62b61ea67daa6c4571ad3d2f44a2ca2a5b6
     - Outputs from known exploited transactions are blacklisted and not spendable even if their value is less than 200 part.
       - Some outputs were blacklisted that only have a high chance of being exploited.  Users can have them whitelisted by proving the amounts back to plain values.
   - Frozen anon prevouts must be spent with a ring size of 1.

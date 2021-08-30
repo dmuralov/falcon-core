@@ -251,7 +251,7 @@ bool TxIndex::WriteBlock(const CBlock& block, const CBlockIndex* pindex)
         IndexCSOutputs(block, pindex);
     }
     // Exclude genesis block transaction because outputs are not spendable.
-    if (!block.IsParticlVersion() && pindex->nHeight == 0) return true;
+    if (!block.IsFalconVersion() && pindex->nHeight == 0) return true;
 
     CDiskTxPos pos(pindex->GetBlockPos(), GetSizeOfCompactSize(block.vtx.size()));
     std::vector<std::pair<uint256, CDiskTxPos>> vPos;
@@ -351,7 +351,7 @@ bool TxIndex::IndexCSOutputs(const CBlock& block, const CBlockIndex* pindex)
             if (lk.m_stake_type == TxoutType::PUBKEYHASH256) {
                 lk.m_stake_id = CKeyID256(uint256(vSolutions[0]));
             } else {
-                LogPrint(BCLog::COINDB, "%s: Ignoring unexpected stakescript type=%d.\n", __func__, particl::FromTxoutType(lk.m_stake_type));
+                LogPrint(BCLog::COINDB, "%s: Ignoring unexpected stakescript type=%d.\n", __func__, falcon::FromTxoutType(lk.m_stake_type));
                 continue;
             }
 
@@ -364,7 +364,7 @@ bool TxIndex::IndexCSOutputs(const CBlock& block, const CBlockIndex* pindex)
             if (lk.m_spend_type == TxoutType::PUBKEYHASH256 || lk.m_spend_type == TxoutType::SCRIPTHASH256) {
                 lk.m_spend_id = CKeyID256(uint256(vSolutions[0]));
             } else {
-                LogPrint(BCLog::COINDB, "%s: Ignoring unexpected spendscript type=%d.\n", __func__, particl::FromTxoutType(lk.m_spend_type));
+                LogPrint(BCLog::COINDB, "%s: Ignoring unexpected spendscript type=%d.\n", __func__, falcon::FromTxoutType(lk.m_spend_type));
                 continue;
             }
 

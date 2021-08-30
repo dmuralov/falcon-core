@@ -22,7 +22,7 @@
 #include <string>
 #include <utility>
 
-// Particl
+// Falcon
 #include <util/strencodings.h>
 #include <smsg/smessage.h>
 

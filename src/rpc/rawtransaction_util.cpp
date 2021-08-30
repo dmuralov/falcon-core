@@ -37,7 +37,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
     UniValue outputs = outputs_is_obj ? outputs_in.get_obj() : outputs_in.get_array();
 
     CMutableTransaction rawTx;
-    rawTx.nVersion = fParticlMode ? PARTICL_TXN_VERSION : BTC_TXN_VERSION;
+    rawTx.nVersion = fFalconMode ? FALCON_TXN_VERSION : BTC_TXN_VERSION;
 
 
     if (!locktime.isNull()) {
@@ -113,7 +113,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
             has_data = true;
             std::vector<unsigned char> data = ParseHexV(outputs[name_].getValStr(), "Data");
 
-            if (fParticlMode)
+            if (fFalconMode)
             {
                 OUTPUT_PTR<CTxOutData> out = MAKE_OUTPUT<CTxOutData>();
                 out->vData = data;
@@ -126,7 +126,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
         } else {
             CTxDestination destination = DecodeDestination(name_);
             if (!IsValidDestination(destination)) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl address: ") + name_);
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon address: ") + name_);
             }
 
             if (!destinations.insert(destination).second) {
@@ -136,7 +136,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
             CScript scriptPubKey = GetScriptForDestination(destination);
             CAmount nAmount = AmountFromValue(outputs[name_]);
 
-            if (fParticlMode) {
+            if (fFalconMode) {
                 OUTPUT_PTR<CTxOutStandard> out = MAKE_OUTPUT<CTxOutStandard>();
                 out->nValue = nAmount;
                 CStealthAddress *psx = std::get_if<CStealthAddress>(&destination);
@@ -293,7 +293,7 @@ void ParsePrevouts(const UniValue& prevTxsUnival, FillableSigningProvider* keyst
                     } else {
                         // otherwise, can't generate scriptPubKey from
                         // either script, so we got unusable parameters
-                        if (!fParticlMode) {
+                        if (!fFalconMode) {
                             throw JSONRPCError(RPC_INVALID_PARAMETER, "redeemScript/witnessScript does not match scriptPubKey");
                         }
                     }

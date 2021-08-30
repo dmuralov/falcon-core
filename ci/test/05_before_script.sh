@@ -8,9 +8,9 @@ export LC_ALL=C.UTF-8
 
 # Make sure default datadir does not exist and is never read by creating a dummy file
 if [ "$CI_OS_NAME" == "macos" ]; then
-  echo > $HOME/Library/Application\ Support/Particl
+  echo > $HOME/Library/Application\ Support/Falcon
 else
-  DOCKER_EXEC echo \> \$HOME/.particl
+  DOCKER_EXEC echo \> \$HOME/.falcon
 fi
 
 DOCKER_EXEC mkdir -p ${DEPENDS_DIR}/SDKs ${DEPENDS_DIR}/sdk-sources

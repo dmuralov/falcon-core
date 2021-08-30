@@ -1,7 +1,7 @@
 #include <windows.h>             // needed for VERSIONINFO
 #include "clientversion.h"       // holds the needed client version information
 
-#define VER_PRODUCTVERSION     CLIENT_VERSION_MAJOR,CLIENT_VERSION_MINOR,CLIENT_VERSION_PARTICL,CLIENT_VERSION_BUILD
+#define VER_PRODUCTVERSION     CLIENT_VERSION_MAJOR,CLIENT_VERSION_MINOR,CLIENT_VERSION_FALCON,CLIENT_VERSION_BUILD
 #define VER_FILEVERSION        VER_PRODUCTVERSION
 
 VS_VERSION_INFO VERSIONINFO
@@ -14,14 +14,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Particl"
-            VALUE "FileDescription",    "particl-cli (JSON-RPC client for " PACKAGE_NAME ")"
+            VALUE "CompanyName",        "Falcon"
+            VALUE "FileDescription",    "falcon-cli (JSON-RPC client for " PACKAGE_NAME ")"
             VALUE "FileVersion",        PACKAGE_VERSION
-            VALUE "InternalName",       "particl-cli"
+            VALUE "InternalName",       "falcon-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "particl-cli.exe"
-            VALUE "ProductName",        "particl-cli"
+            VALUE "OriginalFilename",   "falcon-cli.exe"
+            VALUE "ProductName",        "falcon-cli"
             VALUE "ProductVersion",     PACKAGE_VERSION
         END
     END

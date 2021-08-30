@@ -1,5 +1,5 @@
 ---
-name: "particl-core-linux-22.0.0"
+name: "falcon-core-linux-22.0.0"
 enable_cache: true
 sudo: true
 distro: "ubuntu"
@@ -43,8 +43,8 @@ packages:
 - "binutils-riscv64-linux-gnu"
 - "g++-8-riscv64-linux-gnu"
 remotes:
-- "url": "https://github.com/particl/particl-core.git"
-  "dir": "particl-core"
+- "url": "https://github.com/falcon/falcon-core.git"
+  "dir": "falcon-core"
 files: []
 script: |
   set -e -o pipefail
@@ -122,7 +122,7 @@ script: |
   create_per-host_faketime_wrappers "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd particl-core
+  cd falcon-core
   BASEPREFIX="${PWD}/depends"
   # Build dependencies for each host
   for i in ${HOSTS}; do

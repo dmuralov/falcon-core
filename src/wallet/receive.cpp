@@ -222,7 +222,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter
     for (unsigned int i = 0; i < tx->GetNumVOuts(); i++)
     {
         if (!pwallet->IsSpent(hashTx, i) && (allow_used_addresses || !pwallet->IsSpentKey(hashTx, i))) {
-            nCredit += pwallet->IsParticlWallet()
+            nCredit += pwallet->IsFalconWallet()
                        ? pwallet->GetCredit(tx->vpout[i].get(), filter)
                        : pwallet->GetCredit(tx->vout[i], filter);
             if (!MoneyRange(nCredit))
@@ -306,7 +306,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
     }
 
     // Sent/received.
-    if (tx->IsParticlVersion()) {
+    if (tx->IsFalconVersion()) {
         for (unsigned int i = 0; i < tx->vpout.size(); ++i) {
             const CTxOutBase *txout = tx->vpout[i].get();
             if (!txout->IsStandardOutput()) {
@@ -421,7 +421,7 @@ bool CWallet::IsTrusted(const CWalletTx& wtx, std::set<uint256>& trusted_parents
         // Transactions not sent by us: not trusted
         const CWalletTx* parent = GetWalletTx(txin.prevout.hash);
         if (parent == nullptr) return false;
-        if (wtx.tx->IsParticlVersion()) {
+        if (wtx.tx->IsFalconVersion()) {
             const CTxOutBase *parentOut = parent->tx->vpout[txin.prevout.n].get();
             if (!(IsMine(parentOut) & ISMINE_SPENDABLE)) {
                 return false;

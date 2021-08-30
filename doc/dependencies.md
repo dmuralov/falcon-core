@@ -1,7 +1,7 @@
 Dependencies
 ============
 
-These are the dependencies currently used by Particl Core. You can find instructions for installing them in the `build-*.md` file for your platform.
+These are the dependencies currently used by Falcon Core. You can find instructions for installing them in the `build-*.md` file for your platform.
 
 | Dependency | Version used | Minimum required | CVEs | Shared | [Bundled Qt library](https://doc.qt.io/qt-5/configure-options.html#third-party-libraries) |
 | --- | --- | --- | --- | --- | --- |
@@ -29,7 +29,7 @@ These are the dependencies currently used by Particl Core. You can find instruct
 | ZeroMQ | [4.3.1](https://github.com/zeromq/libzmq/releases) | 4.0.0 | No |  |  |
 | zlib |  |  |  |  | [Yes](https://github.com/bitcoin/bitcoin/blob/master/depends/packages/qt.mk) |
 | protobuf | [2.6.1](https://github.com/google/protobuf/releases) |  | No |  |  |
-| hidapi | [0.9.0-rc1](https://github.com/particl/hidapi/releases) |  | No |  |  |
+| hidapi | [0.9.0-rc1](https://github.com/falcon/hidapi/releases) |  | No |  |  |
 | libusb | [1.0.23](https://github.com/libusb/libusb/releases) |  | No |  |  |
 
 <a name="note1">Note \*</a> : When compiling with `-stdlib=libc++`, the minimum supported libc++ version is 7.0.

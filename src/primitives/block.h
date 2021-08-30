@@ -36,7 +36,7 @@ public:
 
     SERIALIZE_METHODS(CBlockHeader, obj) {
         READWRITE(obj.nVersion, obj.hashPrevBlock, obj.hashMerkleRoot);
-        if (obj.IsParticlVersion()) {
+        if (obj.IsFalconVersion()) {
             READWRITE(obj.hashWitnessMerkleRoot);
         }
         READWRITE(obj.nTime, obj.nBits, obj.nNonce);
@@ -60,9 +60,9 @@ public:
 
     uint256 GetHash() const;
 
-    bool IsParticlVersion() const
+    bool IsFalconVersion() const
     {
-        return nVersion == PARTICL_BLOCK_VERSION;
+        return nVersion == FALCON_BLOCK_VERSION;
     }
 
     int64_t GetBlockTime() const
@@ -124,7 +124,7 @@ public:
     {
         READWRITEAS(CBlockHeader, obj);
         READWRITE(obj.vtx);
-        if (obj.nVersion == PARTICL_BLOCK_VERSION) {
+        if (obj.nVersion == FALCON_BLOCK_VERSION) {
             READWRITE(obj.vchBlockSig);
         }
     }

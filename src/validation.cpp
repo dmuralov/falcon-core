@@ -183,7 +183,7 @@ CBlockIndex* BlockManager::FindForkInGlobalIndex(const CChain& chain, const CBlo
     return chain.Genesis();
 }
 
-namespace particl {
+namespace falcon {
 bool DelayBlock(const std::shared_ptr<const CBlock> &pblock, BlockValidationState &state) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 void CheckDelayedBlocks(BlockValidationState &state, const CChainParams &chainparams, const uint256 &block_hash) LOCKS_EXCLUDED(cs_main);
 
@@ -209,7 +209,7 @@ public:
     int m_node_id;
 };
 std::list<DelayedBlock> list_delayed_blocks;
-} // namespace particl
+} // namespace falcon
 extern bool AddNodeHeader(NodeId node_id, const uint256 &hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 extern void RemoveNodeHeader(const uint256 &hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 extern void RemoveNonReceivedHeaderFromNodes(BlockMap::iterator mi) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
@@ -459,7 +459,7 @@ static bool CheckInputsFromMempoolAndCache(const CTransaction& tx, TxValidationS
         if (txFrom) {
             assert(txFrom->GetHash() == txin.prevout.hash);
             assert(txFrom->GetNumVOuts() > txin.prevout.n);
-            if (txFrom->IsParticlVersion()) {
+            if (txFrom->IsFalconVersion()) {
                 assert(coin.Matches(txFrom->vpout[txin.prevout.n].get()));
             } else {
                 assert(txFrom->vout[txin.prevout.n] == coin.out);
@@ -507,7 +507,7 @@ public:
          * a conflict. */
         const bool m_allow_bip125_replacement{true};
 
-        /** Particl - test if tx would get in the mempool without considering locks */
+        /** Falcon - test if tx would get in the mempool without considering locks */
         const bool m_ignore_locks;
     };
 
@@ -621,7 +621,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     size_t& nConflictingSize = ws.m_conflicting_size;
 
     const Consensus::Params &consensus = Params().GetConsensus();
-    state.SetStateInfo(nAcceptTime, m_active_chainstate.m_chain.Height(), consensus, fParticlMode, (fBusyImporting && fSkipRangeproof));
+    state.SetStateInfo(nAcceptTime, m_active_chainstate.m_chain.Height(), consensus, fFalconMode, (fBusyImporting && fSkipRangeproof));
 
     if (!CheckTransaction(tx, state)) {
         return false; // state filled in by CheckTransaction
@@ -644,7 +644,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     // A transaction with 1 segwit input and 1 P2WPHK output has non-witness size of 82 bytes.
     // Transactions smaller than this are not relayed to mitigate CVE-2017-12842 by not relaying
     // 64-byte transactions.
-    if (::GetSerializeSize(tx, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) < (fParticlMode ? MIN_STANDARD_TX_NONWITNESS_SIZE_PART : MIN_STANDARD_TX_NONWITNESS_SIZE))
+    if (::GetSerializeSize(tx, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) < (fFalconMode ? MIN_STANDARD_TX_NONWITNESS_SIZE_PART : MIN_STANDARD_TX_NONWITNESS_SIZE))
         return state.Invalid(TxValidationResult::TX_NOT_STANDARD, "tx-size-small");
 
     // Only accept nLockTime-using transactions that can be mined in the next
@@ -745,9 +745,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     }
 
     if (state.m_has_anon_input
-         && (m_active_chainstate.m_chain.Height() < particl::GetNumBlocksOfPeers()-1)) {
+         && (m_active_chainstate.m_chain.Height() < falcon::GetNumBlocksOfPeers()-1)) {
         LogPrintf("%s: Ignoring anon transaction while chain syncs height %d - peers %d.\n",
-            __func__, m_active_chainstate.m_chain.Height(), particl::GetNumBlocksOfPeers());
+            __func__, m_active_chainstate.m_chain.Height(), falcon::GetNumBlocksOfPeers());
         return state.Error("Syncing");
     }
 
@@ -1381,9 +1381,9 @@ bool CChainState::IsInitialBlockDownload() const
     if (m_chain.Tip()->nHeight > COINBASE_MATURITY
         && m_chain.Tip()->GetBlockTime() < (GetTime() - nMaxTipAge))
         return true;
-    if (fParticlMode && check_peer_height
-        && (particl::GetNumPeers() < 1
-            || m_chain.Tip()->nHeight < particl::GetNumBlocksOfPeers()-10))
+    if (fFalconMode && check_peer_height
+        && (falcon::GetNumPeers() < 1
+            || m_chain.Tip()->nHeight < falcon::GetNumBlocksOfPeers()-10))
         return true;
 
     LogPrintf("Leaving InitialBlockDownload (latching to false)\n");
@@ -1716,7 +1716,7 @@ DisconnectResult CChainState::DisconnectBlock(const CBlock& block, const CBlockI
         return DISCONNECT_FAILED;
     }
 
-    if (!fParticlMode) {
+    if (!fFalconMode) {
         if (blockUndo.vtxundo.size() + 1 != block.vtx.size()) {
             error("DisconnectBlock(): block and undo data inconsistent");
             return DISCONNECT_FAILED;
@@ -1839,7 +1839,7 @@ DisconnectResult CChainState::DisconnectBlock(const CBlock& block, const CBlockI
         }
 
 
-        if (fParticlMode) {
+        if (fFalconMode) {
             // Restore inputs
             if (!tx.IsCoinBase()) {
                 if (nVtxundo < 0 || nVtxundo >= (int)blockUndo.vtxundo.size()) {
@@ -1975,7 +1975,7 @@ static ThresholdConditionCache warningcache[VERSIONBITS_NUM_BITS] GUARDED_BY(cs_
 
 static unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& consensusparams)
 {
-    if (fParticlMode) {
+    if (fFalconMode) {
         unsigned int flags = SCRIPT_VERIFY_P2SH;
         flags |= SCRIPT_VERIFY_DERSIG;
         flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
@@ -2051,7 +2051,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     int64_t nTimeStart = GetTimeMicros();
 
     const Consensus::Params &consensus = Params().GetConsensus();
-    state.SetStateInfo(block.nTime, pindex->nHeight, consensus, fParticlMode, (fBusyImporting && fSkipRangeproof));
+    state.SetStateInfo(block.nTime, pindex->nHeight, consensus, fFalconMode, (fBusyImporting && fSkipRangeproof));
 
     // Check it again in case a previous version let a bad block in
     // NOTE: We don't currently (re-)invoke ContextualCheckBlock() or
@@ -2096,7 +2096,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
 
     // Special case for the genesis block, skipping connection of its transactions
     // (its coinbase is unspendable)
-    if (!fParticlMode &&    // genesis coinbase is spendable when in Particl mode
+    if (!fFalconMode &&    // genesis coinbase is spendable when in Falcon mode
         fIsGenesisBlock) {
         if (!fJustCheck)
             view.SetBestBlock(pindex->GetBlockHash(), pindex->nHeight);
@@ -2149,7 +2149,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes during their
     // initial block download.
-    bool fEnforceBIP30 = fParticlMode || (!((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
+    bool fEnforceBIP30 = fFalconMode || (!((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
                            (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721"))));
 
     // Once BIP34 activated it was not possible to create new duplicate coinbases and thus other than starting
@@ -2257,7 +2257,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     int64_t nAnonIn = 0;
     int64_t nStakeReward = 0;
 
-    blockundo.vtxundo.reserve(block.vtx.size() - (fParticlMode ? 0 : 1));
+    blockundo.vtxundo.reserve(block.vtx.size() - (fFalconMode ? 0 : 1));
 
     // NOTE: Block reward is based on nMoneySupply
     CAmount nMoneyCreated = 0;
@@ -2271,7 +2271,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
         nInputs += tx.vin.size();
 
         TxValidationState tx_state;
-        tx_state.SetStateInfo(block.nTime, pindex->nHeight, consensus, fParticlMode, (fBusyImporting && fSkipRangeproof));
+        tx_state.SetStateInfo(block.nTime, pindex->nHeight, consensus, fFalconMode, (fBusyImporting && fSkipRangeproof));
         tx_state.m_chainman = state.m_chainman;
         tx_state.m_chainstate = this;
         if (!tx.IsCoinBase())
@@ -2321,7 +2321,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
                 return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-txns-nonfinal");
             }
 
-            if (tx.IsParticlVersion()) {
+            if (tx.IsFalconVersion()) {
                 // Update spent inputs
                 for (size_t j = 0; j < tx.vin.size(); j++) {
                     const CTxIn input = tx.vin[j];
@@ -2506,7 +2506,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "block-validation-failed");
     }
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         if (block.nTime >= consensus.clamp_tx_version_time) {
             nMoneyCreated -= nFees;
         }
@@ -2520,7 +2520,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
                 CAmount smsg_fee_new, smsg_fee_prev = consensus.smsg_fee_msg_per_day_per_k;
                 if (pindex->pprev->nHeight > 0 // Skip genesis block (POW)
                     && pindex->pprev->nTime >= consensus.smsg_fee_time) {
-                    if (!particl::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)
+                    if (!falcon::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)
                         || !txPrevCoinstake->GetSmsgFeeRate(smsg_fee_prev)) {
                         LogPrintf("ERROR: %s: Failed to get previous smsg fee.\n", __func__);
                         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-smsg-fee-prev");
@@ -2547,7 +2547,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
                 uint32_t smsg_difficulty_new, smsg_difficulty_prev = consensus.smsg_min_difficulty;
                 if (pindex->pprev->nHeight > 0 // Skip genesis block (POW)
                     && pindex->pprev->nTime >= consensus.smsg_difficulty_time) {
-                    if (!particl::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)
+                    if (!falcon::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)
                         || !txPrevCoinstake->GetSmsgDifficulty(smsg_difficulty_prev)) {
                         LogPrintf("ERROR: %s: Failed to get previous smsg difficulty.\n", __func__);
                         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-smsg-diff-prev");
@@ -2588,7 +2588,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
 
                 if (pindex->pprev->nHeight > 0) { // Genesis block is pow
                     if (!txPrevCoinstake
-                        && !particl::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)) {
+                        && !falcon::coinStakeCache.GetCoinStake(*this, pindex->pprev->GetBlockHash(), txPrevCoinstake)) {
                         LogPrintf("ERROR: %s: Failed to get previous coinstake.\n", __func__);
                         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-prev");
                     }
@@ -2648,7 +2648,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
                     }
                 }
 
-                particl::coinStakeCache.InsertCoinStake(blockHash, txCoinstake);
+                falcon::coinStakeCache.InsertCoinStake(blockHash, txCoinstake);
             }
         } else {
             if (blockHash != m_params.GetConsensus().hashGenesisBlock) {
@@ -2673,7 +2673,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     if (block.nTime >= consensus.exploit_fix_2_time && pindex->pprev && pindex->pprev->nTime < consensus.exploit_fix_2_time) {
         // TODO: Set to block height after fork
         // Set moneysupply to utxoset sum
-        pindex->nMoneySupply = particl::GetUTXOSum(*this) + nMoneyCreated;
+        pindex->nMoneySupply = falcon::GetUTXOSum(*this) + nMoneyCreated;
         LogPrintf("RCT mint fix HF2, set nMoneySupply to: %d\n", pindex->nMoneySupply);
         reset_balances = true;
         block_balances[BAL_IND_PLAIN] = pindex->nMoneySupply;
@@ -2683,7 +2683,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     pindex->nAnonOutputs = view.nLastRCTOutput;
     setDirtyBlockIndex.insert(pindex); // pindex has changed, must save to disk
 
-    if ((!fIsGenesisBlock || fParticlMode) &&
+    if ((!fIsGenesisBlock || fFalconMode) &&
         !WriteUndoDataForBlock(blockundo, state, pindex, m_params))
         return false;
 
@@ -3561,7 +3561,7 @@ bool CChainState::ActivateBestChain(BlockValidationState& state, std::shared_ptr
         // When we reach this point, we switched to a new tip (stored in pindexNewTip).
 
         for (const auto &block_hash : connected_blocks) {
-            particl::CheckDelayedBlocks(state, m_params, block_hash);
+            falcon::CheckDelayedBlocks(state, m_params, block_hash);
         }
 
         if (nStopAtHeight && pindexNewTip && pindexNewTip->nHeight >= nStopAtHeight) StartShutdown();
@@ -3870,18 +3870,18 @@ void CChainState::ReceivedBlockTransactions(const CBlock& block, CBlockIndex* pi
 
 static bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
 {
-    if (fParticlMode
-        && !block.IsParticlVersion())
+    if (fFalconMode
+        && !block.IsFalconVersion())
         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "block-version", "bad block version");
 
     // Check timestamp
-    if (fParticlMode
+    if (fFalconMode
         && !block.hashPrevBlock.IsNull() // allow genesis block to be created in the future
-        && block.GetBlockTime() > particl::FutureDrift(GetAdjustedTime()))
+        && block.GetBlockTime() > falcon::FutureDrift(GetAdjustedTime()))
         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "block-timestamp", "block timestamp too far in the future");
 
     // Check proof of work matches claimed amount
-    if (!fParticlMode
+    if (!fFalconMode
         && fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "high-hash", "proof of work failed");
 
@@ -3921,7 +3921,7 @@ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensu
     if (!CheckBlockHeader(block, state, consensusParams, fCheckPOW))
         return false;
 
-    state.SetStateInfo(block.nTime, -1, consensusParams, fParticlMode, (fBusyImporting && fSkipRangeproof));
+    state.SetStateInfo(block.nTime, -1, consensusParams, fFalconMode, (fBusyImporting && fSkipRangeproof));
 
     // Signet only: check block solution
     if (consensusParams.signet_blocks && fCheckPOW && !CheckSignetBlockSolution(block, consensusParams)) {
@@ -3954,7 +3954,7 @@ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensu
     if (block.vtx.empty() || block.vtx.size() * WITNESS_SCALE_FACTOR > MAX_BLOCK_WEIGHT || ::GetSerializeSize(block, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * WITNESS_SCALE_FACTOR > MAX_BLOCK_WEIGHT)
         return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-blk-length", "size limits failed");
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         // First transaction must be coinbase (genesis only) or coinstake
         // 2nd txn may be coinbase in early blocks: check further in ContextualCheckBlock
         if (!(block.vtx[0]->IsCoinBase() || block.vtx[0]->IsCoinStake())) { // only genesis can be coinbase, check in ContextualCheckBlock
@@ -3984,7 +3984,7 @@ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensu
     // Must check for duplicate inputs (see CVE-2018-17144)
     for (const auto& tx : block.vtx) {
         TxValidationState tx_state;
-        tx_state.SetStateInfo(block.nTime, -1, consensusParams, fParticlMode, (fBusyImporting && fSkipRangeproof));
+        tx_state.SetStateInfo(block.nTime, -1, consensusParams, fFalconMode, (fBusyImporting && fSkipRangeproof));
         tx_state.m_chainman = state.m_chainman;
         if (state.m_chainman) {
             tx_state.m_chainstate = &state.m_chainman->ActiveChainstate();
@@ -4026,7 +4026,7 @@ void UpdateUncommittedBlockStructures(CBlock& block, const CBlockIndex* pindexPr
 std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams)
 {
     std::vector<unsigned char> commitment;
-    if (fParticlMode) {
+    if (fFalconMode) {
         return commitment;
     }
 
@@ -4124,7 +4124,7 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
     const int nHeight = pindexPrev == nullptr ? 0 : pindexPrev->nHeight + 1;
     const Consensus::Params& consensusParams = params.GetConsensus();
 
-    if (fParticlMode && pindexPrev) {
+    if (fFalconMode && pindexPrev) {
         // Check proof-of-stake
         if (block.nBits != GetNextTargetRequired(pindexPrev))
             return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "bad-diffbits-pos", "incorrect proof of stake");
@@ -4195,10 +4195,10 @@ static bool ContextualCheckBlock(CChainState &chain_state, const CBlock& block, 
         }
     }
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         if (block.IsProofOfStake()) {
             if (!chain_state.IsInitialBlockDownload()
-                && !particl::CheckStakeUnique(block)) {
+                && !falcon::CheckStakeUnique(block)) {
                 //state.DoS(10, false, "bad-cs-duplicate", false, "duplicate coinstake");
 
                 state.nFlags |= BLOCK_FAILED_DUPLICATE_STAKE;
@@ -4255,7 +4255,7 @@ static bool ContextualCheckBlock(CChainState &chain_state, const CBlock& block, 
             }
 
             // Check timestamp against prev
-            if (block.GetBlockTime() <= pindexPrev->GetPastTimeLimit() || particl::FutureDrift(block.GetBlockTime()) < pindexPrev->GetBlockTime()) {
+            if (block.GetBlockTime() <= pindexPrev->GetPastTimeLimit() || falcon::FutureDrift(block.GetBlockTime()) < pindexPrev->GetBlockTime()) {
                 return state.Invalid(BlockValidationResult::DOS_50, "bad-block-time", strprintf("%s: block's timestamp is too early", __func__));
             }
 
@@ -4381,7 +4381,7 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
             if (state.m_chainman && !state.m_peerman) {
                 state.m_peerman = state.m_chainman->m_peerman;
             }
-            if (fParticlMode && !fRequested && !state.m_chainman->ActiveChainstate().IsInitialBlockDownload() && state.nodeId >= 0
+            if (fFalconMode && !fRequested && !state.m_chainman->ActiveChainstate().IsInitialBlockDownload() && state.nodeId >= 0
                 && !state.m_peerman->IncDuplicateHeaders(state.nodeId)) {
                 state.m_peerman->Misbehaving(state.nodeId, 5, "Too many duplicates");
             }
@@ -4456,7 +4456,7 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
         }
     }
     bool force_accept = true;
-    if (fParticlMode &&
+    if (fFalconMode &&
         state.nodeId >= 0 &&
         state.m_chainman->HaveActiveChainstate() &&
         !state.m_chainman->ActiveChainstate().IsInitialBlockDownload()) {
@@ -4566,14 +4566,14 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, Block
             || (pindex->pprev->bnStakeModifier.IsNull()
                 && pindex->pprev->GetBlockHash() != m_params.GetConsensus().hashGenesisBlock)) {
             // Block received out of order
-            if (fParticlMode && !IsInitialBlockDownload()) {
+            if (fFalconMode && !IsInitialBlockDownload()) {
                 if (pindex->nFlags & BLOCK_DELAYED) {
                     // Block is already delayed
                     state.nFlags |= BLOCK_DELAYED;
                     return true;
                 }
                 pindex->nFlags |= BLOCK_DELAYED;
-                return particl::DelayBlock(pblock, state);
+                return falcon::DelayBlock(pblock, state);
             }
         } else {
             pindex->bnStakeModifier = ComputeStakeModifierV2(pindex->pprev, pindex->prevoutStake.hash);
@@ -4672,7 +4672,7 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
             return true;
         }
         if (!ret) {
-            if (fParticlMode && state.GetResult() != BlockValidationResult::BLOCK_MISSING_PREV) {
+            if (fFalconMode && state.GetResult() != BlockValidationResult::BLOCK_MISSING_PREV) {
                 // Mark block as invalid to prevent re-requesting from peer.
                 // Block will have been added to the block index in AcceptBlockHeader
                 CBlockIndex *pindex = ActiveChainstate().m_blockman.AddToBlockIndex(*block);
@@ -4710,7 +4710,7 @@ bool ChainstateManager::ProcessNewBlock(const CChainParams& chainparams, const s
     {
         assert(pindex);
         // Check here for blocks not connected to the chain, TODO: move to a timer.
-        particl::CheckDelayedBlocks(state, chainparams, pindex->GetBlockHash());
+        falcon::CheckDelayedBlocks(state, chainparams, pindex->GetBlockHash());
     }
 
     return true;
@@ -5345,16 +5345,16 @@ bool ChainstateManager::LoadBlockIndex()
         m_blockman.m_block_tree_db->WriteFlag("v2", true);
 
         // Use the provided setting for indices in the new database
-        fAddressIndex = gArgs.GetBoolArg("-addressindex", particl::DEFAULT_ADDRESSINDEX);
+        fAddressIndex = gArgs.GetBoolArg("-addressindex", falcon::DEFAULT_ADDRESSINDEX);
         m_blockman.m_block_tree_db->WriteFlag("addressindex", fAddressIndex);
         LogPrintf("%s: address index %s\n", __func__, fAddressIndex ? "enabled" : "disabled");
-        fTimestampIndex = gArgs.GetBoolArg("-timestampindex", particl::DEFAULT_TIMESTAMPINDEX);
+        fTimestampIndex = gArgs.GetBoolArg("-timestampindex", falcon::DEFAULT_TIMESTAMPINDEX);
         m_blockman.m_block_tree_db->WriteFlag("timestampindex", fTimestampIndex);
         LogPrintf("%s: timestamp index %s\n", __func__, fTimestampIndex ? "enabled" : "disabled");
-        fSpentIndex = gArgs.GetBoolArg("-spentindex", particl::DEFAULT_SPENTINDEX);
+        fSpentIndex = gArgs.GetBoolArg("-spentindex", falcon::DEFAULT_SPENTINDEX);
         m_blockman.m_block_tree_db->WriteFlag("spentindex", fSpentIndex);
         LogPrintf("%s: spent index %s\n", __func__, fSpentIndex ? "enabled" : "disabled");
-        fBalancesIndex = gArgs.GetBoolArg("-balancesindex", particl::DEFAULT_BALANCESINDEX);
+        fBalancesIndex = gArgs.GetBoolArg("-balancesindex", falcon::DEFAULT_BALANCESINDEX);
         m_blockman.m_block_tree_db->WriteFlag("balancesindex", fBalancesIndex);
         LogPrintf("%s: balances index %s\n", __func__, fBalancesIndex ? "enabled" : "disabled");
     }
@@ -5393,10 +5393,10 @@ void CChainState::LoadExternalBlockFile(FILE* fileIn, FlatFilePos* dbp, Chainsta
     static std::multimap<uint256, FlatFilePos> mapBlocksUnknownParent;
     int64_t nStart = GetTimeMillis();
 
-    fAddressIndex = gArgs.GetBoolArg("-addressindex", particl::DEFAULT_ADDRESSINDEX);
-    fTimestampIndex = gArgs.GetBoolArg("-timestampindex", particl::DEFAULT_TIMESTAMPINDEX);
-    fSpentIndex = gArgs.GetBoolArg("-spentindex", particl::DEFAULT_SPENTINDEX);
-    fBalancesIndex = gArgs.GetBoolArg("-balancesindex", particl::DEFAULT_BALANCESINDEX);
+    fAddressIndex = gArgs.GetBoolArg("-addressindex", falcon::DEFAULT_ADDRESSINDEX);
+    fTimestampIndex = gArgs.GetBoolArg("-timestampindex", falcon::DEFAULT_TIMESTAMPINDEX);
+    fSpentIndex = gArgs.GetBoolArg("-spentindex", falcon::DEFAULT_SPENTINDEX);
+    fBalancesIndex = gArgs.GetBoolArg("-balancesindex", falcon::DEFAULT_BALANCESINDEX);
 
     int nLoaded = 0;
     try {
@@ -6306,7 +6306,7 @@ void ChainstateManager::MaybeRebalanceCaches()
     }
 }
 
-namespace particl {
+namespace falcon {
 
 class HeightEntry {
 public:
@@ -6503,7 +6503,7 @@ bool DelayBlock(const std::shared_ptr<const CBlock> &pblock, BlockValidationStat
 
 void CheckDelayedBlocks(BlockValidationState &state, const CChainParams& chainparams, const uint256 &block_hash) LOCKS_EXCLUDED(cs_main)
 {
-    if (!fParticlMode) {
+    if (!fFalconMode) {
         return;
     }
     assert(state.m_chainman);
@@ -6654,7 +6654,7 @@ bool ProcessDuplicateStakeHeader(CBlockIndex *pindex, NodeId nodeId) EXCLUSIVE_L
 
                     if (!pindexPrev->prevoutStake.IsNull()) {
                         uint256 prevhash = pindexPrev->GetBlockHash();
-                        particl::AddToMapStakeSeen(pindexPrev->prevoutStake, prevhash);
+                        falcon::AddToMapStakeSeen(pindexPrev->prevoutStake, prevhash);
                     }
 
                     pindexPrev->nStatus &= (~BLOCK_FAILED_CHILD);
@@ -6667,7 +6667,7 @@ bool ProcessDuplicateStakeHeader(CBlockIndex *pindex, NodeId nodeId) EXCLUSIVE_L
         //};
 
         if (!pindex->prevoutStake.IsNull()) {
-            particl::AddToMapStakeSeen(pindex->prevoutStake, hash);
+            falcon::AddToMapStakeSeen(pindex->prevoutStake, hash);
         }
         return true;
     }
@@ -6716,7 +6716,7 @@ bool CheckStakeUnique(const CBlock &block, bool fUpdate)
         return true;
     }
 
-    while (listStakeSeen.size() > particl::MAX_STAKE_SEEN_SIZE) {
+    while (listStakeSeen.size() > falcon::MAX_STAKE_SEEN_SIZE) {
         const COutPoint &oldest = listStakeSeen.front();
         if (1 != mapStakeSeen.erase(oldest)) {
             LogPrintf("%s: Warning: mapStakeSeen did not erase %s %n\n", __func__, oldest.hash.ToString(), oldest.n);
@@ -6857,4 +6857,4 @@ uint32_t GetSmsgDifficulty(ChainstateManager &chainman, uint64_t time, bool veri
     return consensusParams.smsg_min_difficulty - consensusParams.smsg_difficulty_max_delta;
 };
 
-} // namespace particl
+} // namespace falcon

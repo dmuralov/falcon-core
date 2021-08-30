@@ -918,7 +918,7 @@ static RPCHelpMan getblockheader()
                             {RPCResult::Type::STR_HEX, "chainwork", "Expected number of hashes required to produce the current chain"},
                             {RPCResult::Type::NUM, "nTx", "The number of transactions in the block"},
                             {RPCResult::Type::NUM, "anonoutputs", "The number of RCT outputs in the chain at this block"},
-                            {RPCResult::Type::STR_AMOUNT, "moneysupply", "The total amount of particl in the chain at this block"},
+                            {RPCResult::Type::STR_AMOUNT, "moneysupply", "The total amount of falcon in the chain at this block"},
                             {RPCResult::Type::STR_HEX, "previousblockhash", /* optional */ true, "The hash of the previous block (if available)"},
                             {RPCResult::Type::STR_HEX, "nextblockhash", /* optional */ true, "The hash of the next block (if available)"},
                         }},
@@ -1268,7 +1268,7 @@ static RPCHelpMan gettxoutsetinfo()
         ret.pushKV("height", (int64_t)stats.nHeight);
         ret.pushKV("bestblock", stats.hashBlock.GetHex());
         ret.pushKV("txouts", (int64_t)stats.nTransactionOutputs);
-        if (fParticlMode) {
+        if (fFalconMode) {
             ret.pushKV("txouts_blinded", (int64_t)stats.nBlindTransactionOutputs);
         }
         ret.pushKV("bogosize", (int64_t)stats.nBogoSize);
@@ -1334,9 +1334,9 @@ static RPCHelpMan gettxout()
                     {RPCResult::Type::STR_HEX, "hex", ""},
                     {RPCResult::Type::NUM, "reqSigs", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Number of required signatures"},
                     {RPCResult::Type::STR, "type", "The type, eg pubkeyhash"},
-                    {RPCResult::Type::STR, "address", /* optional */ true, "particl address (only if a well-defined address exists)"},
-                    {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of particl addresses",
-                        {{RPCResult::Type::STR, "address", "particl address"}}},
+                    {RPCResult::Type::STR, "address", /* optional */ true, "falcon address (only if a well-defined address exists)"},
+                    {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of falcon addresses",
+                        {{RPCResult::Type::STR, "address", "falcon address"}}},
                 }},
                 {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
             }},
@@ -1562,10 +1562,10 @@ RPCHelpMan getblockchaininfo()
     obj.pushKV("blocks",                height);
     obj.pushKV("headers",               pindexBestHeader ? pindexBestHeader->nHeight : -1);
     obj.pushKV("bestblockhash",         tip->GetBlockHash().GetHex());
-    if (fParticlMode) {
+    if (fFalconMode) {
         obj.pushKV("moneysupply",           ValueFromAmount(tip->nMoneySupply));
         obj.pushKV("blockindexsize",        (int)chainman.BlockIndex().size());
-        obj.pushKV("delayedblocks",         (int)particl::CountDelayedBlocks());
+        obj.pushKV("delayedblocks",         (int)falcon::CountDelayedBlocks());
     }
     obj.pushKV("difficulty",            (double)GetDifficulty(tip));
     PushTime(obj, "time", tip->nTime);
@@ -1592,7 +1592,7 @@ RPCHelpMan getblockchaininfo()
         }
     }
 
-    if (fParticlMode) {
+    if (fFalconMode) {
         return obj;
     }
     const Consensus::Params& consensusParams = Params().GetConsensus();
@@ -2205,7 +2205,7 @@ static RPCHelpMan getblockstats()
 
         if (loop_inputs) {
             CAmount tx_total_in = 0;
-            const auto& txundo = blockUndo.vtxundo.at(fParticlMode ? i : i - 1); // Particl includes coinbase/coinstake in undo data
+            const auto& txundo = blockUndo.vtxundo.at(fFalconMode ? i : i - 1); // Falcon includes coinbase/coinstake in undo data
             for (const Coin& coin: txundo.vprevout) {
                 const CTxOut& prevoutput = coin.out;
 

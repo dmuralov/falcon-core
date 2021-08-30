@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -74,7 +74,7 @@ static int ExtractBip32InfoV(const std::vector<uint8_t> &vchKey, UniValue &keyIn
 
     CChainParams::Base58Type typePk = CChainParams::EXT_PUBLIC_KEY;
     if (memcmp(&vchKey[0], &Params().Base58Prefix(CChainParams::EXT_SECRET_KEY)[0], 4) == 0) {
-        keyInfo.pushKV("type", "Particl extended secret key");
+        keyInfo.pushKV("type", "Falcon extended secret key");
     } else
     if (memcmp(&vchKey[0], &Params().Base58Prefix(CChainParams::EXT_SECRET_KEY_BTC)[0], 4) == 0) {
         keyInfo.pushKV("type", "Bitcoin extended secret key");
@@ -117,7 +117,7 @@ static int ExtractBip32InfoP(const std::vector<uint8_t> &vchKey, UniValue &keyIn
     CExtPubKey pk;
 
     if (memcmp(&vchKey[0], &Params().Base58Prefix(CChainParams::EXT_PUBLIC_KEY)[0], 4) == 0) {
-        keyInfo.pushKV("type", "Particl extended public key");
+        keyInfo.pushKV("type", "Falcon extended public key");
     } else
     if (memcmp(&vchKey[0], &Params().Base58Prefix(CChainParams::EXT_PUBLIC_KEY_BTC)[0], 4) == 0)  {
         keyInfo.pushKV("type", "Bitcoin extended public key");
@@ -804,7 +804,7 @@ void ParseCoinControlOptions(const UniValue &obj, CHDWallet *pwallet, CCoinContr
         if (!fHaveScript) {
             CTxDestination dest = DecodeDestination(sChangeAddress);
             if (!IsValidDestination(dest)) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "changeAddress must be a valid particl address");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "changeAddress must be a valid falcon address");
             }
             coin_control.destChange = dest;
         }
@@ -979,7 +979,7 @@ static RPCHelpMan extkey()
     //   - locked wallets must be able to derive new keys as they receive
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -1177,7 +1177,7 @@ static RPCHelpMan extkey()
             if (!eKey58.IsValid(CChainParams::EXT_SECRET_KEY)
                 && !eKey58.IsValid(CChainParams::EXT_PUBLIC_KEY_BTC)
                 && !eKey58.IsValid(CChainParams::EXT_PUBLIC_KEY)) {
-                throw JSONRPCError(RPC_INVALID_PARAMETER, "Import failed - Key must begin with a particl prefix.");
+                throw JSONRPCError(RPC_INVALID_PARAMETER, "Import failed - Key must begin with a falcon prefix.");
             }
         }
 
@@ -1580,7 +1580,7 @@ static UniValue extkeyimportinternal(const JSONRPCRequest &request, bool fGenesi
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -1913,8 +1913,8 @@ static RPCHelpMan extkeyaltversion()
 {
     return RPCHelpMan{"extkeyaltversion",
                 "\nReturns the provided ext_key encoded with alternate version bytes.\n"
-                "If the provided ext_key has a Bitcoin prefix the output will be encoded with a Particl prefix.\n"
-                "If the provided ext_key has a Particl prefix the output will be encoded with a Bitcoin prefix.\n",
+                "If the provided ext_key has a Bitcoin prefix the output will be encoded with a Falcon prefix.\n"
+                "If the provided ext_key has a Falcon prefix the output will be encoded with a Bitcoin prefix.\n",
                 {
                     {"ext_key", RPCArg::Type::STR, RPCArg::Optional::NO, ""},
                 },
@@ -1957,7 +1957,7 @@ static RPCHelpMan extkeyaltversion()
 static RPCHelpMan getnewextaddress()
 {
         return RPCHelpMan{"getnewextaddress",
-                "\nReturns a new Particl ext address for receiving payments." +
+                "\nReturns a new Falcon ext address for receiving payments." +
                 HELP_REQUIRING_PASSPHRASE,
                 {
                     {"label", RPCArg::Type::STR, RPCArg::Default{""}, "If specified the key is added to the address book."},
@@ -1977,7 +1977,7 @@ static RPCHelpMan getnewextaddress()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -2023,7 +2023,7 @@ static RPCHelpMan getnewextaddress()
 static RPCHelpMan getnewstealthaddress()
 {
         return RPCHelpMan{"getnewstealthaddress",
-                "\nReturns a new Particl stealth address for receiving payments." +
+                "\nReturns a new Falcon stealth address for receiving payments." +
                 HELP_REQUIRING_PASSPHRASE,
                 {
                     {"label", RPCArg::Type::STR, RPCArg::Default{""}, "If specified the key is added to the address book."},
@@ -2047,7 +2047,7 @@ static RPCHelpMan getnewstealthaddress()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -2124,7 +2124,7 @@ static RPCHelpMan importstealthaddress()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     if (pwallet->IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: Private keys are disabled for this wallet");
@@ -2388,7 +2388,7 @@ static RPCHelpMan liststealthaddresses()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     bool fShowSecrets = request.params.size() > 0 ? GetBool(request.params[0]) : false;
 
@@ -2551,7 +2551,7 @@ static RPCHelpMan reservebalance()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     if (request.params.size() > 0) {
         EnsureWalletIsUnlocked(pwallet);
@@ -2612,7 +2612,7 @@ static RPCHelpMan deriverangekeys()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // TODO: manage nGenerated, nHGenerated properly
 
@@ -2892,7 +2892,7 @@ static RPCHelpMan clearwallettransactions()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -3586,7 +3586,7 @@ static RPCHelpMan filtertransactions()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
@@ -3929,7 +3929,7 @@ static RPCHelpMan filteraddresses()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
@@ -4110,7 +4110,7 @@ static RPCHelpMan manageaddressbook()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
@@ -4142,7 +4142,7 @@ static RPCHelpMan manageaddressbook()
         // Try decode as segwit address
         dest = DecodeDestination(sAddress);
         if (!IsValidDestination(dest)) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
         }
     }
 
@@ -4285,7 +4285,7 @@ static RPCHelpMan getstakinginfo()
                             {RPCResult::Type::STR, "", ""},
                         }},
                         {RPCResult::Type::STR_AMOUNT, "percentyearreward", "Current stake reward percentage"},
-                        {RPCResult::Type::STR_AMOUNT, "moneysupply", "The total amount of particl in the network"},
+                        {RPCResult::Type::STR_AMOUNT, "moneysupply", "The total amount of falcon in the network"},
                         {RPCResult::Type::STR_AMOUNT, "reserve", "The reserve balance of the wallet in " + CURRENCY_UNIT},
                         {RPCResult::Type::STR_AMOUNT, "wallettreasurydonationpercent", "User set percentage of the block reward ceded to the treasury"},
                         {RPCResult::Type::STR_AMOUNT, "treasurydonationpercent", "Network enforced percentage of the block reward ceded to the treasury"},
@@ -4309,7 +4309,7 @@ static RPCHelpMan getstakinginfo()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
     ChainstateManager *pchainman{nullptr};
     if (pwallet->HaveChain()) {
         pchainman = pwallet->chain().getChainman();
@@ -4435,7 +4435,7 @@ static RPCHelpMan getcoldstakinginfo()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
     if (!pwallet->HaveChain()) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Unable to get chain");
     }
@@ -4489,7 +4489,7 @@ static RPCHelpMan getcoldstakinginfo()
         if (scriptPubKey->IsPayToPublicKeyHash256_CS() || scriptPubKey->IsPayToScriptHash256_CS() || scriptPubKey->IsPayToScriptHash_CS()) {
             // Show output on both the spending and staking wallets
             if (!out.fSpendable) {
-                if (!particl::ExtractStakingKeyID(*scriptPubKey, keyID)
+                if (!falcon::ExtractStakingKeyID(*scriptPubKey, keyID)
                     || !pwallet->HaveKey(keyID)) {
                     continue;
                 }
@@ -4503,7 +4503,7 @@ static RPCHelpMan getcoldstakinginfo()
             continue;
         }
 
-        if (!particl::ExtractStakingKeyID(*scriptPubKey, keyID)) {
+        if (!falcon::ExtractStakingKeyID(*scriptPubKey, keyID)) {
             continue;
         }
         if (pwallet->HaveKey(keyID)) {
@@ -4559,9 +4559,9 @@ static RPCHelpMan listunspentanon()
                 {
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{1}, "The minimum confirmations to filter"},
                     {"maxconf", RPCArg::Type::NUM, RPCArg::Default{9999999}, "The maximum confirmations to filter"},
-                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of particl addresses to filter",
+                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of falcon addresses to filter",
                         {
-                            {"address", RPCArg::Type::STR, RPCArg::Default{""}, "particl address"},
+                            {"address", RPCArg::Type::STR, RPCArg::Default{""}, "falcon address"},
                         },
                     },
                     {"include_unsafe", RPCArg::Type::BOOL, RPCArg::Default{true}, "Include outputs that are not safe to spend\n"
@@ -4586,7 +4586,7 @@ static RPCHelpMan listunspentanon()
                         {
                             {RPCResult::Type::STR_HEX, "txid", "the transaction id"},
                             {RPCResult::Type::NUM, "vout", "the vout value"},
-                            {RPCResult::Type::STR, "address", "the particl address"},
+                            {RPCResult::Type::STR, "address", "the falcon address"},
                             {RPCResult::Type::STR, "label", "The associated label, or \"\" for the default label"},
                             {RPCResult::Type::STR_AMOUNT, "amount", "the transaction output amount in " + CURRENCY_UNIT},
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations"},
@@ -4605,7 +4605,7 @@ static RPCHelpMan listunspentanon()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     int nMinDepth = 1;
     if (request.params.size() > 0 && !request.params[0].isNull()) {
@@ -4627,7 +4627,7 @@ static RPCHelpMan listunspentanon()
             const UniValue& input = inputs[idx];
             CBitcoinAddress address(input.get_str());
             if (!address.IsValidStealthAddress())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl stealth address: ")+input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon stealth address: ")+input.get_str());
             if (setAddress.count(address))
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+input.get_str());
            setAddress.insert(address);
@@ -4800,9 +4800,9 @@ static RPCHelpMan listunspentblind()
                 {
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{1}, "The minimum confirmations to filter"},
                     {"maxconf", RPCArg::Type::NUM, RPCArg::Default{9999999}, "The maximum confirmations to filter"},
-                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of particl addresses to filter",
+                    {"addresses", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of falcon addresses to filter",
                         {
-                            {"address", RPCArg::Type::STR, RPCArg::Default{""}, "particl address"},
+                            {"address", RPCArg::Type::STR, RPCArg::Default{""}, "falcon address"},
                         },
                     },
                     {"include_unsafe", RPCArg::Type::BOOL, RPCArg::Default{true}, "Include outputs that are not safe to spend\n"
@@ -4825,7 +4825,7 @@ static RPCHelpMan listunspentblind()
                         {
                             {RPCResult::Type::STR_HEX, "txid", "the transaction id"},
                             {RPCResult::Type::NUM, "vout", "the vout value"},
-                            {RPCResult::Type::STR, "address", "the particl address"},
+                            {RPCResult::Type::STR, "address", "the falcon address"},
                             {RPCResult::Type::STR, "label", "The associated label, or \"\" for the default label"},
                             {RPCResult::Type::STR, "scriptPubKey", "the script key"},
                             {RPCResult::Type::STR_AMOUNT, "amount", "the transaction output amount in " + CURRENCY_UNIT},
@@ -4851,7 +4851,7 @@ static RPCHelpMan listunspentblind()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     bool avoid_reuse = pwallet->IsWalletFlagSet(WALLET_FLAG_AVOID_REUSE);
 
@@ -4917,7 +4917,7 @@ static RPCHelpMan listunspentblind()
             const UniValue& input = inputs[idx];
             CBitcoinAddress address(input.get_str());
             if (!address.IsValidStealthAddress()) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Particl stealth address: ")+input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Falcon stealth address: ")+input.get_str());
             }
             if (setAddress.count(address)) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+input.get_str());
@@ -5065,8 +5065,8 @@ static UniValue SendToInner(const JSONRPCRequest &request, OutputTypes typeIn, O
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
     bool exploit_fix_2_active = GetTime() >= consensusParams.exploit_fix_2_time;
-    bool default_accept_anon = exploit_fix_2_active ? true : particl::DEFAULT_ACCEPT_ANON_TX;
-    bool default_accept_blind = exploit_fix_2_active ? true : particl::DEFAULT_ACCEPT_BLIND_TX;
+    bool default_accept_anon = exploit_fix_2_active ? true : falcon::DEFAULT_ACCEPT_ANON_TX;
+    bool default_accept_blind = exploit_fix_2_active ? true : falcon::DEFAULT_ACCEPT_BLIND_TX;
     if (!gArgs.GetBoolArg("-acceptanontxn", default_accept_anon) &&
         (typeIn == OUTPUT_RINGCT || typeOut == OUTPUT_RINGCT)) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Disabled output type.");
@@ -5081,7 +5081,7 @@ static UniValue SendToInner(const JSONRPCRequest &request, OutputTypes typeIn, O
 
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
@@ -5128,7 +5128,7 @@ static UniValue SendToInner(const JSONRPCRequest &request, OutputTypes typeIn, O
 
         if (typeOut == OUTPUT_RINGCT
             && !address.IsValidStealthAddress()) {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl stealth address");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon stealth address");
         }
 
         if (address.IsValid() || obj.exists("script")) {
@@ -5137,7 +5137,7 @@ static UniValue SendToInner(const JSONRPCRequest &request, OutputTypes typeIn, O
             // Try decode as segwit address
             dest = DecodeDestination(sAddress);
             if (!IsValidDestination(dest)) {
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
             }
         }
 
@@ -5486,7 +5486,7 @@ static RPCHelpMan sendtypeto()
                         {
                             {"", RPCArg::Type::OBJ, RPCArg::Optional::NO, "",
                                 {
-                                    {"address", RPCArg::Type::STR, RPCArg::Default{""}, "The particl address to send to."},
+                                    {"address", RPCArg::Type::STR, RPCArg::Default{""}, "The falcon address to send to."},
                                     {"amount", RPCArg::Type::AMOUNT, RPCArg::Default{""}, "The amount in " + CURRENCY_UNIT + " to send. eg 0.1."},
                                     {"narr", RPCArg::Type::STR, RPCArg::Default{""}, "Up to 24 character narration sent with the transaction."},
                                     {"blindingfactor", RPCArg::Type::STR_HEX, RPCArg::Default{""}, "The blinding factor, 32 bytes and hex encoded."},
@@ -5507,7 +5507,7 @@ static RPCHelpMan sendtypeto()
                     {"test_fee", RPCArg::Type::BOOL, RPCArg::Default{false}, "Only return the fee it would cost to send, txn is discarded."},
                     {"coin_control", RPCArg::Type::OBJ, RPCArg::Default{UniValue::VOBJ}, "",
                         {
-                            {"changeaddress", RPCArg::Type::STR, RPCArg::Default{""}, "The particl address to receive the change"},
+                            {"changeaddress", RPCArg::Type::STR, RPCArg::Default{""}, "The falcon address to receive the change"},
                             {"inputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of json objects",
                                 {
                                     {"", RPCArg::Type::OBJ, RPCArg::Default{UniValue::VOBJ}, "",
@@ -5803,7 +5803,7 @@ static RPCHelpMan createsignaturewithwallet()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
     ChainstateManager *pchainman{nullptr};
@@ -5901,7 +5901,7 @@ static void traceFrozenPrevout(WalletContext& context, const COutPoint &op_trace
 
     std::vector<std::shared_ptr<CWallet> > wallets = GetWallets(context);
     for (auto &wallet : wallets) {
-        CHDWallet *pwallet = GetParticlWallet(wallet.get());
+        CHDWallet *pwallet = GetFalconWallet(wallet.get());
         CTransactionRecord rtx;
         {
         LOCK(pwallet->cs_wallet);
@@ -6080,7 +6080,7 @@ static void traceFrozenOutputs(WalletContext& context, UniValue &rv, CAmount min
 
     // Ensure all wallets are unlocked
     for (auto &wallet : wallets) {
-        CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+        CHDWallet *const pwallet = GetFalconWallet(wallet.get());
         if (pwallet->IsLocked() || pwallet->fUnlockForStakingOnly) {
             throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED,
                 strprintf("Error: Wallet %s is locked, please unlock all loaded wallets for this command.", pwallet->GetDisplayName()));
@@ -6094,7 +6094,7 @@ static void traceFrozenOutputs(WalletContext& context, UniValue &rv, CAmount min
 
     const Consensus::Params &consensusParams = Params().GetConsensus();
     for (auto &wallet : wallets) {
-        CHDWallet *pwallet = GetParticlWallet(wallet.get());
+        CHDWallet *pwallet = GetFalconWallet(wallet.get());
         LOCK(pwallet->cs_wallet);
 
         CHDWalletDB wdb(pwallet->GetDatabase());
@@ -6187,7 +6187,7 @@ static void traceFrozenOutputs(WalletContext& context, UniValue &rv, CAmount min
 
     // Fill in all known tx outputs, external script needs to know them all to check tx outputs == txinputs
     for (auto &wallet : wallets) {
-        CHDWallet *pwallet = GetParticlWallet(wallet.get());
+        CHDWallet *pwallet = GetFalconWallet(wallet.get());
         LOCK(pwallet->cs_wallet);
 
         CHDWalletDB wdb(pwallet->GetDatabase());
@@ -6317,7 +6317,7 @@ static RPCHelpMan debugwallet()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
     WalletContext& context = EnsureWalletContext(request.context);
 
     // Make sure the results are valid at least up to the most recent block
@@ -6393,7 +6393,7 @@ static RPCHelpMan debugwallet()
     if (downgrade_wallets) {
         std::vector<std::shared_ptr<CWallet> > wallets = GetWallets(context);
         for (auto &wallet : wallets) {
-            CHDWallet *pw = GetParticlWallet(wallet.get());
+            CHDWallet *pw = GetFalconWallet(wallet.get());
             pw->Downgrade();
         }
         StartShutdown();
@@ -6563,9 +6563,9 @@ static RPCHelpMan debugwallet()
 
     if (clear_stakes_seen) {
         LOCK(cs_main);
-        particl::mapStakeConflict.clear();
-        particl::mapStakeSeen.clear();
-        particl::listStakeSeen.clear();
+        falcon::mapStakeConflict.clear();
+        falcon::mapStakeSeen.clear();
+        falcon::listStakeSeen.clear();
         return "Cleared stakes seen.";
     }
 
@@ -6885,7 +6885,7 @@ static RPCHelpMan walletsettings()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     // Make sure the results are valid at least up to the most recent block
     // the user could have gotten from another RPC command prior to now
@@ -7162,7 +7162,7 @@ static RPCHelpMan transactionblinds()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -7218,7 +7218,7 @@ static RPCHelpMan derivefromstealthaddress()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     CBitcoinAddress addr(request.params[0].get_str());
     if (!addr.IsValidStealthAddress()) {
@@ -7329,7 +7329,7 @@ static RPCHelpMan getkeyimage()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -7393,7 +7393,7 @@ static RPCHelpMan setvote()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -7488,7 +7488,7 @@ static RPCHelpMan votehistory()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
     if (!pwallet->HaveChain()) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Unable to get chain");
     }
@@ -7798,7 +7798,7 @@ static RPCHelpMan createrawparttransaction()
                         {
                             {"", RPCArg::Type::OBJ, RPCArg::Default{UniValue::VOBJ}, "",
                                 {
-                                    {"address", RPCArg::Type::STR, RPCArg::Default{""}, "The particl address."},
+                                    {"address", RPCArg::Type::STR, RPCArg::Default{""}, "The falcon address."},
                                     {"amount", RPCArg::Type::AMOUNT, RPCArg::Default{""}, "The numeric value (can be string) in " + CURRENCY_UNIT + " of the output."},
                                     {"data", RPCArg::Type::STR_HEX, RPCArg::Default{""}, "The key is \"data\", the value is hex encoded data."},
                                     {"data_ct_fee", RPCArg::Type::AMOUNT, RPCArg::Default{""}, "If type is \"data\" and output is at index 0, then it will be treated as a CT fee output."},
@@ -7849,7 +7849,7 @@ static RPCHelpMan createrawparttransaction()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     EnsureWalletIsUnlocked(pwallet);
 
@@ -7862,7 +7862,7 @@ static RPCHelpMan createrawparttransaction()
     UniValue outputs = request.params[1].get_array();
 
     CMutableTransaction rawTx;
-    rawTx.nVersion = PARTICL_TXN_VERSION;
+    rawTx.nVersion = FALCON_TXN_VERSION;
 
 
     if (!request.params[2].isNull()) {
@@ -8176,7 +8176,7 @@ static RPCHelpMan fundrawtransactionfrom()
                                     },
                                 },
                             },
-                            {"changeAddress", RPCArg::Type::STR, RPCArg::Default{""}, "The particl address to receive the change."},
+                            {"changeAddress", RPCArg::Type::STR, RPCArg::Default{""}, "The falcon address to receive the change."},
                             {"changePosition", RPCArg::Type::NUM, RPCArg::Default{"random"}, "The index of the change output."},
                             //{"change_type", RPCArg::Type::STR, RPCArg::Default{""}, "The output type to use. Only valid if changeAddress is not specified. Options are \"legacy\", \"p2sh-segwit\", and \"bech32\". Default is set by -changetype."},
                             {"includeWatching", RPCArg::Type::BOOL, RPCArg::Default{false}, "Also select inputs which are watch only."},
@@ -8185,7 +8185,7 @@ static RPCHelpMan fundrawtransactionfrom()
                             {"subtractFeeFromOutputs", RPCArg::Type::ARR, RPCArg::Default{UniValue::VARR}, "A json array of integers.\n"
                             "                              The fee will be equally deducted from the amount of each specified output.\n"
                             "                              The outputs are specified by their zero-based index, before any change output is added.\n"
-                            "                              Those recipients will receive less particl than you enter in their corresponding amount field.\n"
+                            "                              Those recipients will receive less falcon than you enter in their corresponding amount field.\n"
                             "                              If no outputs are specified here, the sender pays the fee.",
                                 {
                                     {"vout_index", RPCArg::Type::NUM, RPCArg::Default{""}, ""},
@@ -8236,7 +8236,7 @@ static RPCHelpMan fundrawtransactionfrom()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
     RPCTypeCheck(request.params, {UniValue::VSTR, UniValue::VSTR, UniValue::VOBJ, UniValue::VOBJ, UniValue::VOBJ}, true);
 
@@ -8326,7 +8326,7 @@ static RPCHelpMan fundrawtransactionfrom()
 
     // parse hex string from parameter
     CMutableTransaction tx;
-    tx.nVersion = PARTICL_TXN_VERSION;
+    tx.nVersion = FALCON_TXN_VERSION;
     if (!DecodeHexTx(tx, request.params[1].get_str(), true)) {
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     }
@@ -9359,7 +9359,7 @@ static RPCHelpMan rehashblock()
 {
     std::shared_ptr<CWallet> const wallet = GetWalletForJSONRPCRequest(request);
     if (!wallet) return NullUniValue;
-    CHDWallet *const pwallet = GetParticlWallet(wallet.get());
+    CHDWallet *const pwallet = GetFalconWallet(wallet.get());
 
 
     std::shared_ptr<CBlock> blockptr = std::make_shared<CBlock>();

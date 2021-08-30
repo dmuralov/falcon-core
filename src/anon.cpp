@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
@@ -63,7 +63,7 @@ bool VerifyMLSAG(const CTransaction &tx, TxValidationState &state)
     auto &pblocktree{state.m_chainstate->m_blockman.m_block_tree_db};
     const Consensus::Params &consensus = Params().GetConsensus();
 
-    bool default_accept_anon = state.m_exploit_fix_2 ? true : particl::DEFAULT_ACCEPT_ANON_TX; // TODO: Remove after fork, set DEFAULT_ACCEPT_ANON_TX to true
+    bool default_accept_anon = state.m_exploit_fix_2 ? true : falcon::DEFAULT_ACCEPT_ANON_TX; // TODO: Remove after fork, set DEFAULT_ACCEPT_ANON_TX to true
     if (state.m_exploit_fix_1 &&
         !gArgs.GetBoolArg("-acceptanontxn", default_accept_anon)) {
         return state.Invalid(TxValidationResult::TX_CONSENSUS, "bad-txns-anon-disabled");

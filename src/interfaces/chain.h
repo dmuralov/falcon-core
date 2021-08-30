@@ -303,7 +303,7 @@ public:
     //! Check if Taproot has activated
     virtual bool isTaprootActive() const = 0;
 
-    //! Particl Specific
+    //! Falcon Specific
     virtual int getHeightInt() = 0;
     virtual size_t getAnonOutputs() = 0;
     virtual int64_t getSmsgFeeRate(ChainstateManager &chainman, const CBlockIndex *pindex, bool reduce_height=false) = 0;

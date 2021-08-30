@@ -42,10 +42,10 @@ Install the required dependencies the usual way you [install software on FreeBSD
 pkg install autoconf automake boost-libs git gmake libevent libtool pkgconf
 ```
 
-### 2. Clone Particl Repo
-Now that `git` and all the required dependencies are installed, let's clone the Particl Core repository to a directory. All build scripts and commands will run from this directory.
+### 2. Clone Falcon Repo
+Now that `git` and all the required dependencies are installed, let's clone the Falcon Core repository to a directory. All build scripts and commands will run from this directory.
 ``` bash
-git clone https://github.com/particl/particl-core.git
+git clone https://github.com/falcon/falcon-core.git
 ```
 
 ### 3. Install Optional Dependencies
@@ -92,7 +92,7 @@ pkg install python3
 ```
 ---
 
-## Building Particl Core
+## Building Falcon Core
 
 ### 1. Configuration
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Particl Core developers
+// Copyright (c) 2017-2021 The Falcon Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,7 +20,7 @@
 
 
 HDWalletTestingSetup::HDWalletTestingSetup(const std::string &chainName):
-    TestingSetup(chainName, { "-balancesindex" }, true /* fParticlMode */)
+    TestingSetup(chainName, { "-balancesindex" }, true /* fFalconMode */)
 {
     ECC_Start_Stealth();
     ECC_Start_Blinding();
@@ -40,8 +40,8 @@ HDWalletTestingSetup::~HDWalletTestingSetup()
     pwalletMain->Finalise();
     pwalletMain.reset();
 
-    particl::mapStakeSeen.clear();
-    particl::listStakeSeen.clear();
+    falcon::mapStakeSeen.clear();
+    falcon::listStakeSeen.clear();
 
     ECC_Stop_Stealth();
     ECC_Stop_Blinding();

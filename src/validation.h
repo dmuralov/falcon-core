@@ -150,7 +150,7 @@ void StartScriptCheckWorkerThreads(int threads_num);
 /** Stop all of the script checking worker threads */
 void StopScriptCheckWorkerThreads();
 
-namespace particl {
+namespace falcon {
 static constexpr size_t MAX_STAKE_SEEN_SIZE = 1000;
 inline int64_t FutureDrift(int64_t nTime) { return nTime + 15; } // FutureDriftV2
 
@@ -176,7 +176,7 @@ void SetNumBlocksOfPeers(int num_blocks);
 CAmount GetUTXOSum(CChainState &chainstate);
 /** Update num blocks of peers vector */
 void UpdateNumBlocksOfPeers(ChainstateManager &chainman, NodeId id, int height);
-} // namespace particl
+} // namespace falcon
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
 
@@ -1132,7 +1132,7 @@ bool FlushView(CCoinsViewCache *view, BlockValidationState& state, CChainState &
 
 
 
-namespace particl {
+namespace falcon {
 
 class StakeConflict
 {
@@ -1180,6 +1180,6 @@ bool RebuildRollingIndices(ChainstateManager &chainman, CTxMemPool* mempool);
 int64_t GetSmsgFeeRate(ChainstateManager &chainman, const CBlockIndex *pindex, bool reduce_height=false) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 uint32_t GetSmsgDifficulty(ChainstateManager &chainman, uint64_t time, bool verify=false) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
-} // particl
+} // falcon
 
 #endif // BITCOIN_VALIDATION_H

@@ -1,5 +1,5 @@
 ---
-name: "particl-core-win-22.0.0"
+name: "falcon-core-win-22.0.0"
 enable_cache: true
 sudo: true
 distro: "ubuntu"
@@ -25,8 +25,8 @@ packages:
 - "python3"
 - "python3-pip"
 remotes:
-- "url": "https://github.com/particl/particl-core.git"
-  "dir": "particl-core"
+- "url": "https://github.com/falcon/falcon-core.git"
+  "dir": "falcon-core"
 files: []
 script: |
   set -e -o pipefail
@@ -96,7 +96,7 @@ script: |
   create_per-host_compiler_wrapper "2000-01-01 12:00:00"
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd particl-core
+  cd falcon-core
   BASEPREFIX="${PWD}/depends"
   # Build dependencies for each host
   for i in $HOSTS; do

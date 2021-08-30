@@ -234,7 +234,7 @@ RPCHelpMan importaddress()
             "as change, and not show up in many RPCs.\n"
             "Note: Use \"getwalletinfo\" to query the scanning progress.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The Particl address (or hex-encoded script)"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The Falcon address (or hex-encoded script)"},
                     {"label", RPCArg::Type::STR, RPCArg::Default{""}, "An optional label"},
                     {"rescan", RPCArg::Type::BOOL, RPCArg::Default{true}, "Rescan the wallet for transactions"},
                     {"p2sh", RPCArg::Type::BOOL, RPCArg::Default{false}, "Add the P2SH version of the script as well"},
@@ -309,7 +309,7 @@ RPCHelpMan importaddress()
 
             pwallet->ImportScriptPubKeys(strLabel, scripts, false /* have_solving_data */, true /* apply_label */, 1 /* timestamp */);
         } else {
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address or script");
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address or script");
         }
     }
     if (fRescan)
@@ -587,10 +587,10 @@ RPCHelpMan importwallet()
                     UniValue inj;
                     inj.read(sJson);
 
-                    if (!IsParticlWallet(pwallet.get())) {
+                    if (!IsFalconWallet(pwallet.get())) {
                         throw JSONRPCError(RPC_INVALID_PARAMETER, "Legacy wallet");
                     }
-                    if (!GetParticlWallet(pwallet.get())->LoadJson(inj, sError)) {
+                    if (!GetFalconWallet(pwallet.get())->LoadJson(inj, sError)) {
                         throw JSONRPCError(RPC_WALLET_ERROR, "LoadJson failed " + sError);
                     }
                 }
@@ -701,7 +701,7 @@ RPCHelpMan dumpprivkey()
                 "\nReveals the private key corresponding to 'address'.\n"
                 "Then the importprivkey can be used with this output\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The particl address for the private key"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The falcon address for the private key"},
                 },
                 {
                     RPCResult{"Default", RPCResult::Type::STR, "", "The private key"},
@@ -729,13 +729,13 @@ RPCHelpMan dumpprivkey()
     std::string strAddress = request.params[0].get_str();
     CTxDestination dest = DecodeDestination(strAddress);
     if (!IsValidDestination(dest)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Particl address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Falcon address");
     }
 
-    if (IsParticlWallet(pwallet.get())) {
+    if (IsFalconWallet(pwallet.get())) {
         CExtPubKey *pek = std::get_if<CExtPubKey>(&dest);
         if (pek) {
-            CHDWallet *phdw = GetParticlWallet(pwallet.get());
+            CHDWallet *phdw = GetFalconWallet(pwallet.get());
             LOCK_ASSERTION(phdw->cs_wallet);
             CKeyID id = pek->GetID();
             CStoredExtKey sek;
@@ -757,7 +757,7 @@ RPCHelpMan dumpprivkey()
 
         CStealthAddress *psx = std::get_if<CStealthAddress>(&dest);
         if (psx) {
-            const CHDWallet *phdw = GetParticlWallet(pwallet.get());
+            const CHDWallet *phdw = GetFalconWallet(pwallet.get());
             CKey kSpend;
             CStealthAddress sx = *psx;
             bool have_scan = phdw->GetStealthAddressScanKey(sx);
@@ -907,12 +907,12 @@ RPCHelpMan dumpwallet()
         }
     }
 
-    if (IsParticlWallet(pwallet.get())) {
+    if (IsFalconWallet(pwallet.get())) {
         std::string sError;
         file << "\n# --- Begin JSON --- \n";
 
         UniValue rv(UniValue::VOBJ);
-        if (!GetParticlWallet(pwallet.get())->DumpJson(rv, sError)) {
+        if (!GetFalconWallet(pwallet.get())->DumpJson(rv, sError)) {
             throw JSONRPCError(RPC_WALLET_ERROR, "DumpJson failed " + sError);
         }
         file << rv.write(1);
@@ -1550,7 +1550,7 @@ RPCHelpMan importmulti()
                                       "block from time %d, which is after or within %d seconds of key creation, and "
                                       "could contain transactions pertaining to the key. As a result, transactions "
                                       "and coins using this key may not appear in the wallet. This error could be "
-                                      "caused by pruning or data corruption (see particld log for details) and could "
+                                      "caused by pruning or data corruption (see falcond log for details) and could "
                                       "be dealt with by downloading and rescanning the relevant blocks (see -reindex "
                                       "and -rescan options).",
                                 GetImportTimestamp(request, now), scannedTime - TIMESTAMP_WINDOW - 1, TIMESTAMP_WINDOW)));
@@ -1855,7 +1855,7 @@ RPCHelpMan importdescriptors()
                                       "block from time %d, which is after or within %d seconds of key creation, and "
                                       "could contain transactions pertaining to the desc. As a result, transactions "
                                       "and coins using this desc may not appear in the wallet. This error could be "
-                                      "caused by pruning or data corruption (see particld log for details) and could "
+                                      "caused by pruning or data corruption (see falcond log for details) and could "
                                       "be dealt with by downloading and rescanning the relevant blocks (see -reindex "
                                       "and -rescan options).",
                                 GetImportTimestamp(request, now), scanned_time - TIMESTAMP_WINDOW - 1, TIMESTAMP_WINDOW)));
