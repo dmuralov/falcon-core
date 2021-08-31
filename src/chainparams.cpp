@@ -501,10 +501,10 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xf9;
-        pchMessageStart[1] = 0xbe;
-        chMessageStart[2] = 0xb4;
-        pchMessageStart[3] = 0xd9;
+        pchMessageStart[0] = 0x80;
+        pchMessageStart[1] = 0x85;
+        pchMessageStart[2] = 0xb6;
+        pchMessageStart[3] = 0xba;
         nDefaultPort = 51738;
         nBIP44ID = (int)WithHardenedBit(44);
         assert(nBIP44ID == (int)0x8000002C);
@@ -696,9 +696,9 @@ public:
         consensus.nMinRCTOutputDepth = 12;
 
         pchMessageStart[0] = 0x0b;
-        pchMessageStart[1] = 0x11;
-        pchMessageStart[2] = 0x09;
-        pchMessageStart[3] = 0x07;
+        pchMessageStart[1] = 0x9a;
+        pchMessageStart[2] = 0x9c;
+        pchMessageStart[3] = 0xae;
         nDefaultPort = 51938;
         nBIP44ID = (int)WithHardenedBit(1);
 
@@ -961,10 +961,10 @@ public:
 
         consensus.nMinRCTOutputDepth = 2;
 
-        pchMessageStart[0] = 0xfa;
-        pchMessageStart[1] = 0xbf;
-        pchMessageStart[2] = 0xb5;
-        pchMessageStart[3] = 0xda;
+        pchMessageStart[0] = 0xb0;
+        pchMessageStart[1] = 0x89;
+        pchMessageStart[2] = 0x83;
+        pchMessageStart[3] = 0x8d;
         nDefaultPort = 11938;
         nBIP44ID = (int)WithHardenedBit(1);
 
