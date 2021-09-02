@@ -505,7 +505,7 @@ public:
         pchMessageStart[1] = 0x85;
         pchMessageStart[2] = 0xb6;
         pchMessageStart[3] = 0xba;
-        nDefaultPort = 51738;
+        nDefaultPort = 51838;
         nBIP44ID = (int)WithHardenedBit(44);
         assert(nBIP44ID == (int)0x8000002C);
 
@@ -699,7 +699,7 @@ public:
         pchMessageStart[1] = 0x9a;
         pchMessageStart[2] = 0x9c;
         pchMessageStart[3] = 0xae;
-        nDefaultPort = 51938;
+        nDefaultPort = 52038;
         nBIP44ID = (int)WithHardenedBit(1);
 
         nModifierInterval = 10 * 60;    // 10 minutes
@@ -876,7 +876,7 @@ public:
         uint256 hash = h.GetHash();
         memcpy(pchMessageStart, hash.begin(), 4);
 
-        nDefaultPort = 38333;
+        nDefaultPort = 38433;
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(1598918400, 52613770, 0x1e0377ae, 1, 50 * COIN);
@@ -965,7 +965,7 @@ public:
         pchMessageStart[1] = 0x89;
         pchMessageStart[2] = 0x83;
         pchMessageStart[3] = 0x8d;
-        nDefaultPort = 11938;
+        nDefaultPort = 12038;
         nBIP44ID = (int)WithHardenedBit(1);
 
 
