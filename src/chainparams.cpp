@@ -265,7 +265,7 @@ const size_t nGenesisOutputsTestnet = sizeof(genesisOutputsTestnet) / sizeof(gen
 
 static CBlock CreateGenesisBlockRegTest(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
+    const char *pszTimestamp = "02/09/2021";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
@@ -298,7 +298,7 @@ static CBlock CreateGenesisBlockRegTest(uint32_t nTime, uint32_t nNonce, uint32_
 
 static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
+    const char *pszTimestamp = "02/09/2021";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
@@ -345,7 +345,7 @@ static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_
     // Reserved Falcon for primary round
     // rLWLm1Hp7im3mq44Y1DgyirYgwvrmRASib 9c8c6c8c698f074180ecfdb38e8265c11f2a62cf
     out = MAKE_OUTPUT<CTxOutStandard>();
-    out->nValue = 996000 * COIN;
+    out->nValue = 89998803971,7 * COIN;
     out->scriptPubKey = CScript() << 1512000000 << OP_CHECKLOCKTIMEVERIFY << OP_DROP << OP_HASH160<< ParseHex("9c8c6c8c698f074180ecfdb38e8265c11f2a62cf") << OP_EQUAL; // 2017-11-30
     txNew.vpout.push_back(out);
 
@@ -366,7 +366,7 @@ static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_
 
 static CBlock CreateGenesisBlockMainNet(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "BTC 000000000000000000c679bc2209676d05129834627c7b1c02d1018b224c6f37";
+    const char *pszTimestamp = "02/09/2021";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
@@ -413,7 +413,7 @@ static CBlock CreateGenesisBlockMainNet(uint32_t nTime, uint32_t nNonce, uint32_
     // Reserved Falcon for primary round
     // RNnoeeqBTkpPQH8d29Gf45dszVj9RtbmCu
     out = MAKE_OUTPUT<CTxOutStandard>();
-    out->nValue = 996000 * COIN;
+    out->nValue = 89998803971,7 * COIN;
     out->scriptPubKey = CScript() << 1512000000 << OP_CHECKLOCKTIMEVERIFY << OP_DROP << OP_HASH160<< ParseHex("9433643b4fd5de3ebd7fdd68675f978f34585af1") << OP_EQUAL; // 2017-11-30
     txNew.vpout.push_back(out);
 
