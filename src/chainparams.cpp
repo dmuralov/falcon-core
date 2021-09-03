@@ -265,7 +265,7 @@ const size_t nGenesisOutputsTestnet = sizeof(genesisOutputsTestnet) / sizeof(gen
 
 static CBlock CreateGenesisBlockRegTest(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "02/09/2021";
+    const char *pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
@@ -298,7 +298,7 @@ static CBlock CreateGenesisBlockRegTest(uint32_t nTime, uint32_t nNonce, uint32_
 
 static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "02/09/2021";
+    const char *pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
@@ -366,7 +366,7 @@ static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_
 
 static CBlock CreateGenesisBlockMainNet(uint32_t nTime, uint32_t nNonce, uint32_t nBits)
 {
-    const char *pszTimestamp = "02/09/2021";
+    const char *pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
 
     CMutableTransaction txNew;
     txNew.nVersion = FALCON_TXN_VERSION;
