@@ -495,8 +495,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 709632; // Approximately November 12th, 2021
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); //c88e750b04ef441449
-        consensus.defaultAssumeValid = uint256(); // 992790
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000c88e750b04ef441449"); //c88e750b04ef441449
+        consensus.defaultAssumeValid = uint256S("0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b"); // 992790
          //0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b
 
         consensus.nMinRCTOutputDepth = 12;
@@ -588,7 +588,7 @@ public:
 
         checkpointData = {
             {
-                /*{ 5000,     uint256S("0xe786020ab94bc5461a07d744f3631a811b4ebf424fceda12274f2321883713f4")},
+                { 5000,     uint256S("0xe786020ab94bc5461a07d744f3631a811b4ebf424fceda12274f2321883713f4")},
                 { 15000,    uint256S("0xafc73ac299f2e6dd309077d230fccef547b9fc24379c1bf324dd3683b13c61c3")},
                 { 30000,    uint256S("0x35d95c12799323d7b418fd64df9d88ef67ef27f057d54033b5b2f38a5ecaacbf")},
                 { 91000,    uint256S("0x4d1ffaa5b51431918a0c74345e2672035c743511359ac8b1be67467b02ff884c")},
@@ -602,7 +602,7 @@ public:
                 { 856749,   uint256S("0x6b705dbf87345594314152841212a532753f11ec711ac81afc64f31eb048df19")},
                 { 887180,   uint256S("0xf9f1e91f82e73d4781052e42c8b814b8265e0929d4c16284db3feb354bfc317c")},
                 { 962370,   uint256S("0x43c3d5568f3b3467e5142f86445d5b12b923e3e5c4a1e6566d90a7fad807799c")},
-                { 992790,   uint256S("0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b")},*/
+                { 992790,   uint256S("0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b")},
             }
         };
 
