@@ -10,7 +10,7 @@
 #include <limits>
 
 /** Amount in satoshis (Can be negative) */
-typedef uint64_t CAmount;
+typedef int128_t CAmount;
 
 static const CAmount COIN = 100000000;
 static const CAmount CENT = 1000000;
