@@ -729,9 +729,9 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet-seed.falcon.io");
-        vSeeds.emplace_back("dnsseed-testnet.falcon.io");
-        vSeeds.emplace_back("dnsseed-testnet.tecnovert.net");
+        //vSeeds.emplace_back("testnet-seed.falcon.io");
+        //vSeeds.emplace_back("dnsseed-testnet.falcon.io");
+        //vSeeds.emplace_back("dnsseed-testnet.tecnovert.net");
 
         vTreasuryFundSettings.push_back(std::make_pair(0, TreasuryFundSettings("rTvv9vsbu269mjYYEecPYinDG8Bt7D86qD", 10, 60)));
 
