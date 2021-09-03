@@ -495,7 +495,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 709632; // Approximately November 12th, 2021
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000c88e750b04ef441449"); //c88e750b04ef441449
+        consensus.nMinimumChainWork = uint256S("0x0"); //c88e750b04ef441449
+        //0x0000000000000000000000000000000000000000000000c88e750b04ef441449
         consensus.defaultAssumeValid = uint256S("0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b"); // 992790
          //0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b
 
@@ -695,7 +696,8 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000012c75dd4368d68ff58"); //12c75dd4368d68ff58
+        consensus.nMinimumChainWork = uint256S("0x0"); //12c75dd4368d68ff58
+        //0x000000000000000000000000000000000000000000000012c75dd4368d68ff58
         consensus.defaultAssumeValid = uint256S("0xa7670a4ec4a80183a41c37c0bb377deb25e64d0d9f0e1b9cd69f832c315f2f31"); // 940090
        
         //0xa7670a4ec4a80183a41c37c0bb377deb25e64d0d9f0e1b9cd69f832c315f2f31
