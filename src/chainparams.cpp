@@ -537,10 +537,14 @@ public:
         std::cout << "hsh -> " << genesis.hashMerkleRoot.ToString() << std::endl;
         std::cout << "hsh -> " << genesis.hashWitnessMerkleRoot.ToString() << std::endl;
         
+        
+        assert(consensus.hashGenesisBlock == uint256S("0x037835d4213c64ed0facb3073042e70cdaa9c4e08d2b4bc5c3dce6e91482cac3"));
+        //0x0000ee0784c195317ac95623e22fddb8c7b8825dc3998e0bb924d66866eccf4c
+        assert(genesis.hashMerkleRoot == uint256S("0x35623ac8695f40ee8c1376cc324be5bc2ef4cc9c277e4c6a0760cc213dbcad8a"));
+        //0xc95fb023cf4bc02ddfed1a59e2b2f53edd1a726683209e2780332edf554f1e3e
+        assert(genesis.hashWitnessMerkleRoot == uint256S("0x69736e608a613ff773d5031a34d41d4d0080f674f75391b91b5c8986eb889f17"));
+        //0x619e94a7f9f04c8a1d018eb8bcd9c42d3c23171ebed8f351872256e36959d66c
 
-        assert(consensus.hashGenesisBlock == uint256S("0x0000ee0784c195317ac95623e22fddb8c7b8825dc3998e0bb924d66866eccf4c"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc95fb023cf4bc02ddfed1a59e2b2f53edd1a726683209e2780332edf554f1e3e"));
-        assert(genesis.hashWitnessMerkleRoot == uint256S("0x619e94a7f9f04c8a1d018eb8bcd9c42d3c23171ebed8f351872256e36959d66c"));
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
