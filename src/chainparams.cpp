@@ -14,6 +14,7 @@
 #include <chain/chainparamsimport.h>
 
 #include <assert.h>
+#include <iostream>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -530,6 +531,11 @@ public:
 
         genesis = CreateGenesisBlockMainNet(1630663200, 31429, 0x1f00ffff); // 2017-09-03 13:00:00
         consensus.hashGenesisBlock = genesis.GetHash();
+        
+        cout << "hsh -> " << consensus.hashGenesisBlock << endl;
+        cout << "hsh -> " << genesis.hashMerkleRoot << endl;
+        cout << "hsh -> " << genesis.hashWitnessMerkleRoot << endl;
+        
 
         assert(consensus.hashGenesisBlock == uint256S("0x0000ee0784c195317ac95623e22fddb8c7b8825dc3998e0bb924d66866eccf4c"));
         assert(genesis.hashMerkleRoot == uint256S("0xc95fb023cf4bc02ddfed1a59e2b2f53edd1a726683209e2780332edf554f1e3e"));
@@ -726,6 +732,10 @@ public:
 
         genesis = CreateGenesisBlockTestNet(1630663200, 5924, 0x1f00ffff);
         consensus.hashGenesisBlock = genesis.GetHash();
+        
+        cout << "hsh -> " << consensus.hashGenesisBlock << endl;
+        cout << "hsh -> " << genesis.hashMerkleRoot << endl;
+        cout << "hsh -> " << genesis.hashWitnessMerkleRoot << endl;
 
         assert(consensus.hashGenesisBlock == uint256S("0x0000594ada5310b367443ee0afd4fa3d0bbd5850ea4e33cdc7d6a904a7ec7c90"));
         assert(genesis.hashMerkleRoot == uint256S("0x2c7f4d88345994e3849502061f6303d9666172e4dff3641d3472a72908eec002"));
