@@ -739,7 +739,7 @@ public:
         m_assumed_blockchain_size = 1;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlockTestNet(1630663200, 5925, 0x1f00ffff);
+        genesis = CreateGenesisBlockTestNet(1630663200, 5925000, 0x1f00ffff);
         consensus.hashGenesisBlock = genesis.GetHash();
         
         std::cout << "hsh -> " << consensus.hashGenesisBlock.ToString() << std::endl;
