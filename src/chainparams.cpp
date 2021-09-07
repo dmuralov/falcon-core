@@ -746,7 +746,7 @@ public:
         std::cout << "hsh -> " << genesis.hashMerkleRoot.ToString() << std::endl;
         std::cout << "hsh -> " << genesis.hashWitnessMerkleRoot.ToString() << std::endl;
 
-        assert(consensus.hashGenesisBlock == uint256S("0x07eeaa4edf2213d73d115c02a741a8dfe5971b856ddbc94ad306fc5722dde712"));
+        assert(consensus.hashGenesisBlock == uint256S("0xf2e579312d9b18370aaf1b148776393dfe45b2cff0cc593d1b0a4d421c1746f9"));
         //0x0000594ada5310b367443ee0afd4fa3d0bbd5850ea4e33cdc7d6a904a7ec7c90
         assert(genesis.hashMerkleRoot == uint256S("0x4d0da1b41bd614359ce1c96b894fdce7858887b9a8f51fa89b8e2b7341c48ece"));
         //2c7f4d88345994e3849502061f6303d9666172e4dff3641d3472a72908eec002
