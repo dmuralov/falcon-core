@@ -539,11 +539,11 @@ public:
         std::cout << "hsh -> " << genesis.hashWitnessMerkleRoot.ToString() << std::endl;
         
         
-        assert(consensus.hashGenesisBlock == uint256S("0x037835d4213c64ed0facb3073042e70cdaa9c4e08d2b4bc5c3dce6e91482cac3"));
+        assert(consensus.hashGenesisBlock == uint256S("0x7a165ccc35afd6f002e004b9817646d57e1d9c3b144395dc7459d7c3a170e585"));
         //0x0000ee0784c195317ac95623e22fddb8c7b8825dc3998e0bb924d66866eccf4c
-        assert(genesis.hashMerkleRoot == uint256S("0x35623ac8695f40ee8c1376cc324be5bc2ef4cc9c277e4c6a0760cc213dbcad8a"));
+        assert(genesis.hashMerkleRoot == uint256S("0x195420e3824cebd37ac4a89173bd0d51c3f875549777beff05ec25bf687e973e"));
         //0xc95fb023cf4bc02ddfed1a59e2b2f53edd1a726683209e2780332edf554f1e3e
-        assert(genesis.hashWitnessMerkleRoot == uint256S("0x69736e608a613ff773d5031a34d41d4d0080f674f75391b91b5c8986eb889f17"));
+        assert(genesis.hashWitnessMerkleRoot == uint256S("0x46850d793efa0fbf433ae7770010b3c1f541f05c114f63bbb469c36c1d6b8e01"));
         //0x619e94a7f9f04c8a1d018eb8bcd9c42d3c23171ebed8f351872256e36959d66c
 
 
@@ -746,11 +746,11 @@ public:
         std::cout << "hsh -> " << genesis.hashMerkleRoot.ToString() << std::endl;
         std::cout << "hsh -> " << genesis.hashWitnessMerkleRoot.ToString() << std::endl;
 
-        assert(consensus.hashGenesisBlock == uint256S("0x7fbbb2c71fcad34ec4583826ab5fb80cecf4ec9d389e6374780293a085a2a12d"));
+        assert(consensus.hashGenesisBlock == uint256S("0x7a165ccc35afd6f002e004b9817646d57e1d9c3b144395dc7459d7c3a170e585"));
         //0x0000594ada5310b367443ee0afd4fa3d0bbd5850ea4e33cdc7d6a904a7ec7c90
-        assert(genesis.hashMerkleRoot == uint256S("0x2c7f4d88345994e3849502061f6303d9666172e4dff3641d3472a72908eec002"));
+        assert(genesis.hashMerkleRoot == uint256S("0x195420e3824cebd37ac4a89173bd0d51c3f875549777beff05ec25bf687e973e"));
         //2c7f4d88345994e3849502061f6303d9666172e4dff3641d3472a72908eec002
-        assert(genesis.hashWitnessMerkleRoot == uint256S("0xf9e2235c9531d5a19263ece36e82c4d5b71910d73cd0b677b81c5e50d17b6cda"));
+        assert(genesis.hashWitnessMerkleRoot == uint256S("0x46850d793efa0fbf433ae7770010b3c1f541f05c114f63bbb469c36c1d6b8e01"));
         //f9e2235c9531d5a19263ece36e82c4d5b71910d73cd0b677b81c5e50d17b6cda
 
         vFixedSeeds.clear();
