@@ -347,9 +347,9 @@ static CBlock CreateGenesisBlockTestNet(uint32_t nTime, uint32_t nNonce, uint32_
     // Reserved Falcon for primary round
     // rLWLm1Hp7im3mq44Y1DgyirYgwvrmRASib 9c8c6c8c698f074180ecfdb38e8265c11f2a62cf
     out = MAKE_OUTPUT<CTxOutStandard>();
-    out->nValue = 996000 * COIN;
+    //out->nValue = 996000 * COIN;
     //out->nValue = 89998803971,7 * COIN;
-    //out->nValue = 8999880397,17 * COIN;
+    out->nValue = 8999880397,17 * COIN;
     out->scriptPubKey = CScript() << 1512000000 << OP_CHECKLOCKTIMEVERIFY << OP_DROP << OP_HASH160<< ParseHex("9c8c6c8c698f074180ecfdb38e8265c11f2a62cf") << OP_EQUAL; // 2017-11-30
     txNew.vpout.push_back(out);
 
@@ -418,8 +418,8 @@ static CBlock CreateGenesisBlockMainNet(uint32_t nTime, uint32_t nNonce, uint32_
     // RNnoeeqBTkpPQH8d29Gf45dszVj9RtbmCu
     out = MAKE_OUTPUT<CTxOutStandard>();
     //out->nValue = 89998803971,7 * COIN;
-    //out->nValue = 8999880397,17 * COIN;
-    out->nValue = 996000 * COIN;
+    out->nValue = 8999880397,17 * COIN;
+    //out->nValue = 996000 * COIN;
     out->scriptPubKey = CScript() << 1512000000 << OP_CHECKLOCKTIMEVERIFY << OP_DROP << OP_HASH160<< ParseHex("9433643b4fd5de3ebd7fdd68675f978f34585af1") << OP_EQUAL; // 2017-11-30
     txNew.vpout.push_back(out);
 
