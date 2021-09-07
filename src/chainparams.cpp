@@ -531,7 +531,7 @@ public:
         m_assumed_blockchain_size = 2;
         m_assumed_chain_state_size = 2;
 
-        genesis = CreateGenesisBlockMainNet(1630663200, 31429, 0x1f00ffff); // 2017-09-03 13:00:00
+        genesis = CreateGenesisBlockMainNet(1630663200, 31430, 0x1f00ffff); // 2017-09-03 13:00:00
         consensus.hashGenesisBlock = genesis.GetHash();
         
         std::cout << "hsh -> " << consensus.hashGenesisBlock.ToString() << std::endl;
@@ -739,7 +739,7 @@ public:
         m_assumed_blockchain_size = 1;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlockTestNet(1630663200, 5924, 0x1f00ffff);
+        genesis = CreateGenesisBlockTestNet(1630663200, 5925, 0x1f00ffff);
         consensus.hashGenesisBlock = genesis.GetHash();
         
         std::cout << "hsh -> " << consensus.hashGenesisBlock.ToString() << std::endl;
