@@ -498,7 +498,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 709632; // Approximately November 12th, 2021
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = consensus.powLimit; //c88e750b04ef441449
+        consensus.nMinimumChainWork = uint256(); //c88e750b04ef441449
         //0x0000000000000000000000000000000000000000000000c88e750b04ef441449
         consensus.defaultAssumeValid = uint256(); // 992790
          //0xea97054e60558199d5c94627116fbfa9f3be1c63d45510963d1a308fe152974b
@@ -711,7 +711,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = consensus.powLimit; //12c75dd4368d68ff58
+        consensus.nMinimumChainWork = uint256(); //12c75dd4368d68ff58
         //0x000000000000000000000000000000000000000000000012c75dd4368d68ff58
         consensus.defaultAssumeValid = uint256(); // 940090
        
